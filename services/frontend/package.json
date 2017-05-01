@@ -1,0 +1,39 @@
+{
+  "name": "forums-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@steem/crypto-session": "git+https://github.com/steemit/crypto-session.git#83a90b319ce5bc6a70362d52a15a815de7e729bb",
+    "formsy-react": "^0.19.2",
+    "formsy-semantic-ui-react": "^0.2.3",
+    "immutable": "^3.7.6",
+    "react": "^15.4.2",
+    "react-addons-pure-render-mixin": "^15.4.1",
+    "react-dom": "^15.4.2",
+    "react-input-range": "^1.1.2",
+    "react-redux": "^5.0.3",
+    "react-router": "^4.1.1",
+    "react-router-dom": "^4.0.0-beta.8",
+    "react-scrollchor": "^2.2.0",
+    "react-timeago": "^3.2.0",
+    "redux": "^3.6.0",
+    "remarkable": "1.6.2",
+    "sanitize-html": "^1.11.4",
+    "semantic-ui-react": "^0.67.0",
+    "slug": "^0.9.1",
+    "steem": "0.5.5",
+    "store": "^1.3.20",
+    "xmldom": "^0.1.22"
+  },
+  "devDependencies": {
+    "enzyme": "^2.7.1",
+    "react-scripts": "0.9.4",
+    "semantic-ui": "^2.2.9"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

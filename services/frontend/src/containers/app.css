@@ -1,0 +1,16 @@
+.AppContainer {
+  background: #fcfcfc;
+}
+
+.AppContainer > .ui.menu {
+  border-radius: 0;
+}
+
+.AppContainer > .ui.segment.footer {
+  margin-top: 5em;
+}
+
+.modal-warning a {
+  color: white;
+  text-decoration: underline;
+}

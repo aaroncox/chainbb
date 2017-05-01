@@ -1,0 +1,14 @@
+.aws
+.boto
+deploy.sh
+
+snapshot
+
+services/frontend/build
+services/frontend/node_modules
+
+services/avatars/steem
+
+services/rest/__pycache__
+
+services/statistics/steem/main.py

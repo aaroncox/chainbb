@@ -1,0 +1,11 @@
+python3 reindex.py '{
+    "_id": "unique-id",
+    "name": "Display Name",
+    "group": "grouping-id",
+    "group_order": 6,
+    "forum_order": 1,
+    "description": "A longer description",
+    "tags": [
+      "tags","the","forum","should","include"
+    ]
+  }'
