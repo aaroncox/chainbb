@@ -33,13 +33,10 @@ export default class ForumHeader extends React.Component {
                   {topic.title}
                 </Link>
                 <Header.Subheader>
+                  {'↳ '}
                   <UserLink username={topic.author} />
                   {' • '}
                   posted <TimeAgo date={`${topic.created}Z`} />
-                  {' • '}
-                  <Link to={`/topics/${topic.category}`}>
-                    #{topic.category}
-                  </Link>
                 </Header.Subheader>
               </Header>
             </Grid.Column>
