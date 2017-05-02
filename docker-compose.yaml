@@ -31,6 +31,13 @@ services:
     restart: always
     volumes:
       - ./services/rest:/src:rw
+  statistics:
+    build: ./services/statistics/steem
+    links:
+      - mongo
+    restart: always
+    volumes:
+      - ./services/statistics/steem:/src:rw
   # redis:
   #   image: redis:3.2.4-alpine
   #   ports:

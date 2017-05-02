@@ -10,5 +10,3 @@ services/frontend/node_modules
 services/avatars/steem
 
 services/rest/__pycache__
-
-services/statistics/steem/main.py
