@@ -175,7 +175,7 @@ def height():
 
 @app.route("/config")
 def config():
-    results = db.indexes.find()
+    results = db.forums.find()
     return response(list(results))
 
 
