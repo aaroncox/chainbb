@@ -58,17 +58,24 @@ export default class PostContent extends React.Component {
       )
     }
     if(post.depth === 0) {
+      let tags = false
+      if(post.json_metadata && post.json_metadata.tags) {
+        tags = post.json_metadata.tags.map((tag, i) => <span key={i}>
+          {!!i && " • "}
+          <Link to={`/topic/${tag}`}>
+            #{tag}
+          </Link>
+        </span>)
+      }
       title = (
         <Segment piled attached='top'>
           <div className='ui huge header'>
             <h1 style={{margin: 0}}>{post.title}</h1>
             <Header.Subheader>
-            {post.json_metadata.tags.map((tag, i) => <span key={i}>
-              {!!i && " • "}
-              <Link to={`/topic/${tag}`}>
-                #{tag}
-              </Link>
-            </span>)}
+            {'↳ '}
+            tagged
+            {' '}
+            {tags}
             </Header.Subheader>
           </div>
         </Segment>
