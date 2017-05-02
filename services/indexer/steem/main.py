@@ -196,7 +196,9 @@ def update_forums(comment):
                 '_id': index,
                 'updated': comment['created']
             }
+            increments = {}
             if comment['parent_author'] == '':
+                increments['stats.posts'] = 1
                 updates.update({
                     'last_post': {
                         'created': comment['created'],
@@ -206,6 +208,7 @@ def update_forums(comment):
                     }
                 })
             else:
+                increments['stats.replies'] = 1
                 updates.update({
                     'last_reply': {
                         'created': comment['created'],
@@ -214,7 +217,7 @@ def update_forums(comment):
                         'url': comment['url']
                     }
                 })
-            db.forums.update(query, {'$set': updates, }, upsert=True)
+            db.forums.update(query, {'$set': updates, '$inc': increments}, upsert=True)
 
 def process_vote(_id, author, permlink):
     # Grab the parsed data of the post
