@@ -2,6 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import NumericLabel from '../utils/NumericLabel'
 
 import { Dimmer, Divider, Loader, Grid, Header, Popup, Segment  } from 'semantic-ui-react'
 
@@ -70,11 +71,15 @@ class Forums extends React.Component {
           let groupings = forums.filter(function(forum) {
             return forum['group'] === group
           }).map((forum, index) => {
-            let author = (forum.last_reply) ? forum.last_reply['author'] : ((forum.last_post) ? forum.last_post['author'] : null),
-                url = (forum.last_reply) ? forum.last_reply['url'] : ((forum.last_post) ? forum.last_post['url'] : null),
-                created = (forum.last_reply) ? forum.last_reply['created'] : ((forum.last_post) ? forum.last_post['created'] : null),
-                title = (forum.last_reply) ? forum.last_reply['title'] : ((forum.last_post) ? forum.last_post['title'].substring(0, 100) : null),
-                latest_post = null
+            let author = (forum.last_reply && forum.last_reply.created === forum.updated) ? forum.last_reply['author'] : ((forum.last_post) ? forum.last_post['author'] : null),
+                url = (forum.last_reply && forum.last_reply.created === forum.updated) ? forum.last_reply['url'] : ((forum.last_post) ? forum.last_post['url'] : null),
+                created = (forum.last_reply && forum.last_reply.created === forum.updated) ? forum.last_reply['created'] : ((forum.last_post) ? forum.last_post['created'] : null),
+                title = (forum.last_reply && forum.last_reply.created === forum.updated) ? forum.last_reply['title'] : ((forum.last_post) ? forum.last_post['title'].substring(0, 100) : null),
+                latest_post = null,
+                numberFormat = {
+                  shortFormat: true,
+                  shortFormatMinValue: 1000
+                }
             if(title && title.length > 100) {
               title = title.substring(0, 100) + " ..."
             }
@@ -85,6 +90,7 @@ class Forums extends React.Component {
                                 {title}
                               </Link>
                               <Header.Subheader>
+                                {'↳ '}
                                 <UserLink username={author} />
                                 {' • '}
                                 <TimeAgo date={`${created}Z`} />
@@ -98,12 +104,13 @@ class Forums extends React.Component {
                   <Grid.Column width={7}>
                     <Header size='medium'>
                       <ForumLink forum={forum}/>
-                      <Header.Subheader>
+                      <Header.Subheader style={{marginTop: '0.1rem'}}>
                         {
                           (forum.description)
                             ? <p>{forum.description}</p>
                             : ''
                         }
+                        {'↳ '}
                         <Popup
                           trigger={<a>{forum.tags.length} Tags</a>}
                           position='left center'
@@ -115,6 +122,14 @@ class Forums extends React.Component {
                             </Link>
                           </span>)}
                         />
+                        {' • '}
+                        <NumericLabel params={numberFormat}>{forum.stats.posts}</NumericLabel>
+                        {' '}
+                        posts
+                        {' • '}
+                        <NumericLabel params={numberFormat}>{forum.stats.replies}</NumericLabel>
+                        {' '}
+                        replies
                       </Header.Subheader>
                     </Header>
                   </Grid.Column>
