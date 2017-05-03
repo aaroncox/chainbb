@@ -112,6 +112,7 @@ class MarkdownViewer extends Component {
                     sections.push(
                         <Embed
                           id={id}
+                          key={id}
                           placeholder={`https://img.youtube.com/vi/${id}/0.jpg`}
                           source='youtube'/>
                     )
