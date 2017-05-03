@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 const NumericLabel = (props) => {
 
@@ -11,17 +11,19 @@ const NumericLabel = (props) => {
       }
     }
 
-    var num = +num;
+    num = +num;
 
-    var minValue = minValue || 0;
+    minValue = minValue || 0;
+
     var si = [
-      { value: 1E18, symbol: "E" },
-      { value: 1E15, symbol: "P" },
-      { value: 1E12, symbol: "T" },
-      { value: 1E9,  symbol: "G" },
-      { value: 1E6,  symbol: "M" },
-      { value: 1E3,  symbol: "k" }
-    ], rx = /\.0+$|(\.[0-9]*[1-9])0+$/, i;
+            { value: 1E18, symbol: "E" },
+            { value: 1E15, symbol: "P" },
+            { value: 1E12, symbol: "T" },
+            { value: 1E9,  symbol: "G" },
+            { value: 1E6,  symbol: "M" },
+            { value: 1E3,  symbol: "k" }
+          ],
+        i;
 
     if(typeof num === 'number' && num >= minValue) {
       for (i = 0; i < si.length; i++) {
@@ -42,20 +44,21 @@ const NumericLabel = (props) => {
 
 
   if(props.params) {
-      var locales = props.params.locales;
-      if(props.params.wholenumber == 'floor'){
-        var number = Math.floor(props.children);
-      }else if(props.params.wholenumber == 'ceil'){
-        var number = Math.ceil(props.children);
+      var locales = props.params.locales,
+          number;
+      if(props.params.wholenumber === 'floor'){
+        number = Math.floor(props.children);
+      }else if(props.params.wholenumber === 'ceil'){
+        number = Math.ceil(props.children);
       }else{
-        var number = props.children;
+        number = props.children;
       }
 
       var styles = 'right';
-      if(props.params.justification == 'L') {
+      if(props.params.justification === 'L') {
         styles = 'left';
       }
-      else if(props.params.justification == 'C') {
+      else if(props.params.justification === 'C') {
         styles = 'center';
       }
       else{
@@ -65,22 +68,21 @@ const NumericLabel = (props) => {
         'textAlign':styles
       };
 
+      var currencyIndicator = 'USD';
       if(props.params.currencyIndicator) {
-        var currencyIndicator = props.params.currencyIndicator
-      }
-      else {
-        var currencyIndicator = 'USD';
+        currencyIndicator = props.params.currencyIndicator
       }
 
+      var option
       if(props.params.percentage){
-          var option = {
+          option = {
             style:'percent',
             maximumFractionDigits:props.params.precision,
             useGrouping:props.params.commafy
           };
       }
       else if(props.params.currency){
-          var option = {
+          option = {
             style:'currency',
             currency:currencyIndicator,
             maximumFractionDigits:props.params.precision,
@@ -88,7 +90,7 @@ const NumericLabel = (props) => {
           };
       }
       else {
-          var option = {
+          option = {
             style:'decimal',
             maximumFractionDigits:props.params.precision,
             useGrouping:props.params.commafy
@@ -96,20 +98,20 @@ const NumericLabel = (props) => {
       }
 
       var css = '';
-      if(props.params.cssClass) {
-        props.params.cssClass.map((clas) => {
-          css += clas + ' ';
-        });
-      }
+      // if(props.params.cssClass) {
+      //   props.params.cssClass.map((clas) => {
+      //     css += clas + ' ';
+      //   });
+      // }
 
     }
-    else{
-      var number = props.children;
-      var locales = 'en-US';
-      var mystyle = {
+    else {
+      number = props.children;
+      locales = 'en-US';
+      mystyle = {
         'textAlign':'left'
       };
-      var option = {};
+      option = {};
     }
 
     var shortenNumber = number;
