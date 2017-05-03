@@ -101,15 +101,3 @@ export function resetPostState() {
     type: types.POST_RESET_STATE
   }
 }
-
-export function showNewPost() {
-  return {
-    type: types.SHOW_NEW_POST
-  }
-}
-
-export function hideNewPost() {
-  return {
-    type: types.HIDE_NEW_POST
-  }
-}
