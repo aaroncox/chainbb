@@ -31,7 +31,7 @@ class Thread extends React.Component {
       let total = this.props.post.responses.length,
           perPage = this.props.preferences.threadPostsPerPage
       page = Math.ceil(total / perPage)
-      id = 'comments-bottom'
+      id = 'comments-new'
     }
     // Change page and focus
     this.changePage(page, id)
@@ -59,8 +59,23 @@ class Thread extends React.Component {
 
   componentDidUpdate() {
     if(this.state && this.state.scrollTo) {
-      goToAnchor(this.state.scrollTo)
+      goToAnchor(this.state.scrollTo, true)
       this.setState({scrollTo: false})
+    }
+  }
+
+  componentDidMount() {
+    window.addEventListener("hashchange", this.hashChange.bind(this), false);
+  }
+
+  hashChange() {
+    const { hash } = location;
+    const regex = /#comments-page-(\d+)+$/
+    let matches = hash.match(regex)
+    if(!matches) {
+      this.setState({page: 1})
+    } else {
+      this.setState({page: parseInt(matches[1])})
     }
   }
 
@@ -76,7 +91,7 @@ class Thread extends React.Component {
               Comments ({responses.length})
             </Header>
           </Grid.Column>
-          <Grid.Column mobile={16} tablet={12} computer={12} id='comment-top'>
+          <Grid.Column mobile={16} tablet={12} computer={12} id={`comments-page-${page}`}>
             <Paginator
               page={page}
               perPage={perPage}
@@ -102,7 +117,7 @@ class Thread extends React.Component {
           changePage={this.changePage}
           scrollToPost={this.scrollToPost}
           { ...this.props } />
-        <Divider horizontal id='comments-bottom'>Page {page}</Divider>
+        <Divider horizontal id='comments-new'>Page {page}</Divider>
         { comments_nav }
       </div>
     )

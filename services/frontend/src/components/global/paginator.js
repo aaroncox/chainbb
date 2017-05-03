@@ -6,8 +6,7 @@ import { Grid, Menu, Segment } from 'semantic-ui-react'
 export default class Paginator extends Component {
 
   changePage = (e, data) => {
-    this.props.callback(data.value)
-    goToAnchor('comment-top')
+    this.props.callback(data.value, `comments-page-${data.value}`)
     e.preventDefault()
   }
 
