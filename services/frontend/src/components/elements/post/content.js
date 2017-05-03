@@ -17,6 +17,11 @@ export default class PostContent extends React.Component {
     })
   }
 
+  handleNewPost = (id) => {
+    this.handleResponding()
+    this.props.scrollToPost(id)
+  }
+
   render() {
     let post = this.props.content,
         quote = this.props.quote,
@@ -53,7 +58,7 @@ export default class PostContent extends React.Component {
           elements={['body']}
           parent={post}
           onCancel={this.handleResponding}
-          onComplete={this.handleResponding}
+          onComplete={this.handleNewPost}
           { ... this.props } />
       )
     }

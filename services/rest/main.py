@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from pprint import pprint
 from pymongo import MongoClient
 from bson.json_util import dumps
@@ -83,6 +83,7 @@ def forum(slug):
         '_id': slug
     }
     forum = db.forums.find_one(query)
+    # Load the posts
     query = {
         'category': {
             '$in': forum['tags']
@@ -101,8 +102,11 @@ def forum(slug):
         'url': 1
     }
     sort = [("active",-1)]
-    limit = 20
-    results = db.posts.find(query, fields).sort(sort).limit(limit)
+    page = int(request.args.get('page', 1))
+    perPage = 20
+    skip = (page - 1) * perPage
+    limit = perPage
+    results = db.posts.find(query, fields).sort(sort).skip(skip).limit(limit)
     return response(list(results), forum=forum)
 
 @app.route('/topics/<category>')

@@ -128,7 +128,6 @@ export default class PostForm extends React.Component {
             t.setState({
               waitingforblock: false
             })
-            t.props.onComplete()
             // If we have a parent, reload all of the children
             if(parent) {
               let parent_author = (parent.root_author) ? parent.root_author : parent.author,
@@ -143,7 +142,8 @@ export default class PostForm extends React.Component {
                 permlink: parent_permlink
               })
             }
-            t.props.actions.hideNewPost()
+            let id = account.name + '/' + permlink
+            t.props.onComplete(id)
           }, 5000)
         }, 5000)
       }
@@ -214,7 +214,7 @@ export default class PostForm extends React.Component {
     display = (
       <Segment stacked>
         <Dimmer inverted active={this.state.submitting} style={{minHeight: '100px'}}>
-          <Loader size='large' content='Submitting to Blockchain'/>
+          <Loader size='large' indeterminate content='Submitting to Blockchain'/>
         </Dimmer>
         <Dimmer inverted active={this.state.waitingforblock} style={{minHeight: '100px'}}>
           <Loader size='large' content='Waiting for next Block'/>

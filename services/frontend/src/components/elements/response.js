@@ -2,9 +2,8 @@ import React from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import TimeAgo from 'react-timeago'
-import Scrollchor from 'react-scrollchor';
 
-import { Button, Dimmer, Divider, Grid, Header, Loader, Popup, Segment } from 'semantic-ui-react'
+import { Button, Dimmer, Divider, Grid, Header, Icon, Label, Loader, Popup, Segment } from 'semantic-ui-react'
 
 import * as accountActions from '../../actions/accountActions'
 import * as breadcrumbActions from '../../actions/breadcrumbActions'
@@ -66,7 +65,9 @@ class Response extends React.Component {
       )
     }
     if(count && count > 0) {
-      let responses = this.props.post.responses
+      let start = (this.props.page - 1) * this.props.perPage,
+          end = start + this.props.perPage,
+          responses = this.props.post.responses.slice(start, end)
       let jsonMetadata = {}
       let high_quality_post = true
       let formId = 0
@@ -91,12 +92,20 @@ class Response extends React.Component {
                               {' '}
                               said
                               {' '}
-                              <Scrollchor to={`#${parent_post._id}`}>
+                              <a onClick={this.props.scrollToPost.bind(this, parent_post._id)}>
                                 <TimeAgo date={`${parent_post.created}Z`} />
-                              </Scrollchor>
+                              </a>
                               {' '}
                               ...
                             </Header>
+                            <Label
+                              attached='top right'
+                              style={{cursor: 'pointer'}}
+                              onClick={this.props.scrollToPost.bind(this, parent_post._id)}>
+                                <Icon name='toggle up' />
+                                Jump to Original
+                            </Label>
+
                             <MarkdownViewer formId={formId + '-viewer'} text={parent_post.body} jsonMetadata={jsonMetadata} large highQualityPost={high_quality_post}  />
                           </Segment>
                           <Divider hidden></Divider>
@@ -109,7 +118,11 @@ class Response extends React.Component {
                               {account}
                             </Grid.Column>
                             <Grid.Column mobile={16} tablet={12} computer={12}>
-                              <PostContent quote={quote} content={post} { ...this.props } />
+                              <PostContent
+                                quote={quote}
+                                content={post}
+                                scrollToLatestPost={this.scrollToLatestPost}
+                                { ...this.props } />
                             </Grid.Column>
                           </Grid.Row>
 

@@ -9,6 +9,7 @@ import * as GLOBAL from '../global';
 import * as breadcrumbActions from '../actions/breadcrumbActions'
 import * as postActions from '../actions/postActions'
 
+import Paginator from '../components/global/paginator'
 import ForumHeader from '../components/elements/forum/header'
 import ForumTitle from '../components/elements/forum/title'
 import Forum404 from '../components/elements/forum/404'
@@ -19,6 +20,7 @@ class Forum extends React.Component {
   constructor(props, state) {
     super(props, state);
     this.state = {
+      page: 1,
       topics: false,
       showNewPost: false,
       forum: {
@@ -28,8 +30,14 @@ class Forum extends React.Component {
     this.getForum = this.getForum.bind(this);
   }
 
+  changePage = (page) => {
+    this.setState({page: page})
+    this.getForum(page)
+  }
+
   showNewPost = (e) => {
     this.setState({
+      page: 1,
       showNewPost: true
     })
   }
@@ -48,16 +56,16 @@ class Forum extends React.Component {
     this.getForum()
   }
 
-  async getForum() {
+  async getForum(page = 1) {
     this.setState({
       topics: false,
       showNewPost: false
     })
     try {
-      const { forumid } = this.props;
-      const response = await fetch(`${ GLOBAL.REST_API }/forum/${ forumid }`);
+      const { forumid } = this.props
+      const response = await fetch(`${ GLOBAL.REST_API }/forum/${ forumid }?page=${ page }`)
       if (response.ok) {
-        const result = await response.json();
+        const result = await response.json()
         this.setState({
           forum: result.forum,
           topics: result.data
@@ -78,6 +86,9 @@ class Forum extends React.Component {
 
   render() {
     let forum = this.state.forum,
+        page = this.state.page,
+        perPage = 20,
+        posts = 0,
         loaded = (typeof this.state.topics === 'object'),
         topics = this.state.topics,
         display = (
@@ -86,12 +97,25 @@ class Forum extends React.Component {
           </Dimmer>
         )
     if(loaded) {
+      posts = forum.stats.posts
       if(topics.length > 0) {
-        let posts = topics.map((topic, idx) => <ForumPost topic={topic} key={idx} />)
+        let rows = topics.map((topic, idx) => <ForumPost topic={topic} key={idx} />)
         display = (
           <div>
+            <Paginator
+              page={page}
+              perPage={perPage}
+              total={posts}
+              callback={this.changePage}
+              />
             <ForumHeader />
-            {posts}
+            {rows}
+            <Paginator
+              page={page}
+              perPage={perPage}
+              total={posts}
+              callback={this.changePage}
+              />
           </div>
         )
       } else {

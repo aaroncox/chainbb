@@ -15,7 +15,7 @@
     "react-redux": "^5.0.3",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.0.0-beta.8",
-    "react-scrollchor": "^2.2.0",
+    "react-scrollable-anchor": "^0.4.2",
     "react-timeago": "^3.2.0",
     "redux": "^3.6.0",
     "remarkable": "1.6.2",

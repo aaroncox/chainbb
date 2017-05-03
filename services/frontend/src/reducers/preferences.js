@@ -3,7 +3,8 @@ import store from 'store'
 
 const initialPreferences = {
   votePowerPost: 100,
-  votePowerComment: 100
+  votePowerComment: 100,
+  threadPostsPerPage: 10
 }
 
 export default function preferences(state = false, action) {
