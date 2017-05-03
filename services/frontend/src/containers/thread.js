@@ -27,7 +27,7 @@ class Thread extends React.Component {
   scrollToPost = (id) => {
     let page = this.getPageForPost(id)
     // Couldn't determine page, goto last and bottom
-    if(!page) {
+    if(page === false) {
       let total = this.props.post.responses.length,
           perPage = this.props.preferences.threadPostsPerPage
       page = Math.ceil(total / perPage)
@@ -46,7 +46,7 @@ class Thread extends React.Component {
         position = i
       }
     }
-    if(!position) return position
+    if(position === false) return position
     return Math.floor(position / perPage) + 1;
   }
 
