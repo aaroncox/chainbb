@@ -1,9 +1,4 @@
 version: '2.1'
-
-# volumes:
-#   redis-data:
-#     driver: local
-
 services:
   # avatars:
   #   build: ./services/avatars/steem
@@ -13,13 +8,30 @@ services:
   #     # - ./.aws:/root/.aws
   #     - ./.boto:/root/.boto
   #     - ./services/avatars/steem:/src:rw
-  steem:
-    build: ./services/indexer/steem
-    links:
-      - mongo
-    restart: always
+  mongodata:
+    image: mongo:3.3.10
     volumes:
-      - ./services/indexer/steem:/src:rw
+      - /data/db
+    command: --break-mongo
+  mongo:
+    image: mongo:3.3.10
+    volumes:
+      - ./:/tempo:rw
+    volumes_from:
+      - mongodata
+    ports:
+      - "27017:27017"
+    command: --smallfiles --rest
+  # redis:
+  #   image: redis:3.2.4-alpine
+  #   ports:
+  #     # We'll bind our host's port 6379 to redis's port 6379, so we can use
+  #     # Redis Desktop Manager (or other tools) with it:
+  #     - 6379:6379
+  #   volumes:
+  #     # We'll mount the 'redis-data' volume into the location redis stores it's data:
+  #     - redis-data:/var/lib/redis
+  #   command: redis-server --appendonly yes
   rest:
     build: ./services/rest
     environment:
@@ -38,27 +50,17 @@ services:
     restart: always
     volumes:
       - ./services/statistics/steem:/src:rw
-  # redis:
-  #   image: redis:3.2.4-alpine
-  #   ports:
-  #     # We'll bind our host's port 6379 to redis's port 6379, so we can use
-  #     # Redis Desktop Manager (or other tools) with it:
-  #     - 6379:6379
+  steem:
+    build: ./services/indexer/steem
+    links:
+      - mongo
+    restart: always
+    volumes:
+      - ./services/indexer/steem:/src:rw
+  # test:
+  #   build: ./services/test
   #   volumes:
-  #     # We'll mount the 'redis-data' volume into the location redis stores it's data:
-  #     - redis-data:/var/lib/redis
-  #   command: redis-server --appendonly yes
-  mongodata:
-    image: mongo:3.3.10
-    volumes:
-      - /data/db
-    command: --break-mongo
-  mongo:
-    image: mongo:3.3.10
-    volumes:
-      - ./:/tempo:rw
-    volumes_from:
-      - mongodata
-    ports:
-      - "27017:27017"
-    command: --smallfiles --rest
+  #     - ./services/test:/src:rw
+# volumes:
+#   redis-data:
+#     driver: local

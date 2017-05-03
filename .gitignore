@@ -4,9 +4,8 @@ deploy.sh
 
 snapshot
 
+services/avatars/steem
 services/frontend/build
 services/frontend/node_modules
-
-services/avatars/steem
-
 services/rest/__pycache__
+services/test
