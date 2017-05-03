@@ -87,7 +87,7 @@ export default class VoteButton extends React.Component {
         <Button.Group floated='left' color={color} >
           <Popup
             trigger={
-              <Button onClick={this.castVote} loading={this.props.loading} active={active}>
+              <Button onClick={this.castVote} loading={this.props.loading} disabled={this.props.loading} active={active}>
                 <i className={icon}></i>
                 {text}
                 {(!active && !this.props.error ? ` (${weight}%)` : '')}
