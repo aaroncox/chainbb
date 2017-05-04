@@ -97,7 +97,7 @@ class Forum extends React.Component {
           </Dimmer>
         )
     if(loaded) {
-      posts = forum.stats.posts
+      posts = (forum.stats) ? forum.stats.posts : 0
       if(topics.length > 0) {
         let rows = topics.map((topic, idx) => <ForumPost topic={topic} key={idx} />)
         display = (
