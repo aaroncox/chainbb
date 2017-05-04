@@ -228,7 +228,7 @@ export default class PostForm extends React.Component {
           <Header icon='alarm outline' content='Error Submitting to the Blockchain' />
           <Modal.Content>
             <h3>An error has occured.</h3>
-            <p>If you need assistance, please notify @jesta on here on the forums, on steemit.com, or via steemit.chat. Please include the error message shown below.</p>
+            <p>If you need assistance, please notify @jesta here on the forums, on steemit.com, or via steemit.chat. Please include the error message shown below.</p>
             <code>
             <pre>
               {this.state.errorMsg}
