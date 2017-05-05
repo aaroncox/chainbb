@@ -2,6 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { goToTop } from 'react-scrollable-anchor'
 import NumericLabel from '../utils/NumericLabel'
 
 import { Dimmer, Divider, Loader, Grid, Header, Popup, Segment  } from 'semantic-ui-react'
@@ -17,6 +18,7 @@ import TimeAgo from 'react-timeago'
 class Forums extends React.Component {
 
     constructor(props) {
+      goToTop()
       super(props);
       this.state = { forums: [] };
       this.getForums = this.getForums.bind(this);

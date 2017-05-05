@@ -2,6 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { goToTop } from 'react-scrollable-anchor'
 
 import { Dimmer, Header, Label, Loader } from 'semantic-ui-react'
 
@@ -18,6 +19,7 @@ import PostForm from '../components/elements/post/form'
 
 class Forum extends React.Component {
   constructor(props, state) {
+    goToTop()
     super(props, state);
     this.state = {
       page: 1,
