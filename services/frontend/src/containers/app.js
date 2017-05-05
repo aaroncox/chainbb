@@ -25,6 +25,7 @@ const App = () => (
         <Route path="/topic/:category" component={TopicLayout} />
         <Route path="/:category/@:author/:permlink" component={Thread} />
       </Container>
+      <BreadcrumbMenu />
       <FooterMenu />
     </div>
   </BrowserRouter>
