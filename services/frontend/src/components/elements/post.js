@@ -26,12 +26,15 @@ class Post extends React.Component {
     if(this.props.post.content) {
       sidebar = (
         <Grid.Column only='tablet computer' width={4}>
-          <PostSidebar { ...this.props } />
+          <PostSidebar
+            op={true}
+            { ...this.props } />
         </Grid.Column>
       )
       display = (
         <Grid.Column mobile={16} tablet={12} computer={12}>
           <PostContent
+            op={true}
             content={this.props.post.content}
             { ...this.props } />
         </Grid.Column>

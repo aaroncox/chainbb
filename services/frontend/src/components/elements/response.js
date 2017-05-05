@@ -119,8 +119,9 @@ class Response extends React.Component {
                             </Grid.Column>
                             <Grid.Column mobile={16} tablet={12} computer={12}>
                               <PostContent
-                                quote={quote}
                                 content={post}
+                                op={false}
+                                quote={quote}
                                 scrollToLatestPost={this.scrollToLatestPost}
                                 { ...this.props } />
                             </Grid.Column>

@@ -24,6 +24,7 @@ export default class PostContent extends React.Component {
 
   render() {
     let post = this.props.content,
+        postContent = false,
         quote = this.props.quote,
         title = false,
         formHeader = (
@@ -86,30 +87,37 @@ export default class PostContent extends React.Component {
         </Segment>
       )
     }
+    if(!this.props.op || (this.props.op && this.props.page === 1)) {
+      postContent = (
+        <div>
+          <Segment attached className="thread-post">
+            {quote}
+            <MarkdownViewer formId={'viewer'} text={post.body} jsonMetadata={{}} large highQualityPost={true}  />
+            <Divider hidden></Divider>
+          </Segment>
+          <PostControls
+            target={post}
+            { ...this.props }
+            />
+          <Segment basic clearing secondary attached='bottom'>
+            {postButton}
+            <Link to={`#${post._id}`}>
+              Posted <TimeAgo date={`${post.created}Z`} />
+            </Link>
+            <br/>
+            <small>
+              via
+              {' '}
+              <PlatformLink platform={post.json_metadata.app} />
+            </small>
+          </Segment>
+        </div>
+      )
+    }
     return (
       <div>
         {title}
-        <Segment attached className="thread-post">
-          {quote}
-          <MarkdownViewer formId={'viewer'} text={post.body} jsonMetadata={{}} large highQualityPost={true}  />
-          <Divider hidden></Divider>
-        </Segment>
-        <PostControls
-          target={post}
-          { ...this.props }
-          />
-        <Segment basic clearing secondary attached='bottom'>
-          {postButton}
-          <Link to={`#${post._id}`}>
-            Posted <TimeAgo date={`${post.created}Z`} />
-          </Link>
-          <br/>
-          <small>
-            via
-            {' '}
-            <PlatformLink platform={post.json_metadata.app} />
-          </small>
-        </Segment>
+        {postContent}
         {postForm}
       </div>
     )

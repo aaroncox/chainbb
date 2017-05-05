@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { goToAnchor } from 'react-scrollable-anchor'
 
 import { Grid, Menu, Segment } from 'semantic-ui-react'
 
@@ -13,11 +12,7 @@ export default class Paginator extends Component {
   render() {
     let { page, perPage, total } = this.props,
         pages = Math.ceil(total / perPage),
-        elements = [{
-          key: 'title',
-          header: true,
-          name: `Page: ${page}`
-        }]
+        elements = []
     if(pages === 1) return false
     if(page !== 1 && page > 1) {
       elements.push({

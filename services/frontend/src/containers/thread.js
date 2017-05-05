@@ -1,7 +1,7 @@
 import React from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { goToAnchor } from 'react-scrollable-anchor'
+import { goToTop, goToAnchor } from 'react-scrollable-anchor'
 
 import { Divider, Grid, Header } from 'semantic-ui-react'
 
@@ -31,7 +31,6 @@ class Thread extends React.Component {
       let total = this.props.post.responses.length,
           perPage = this.props.preferences.threadPostsPerPage
       page = Math.ceil(total / perPage)
-      id = 'comments-new'
     }
     // Change page and focus
     this.changePage(page, id)
@@ -51,44 +50,66 @@ class Thread extends React.Component {
   }
 
   changePage = (page, scrollTo = false) => {
-    this.setState({
-      page: page,
-      scrollTo: scrollTo
-    })
+    let state = {
+      page: page
+    }
+    if(scrollTo) {
+      state.scrollTo = scrollTo
+    } else {
+      goToTop()
+    }
+    this.setState(state)
   }
 
   componentDidUpdate() {
-    if(this.state && this.state.scrollTo) {
-      goToAnchor(this.state.scrollTo, true)
+    const anchor = (this.state) ? this.state.scrollTo : false
+    if(this.state && this.state.scrollTo && this.props.post.responses.length > 0) {
       this.setState({scrollTo: false})
+      setTimeout(function() {
+        goToAnchor(anchor)
+      }, 50)
+    }
+    if(this.state && this.state.scrollToWhenReady && this.props.post.responses.length > 0) {
+      this.scrollToPost(this.state.scrollToWhenReady)
+      this.setState({
+        scrollToWhenReady: false
+      })
     }
   }
 
   componentDidMount() {
-    window.addEventListener("hashchange", this.hashChange.bind(this), false);
-  }
-
-  hashChange() {
     const { hash } = location;
-    const regex = /#comments-page-(\d+)+$/
-    let matches = hash.match(regex)
-    if(!matches) {
-      this.setState({page: 1})
-    } else {
-      this.setState({page: parseInt(matches[1])})
+    const regexPage = /#comments-page-(\d+)+$/
+    const regexPost = /#([A-Za-z0-9\-_]+)\/([A-Za-z0-9\-_]+)$/
+    let matchesPage = hash.match(regexPage)
+    let matchesPost = hash.match(regexPost)
+    if(matchesPage) {
+      this.setState({
+        page: parseInt(matchesPage[1], 10)
+      })
+    }
+    if(matchesPost) {
+      let anchor = matchesPost[1] + '/' + matchesPost[2]
+      this.setState({
+        scrollToWhenReady: anchor
+      })
     }
   }
 
   render() {
     let page = (this.state) ? this.state.page : 1,
         perPage = this.props.preferences.threadPostsPerPage,
-        responses = (this.props.post) ? this.props.post.responses : 0
+        responses = (this.props.post) ? this.props.post.responses : 0,
+        pages = Math.ceil(responses.length / perPage)
     let comments_nav = (
-      <Grid>
+      <Grid id='comments-top'>
         <Grid.Row stretched>
           <Grid.Column only='tablet computer' width={4}>
-            <Header textAlign='center' size='huge' style={{padding: '0.9em 0'}}>
+            <Header textAlign='right' size='huge' style={{padding: '0.9em 0'}}>
               Comments ({responses.length})
+              <Header.Subheader>
+                Page {page} of {pages}
+              </Header.Subheader>
             </Header>
           </Grid.Column>
           <Grid.Column mobile={16} tablet={12} computer={12} id={`comments-page-${page}`}>
@@ -105,6 +126,7 @@ class Thread extends React.Component {
     return (
       <div>
         <Post
+          page={page}
           changePage={this.changePage}
           scrollToPost={this.scrollToPost}
           { ...this.props }/>
