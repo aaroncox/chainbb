@@ -1,0 +1,281 @@
+python3 reindex.py '{
+  "_id": "crypto-general",
+  "name": "General Discussion",
+  "group": "crypto-general",
+  "group_order": 1,
+  "forum_order": 1,
+  "description": "",
+  "tags": [
+    "cryptocurrency",
+    "beyondbitcoin",
+    "blockchain"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-mining",
+  "name": "Mining",
+  "group": "crypto-general",
+  "group_order": 1,
+  "forum_order": 2,
+  "description": "",
+  "tags": [
+    "mining",
+    "staking",
+    "minting"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-support",
+  "name": "Technical Support",
+  "group": "crypto-general",
+  "group_order": 1,
+  "forum_order": 3,
+  "description": "",
+  "tags": [
+    "crypto-support",
+    "crypto-help",
+    "technical-support"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-btc",
+  "name": "Bitcoin",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 2,
+  "description": "",
+  "tags": [
+    "bitcoin",
+    "btc"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-eth",
+  "name": "Ethereum",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 2,
+  "description": "",
+  "tags": [
+    "ethereum",
+    "eth"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-xrp",
+  "name": "Ripple",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 3,
+  "description": "",
+  "tags": [
+    "ripple",
+    "xrp"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-ltc",
+  "name": "Litecoin",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 4,
+  "description": "",
+  "tags": [
+    "litecoin",
+    "ltc"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-nem",
+  "name": "NEM",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 5,
+  "description": "",
+  "tags": [
+    "nem"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-dash",
+  "name": "Dash",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 6,
+  "description": "",
+  "tags": [
+    "dash"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-etc",
+  "name": "Ethereum Classic",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 7,
+  "description": "",
+  "tags": [
+    "ethereum-classic",
+    "etc"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-xmr",
+  "name": "Monero",
+  "group": "crypto-xmr",
+  "group_order": 2,
+  "forum_order": 8,
+  "description": "",
+  "tags": [
+    "monero",
+    "xmr"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-xlm",
+  "name": "Stellar Lumens",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 9,
+  "description": "",
+  "tags": [
+    "stellar",
+    "stellar-lumens",
+    "lumens",
+    "xlm"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-gnt",
+  "name": "Golem",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 10,
+  "description": "",
+  "tags": [
+    "golen",
+    "gnt"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-rep",
+  "name": "Augur",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 11,
+  "description": "",
+  "tags": [
+    "augur",
+    "rep"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-doge",
+  "name": "Dogecoin",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 12,
+  "description": "",
+  "tags": [
+    "dogecoin",
+    "doge"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-maid",
+  "name": "MaidSafeCoin",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 13,
+  "description": "",
+  "tags": [
+    "maidsafe",
+    "maidsafecoin",
+    "maid"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-zec",
+  "name": "Zcash",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 14,
+  "description": "",
+  "tags": [
+    "zcash",
+    "zec"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-steem",
+  "name": "Steem",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 15,
+  "description": "",
+  "tags": [
+    "steem",
+    "sbd",
+    "steemit"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-gno",
+  "name": "Gnosis",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 16,
+  "description": "",
+  "tags": [
+    "gnosis",
+    "gno"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-strat",
+  "name": "Stratis",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 17,
+  "description": "",
+  "tags": [
+    "stratis",
+    "strat"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-bcn",
+  "name": "Bytecoin",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 18,
+  "description": "",
+  "tags": [
+    "bytecoin",
+    "bcn"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-bts",
+  "name": "BitShares",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 19,
+  "description": "",
+  "tags": [
+    "bitshares",
+    "bts"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "crypto-fct",
+  "name": "Factom",
+  "group": "crypto-index",
+  "group_order": 2,
+  "forum_order": 20,
+  "description": "",
+  "tags": [
+    "factom",
+    "fct"
+  ]
+}'

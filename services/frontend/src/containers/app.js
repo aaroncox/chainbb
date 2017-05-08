@@ -21,6 +21,7 @@ const App = () => (
       <BreadcrumbMenu />
       <Container>
         <Route exact path="/" component={IndexLayout} />
+        <Route path="/forums/:group" component={IndexLayout} />
         <Route path="/forum/:id" component={ForumLayout} />
         <Route path="/topic/:category" component={TopicLayout} />
         <Route path="/:category/@:author/:permlink" component={Thread} />

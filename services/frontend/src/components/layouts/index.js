@@ -7,14 +7,15 @@ import Sidebar from '../../containers/sidebar'
 
 export default class IndexLayout extends React.Component {
   render() {
+    const params = this.props.match.params;
     return(
       <Grid divided stackable>
         <Grid.Row>
           <Grid.Column width={4} only='tablet computer'>
-            <Sidebar />
+            <Sidebar forums={params} />
           </Grid.Column>
           <Grid.Column mobile={16} tablet={12} computer={12}>
-            <Forums />
+            <Forums forums={params} />
           </Grid.Column>
         </Grid.Row>
       </Grid>

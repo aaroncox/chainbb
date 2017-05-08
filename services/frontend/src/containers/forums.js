@@ -17,7 +17,7 @@ import TimeAgo from 'react-timeago'
 
 class Forums extends React.Component {
 
-    constructor(props) {
+    constructor(props, state) {
       goToTop()
       super(props);
       this.state = { forums: [] };
@@ -35,7 +35,11 @@ class Forums extends React.Component {
 
     async getForums() {
       try {
-        const response = await fetch(GLOBAL.REST_API);
+        const uri = GLOBAL.REST_API;
+        if(this.props.forums && this.props.forums.group) {
+          uri = uri + '/' + this.props.forums.group;
+        }
+        const response = await fetch(uri);
         if (response.ok) {
           const result = await response.json();
           this.setState({
@@ -125,11 +129,11 @@ class Forums extends React.Component {
                           </span>)}
                         />
                         {' • '}
-                        <NumericLabel params={numberFormat}>{forum.stats.posts}</NumericLabel>
+                        <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.posts : '?'}</NumericLabel>
                         {' '}
                         posts
                         {' • '}
-                        <NumericLabel params={numberFormat}>{forum.stats.replies}</NumericLabel>
+                        <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.replies : '?'}</NumericLabel>
                         {' '}
                         replies
                       </Header.Subheader>
@@ -171,7 +175,9 @@ class Forums extends React.Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  return {}
+  return {
+    preferences: state.preferences
+  }
 }
 
 function mapDispatchToProps(dispatch) {

@@ -64,7 +64,18 @@ def load_replies(query, sort):
 
 @app.route("/")
 def index():
-    query = {}
+    query = {
+      "group": {"$in": ["chainbb", "general", "creative", "tech", "interest"]}
+    }
+    sort = [("group_order",1),("forum_order",1)]
+    results = db.forums.find(query).sort(sort)
+    return response(list(results))
+
+@app.route("/crypto")
+def crypto():
+    query = {
+      "group": {"$in": ["chainbb", "crypto-general", "crypto-index"]}
+    }
     sort = [("group_order",1),("forum_order",1)]
     results = db.forums.find(query).sort(sort)
     return response(list(results))
