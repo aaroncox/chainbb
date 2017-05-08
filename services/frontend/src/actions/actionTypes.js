@@ -20,3 +20,6 @@ export const POST_LOAD_RESPONSES_RESOLVED = 'POST_LOAD_RESPONSES_RESOLVED'
 
 // Preferences
 export const SET_PREFERENCE = 'SET_PREFERENCE'
+
+// status
+export const SET_STATUS = 'SET_STATUS'

@@ -10,6 +10,7 @@ import { Dimmer, Divider, Loader, Grid, Header, Popup, Segment  } from 'semantic
 import * as GLOBAL from '../global';
 import * as breadcrumbActions from '../actions/breadcrumbActions'
 import * as postActions from '../actions/postActions'
+import * as statusActions from '../actions/statusActions'
 
 import ForumLink from '../utils/forumlink'
 import UserLink from '../utils/link/user'
@@ -45,6 +46,7 @@ class Forums extends React.Component {
           this.setState({
             forums: result.data
           });
+          this.props.actions.setStatus({'height': result.height});
         } else {
           console.error(response.status);
         }
@@ -190,12 +192,17 @@ class Forums extends React.Component {
 
 function mapStateToProps(state, ownProps) {
   return {
-    preferences: state.preferences
+    preferences: state.preferences,
+    status: state.status
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  return {actions: bindActionCreators({ ...breadcrumbActions, ...postActions }, dispatch)}
+  return {actions: bindActionCreators({
+    ...breadcrumbActions,
+    ...postActions,
+    ...statusActions
+  }, dispatch)}
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Forums);

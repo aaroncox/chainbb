@@ -8,6 +8,7 @@ import { Divider, Grid, Header } from 'semantic-ui-react'
 import * as accountActions from '../actions/accountActions'
 import * as postActions from '../actions/postActions'
 import * as preferenceActions from '../actions/preferenceActions'
+import * as statusActions from '../actions/statusActions'
 
 import Post from '../components/elements/post'
 import Response from '../components/elements/response'
@@ -157,7 +158,8 @@ function mapDispatchToProps(dispatch) {
   return {actions: bindActionCreators({
     ...accountActions,
     ...postActions,
-    ...preferenceActions
+    ...preferenceActions,
+    ...statusActions
   }, dispatch)}
 }
 

@@ -9,6 +9,7 @@ import { Button, Dimmer, Header, Label, Loader, Segment } from 'semantic-ui-reac
 import * as GLOBAL from '../global';
 import * as breadcrumbActions from '../actions/breadcrumbActions'
 import * as postActions from '../actions/postActions'
+import * as statusActions from '../actions/statusActions'
 
 import Paginator from '../components/global/paginator'
 import ForumHeader from '../components/elements/forum/header'
@@ -72,6 +73,7 @@ class Forum extends React.Component {
           forum: result.forum,
           topics: result.data
         });
+        this.props.actions.setStatus({'height': result.height});
         this.props.actions.setBreadcrumb([
           {
             name: result.forum.name,
@@ -185,7 +187,8 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {actions: bindActionCreators({
     ...breadcrumbActions,
-    ...postActions
+    ...postActions,
+    ...statusActions
   }, dispatch)}
 }
 
