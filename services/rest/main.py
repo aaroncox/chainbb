@@ -99,11 +99,19 @@ def forum(slug):
     }
     forum = db.forums.find_one(query)
     # Load the posts
-    query = {
-        'category': {
-            '$in': forum['tags']
-        }
-    }
+    query = {}
+    if 'tags' in forum and len(forum['tags']) > 0:
+        query.update({
+            'category': {
+                '$in': forum['tags']
+            }
+        })
+    if 'accounts' in forum and len(forum['accounts']) > 0:
+        query.update({
+            'author': {
+                '$in': forum['accounts']
+            }
+        })
     fields = {
         'author': 1,
         'category': 1,
