@@ -23,14 +23,11 @@ export default class ForumTitle extends React.Component {
             <Header.Subheader>
               {forum.description}
             </Header.Subheader>
-            <Header.Subheader>
-              <p><em>To write a post in this forum, use one of the following tags as the <strong>first tag</strong>.</em></p>
-              <List horizontal small>
-                <List.Item header>Tags included:</List.Item>
-                {tags}
-              </List>
-            </Header.Subheader>
           </Header>
+          <p><em>To write a post in this forum, use one of the following tags as the <strong>first tag</strong>.</em></p>
+          <List horizontal small>
+            {tags}
+          </List>
         </Segment>
       </div>
     )
