@@ -29,9 +29,11 @@ def update_forum(data):
         pprint("[FORUM][REINDEXER] - Updating forum [" + data['_id'] + "]")
 
 def update_posts(data):
-    query = {
-        'category': {'$in': data['tags']}
-    }
+    query = {}
+    if 'tags' in data and len(data['tags']) > 0:
+        query.update({'category': {'$in': data['tags']}})
+    if 'accounts' in data and len(data['accounts']) > 0:
+        query.update({'author': {'$in': data['accounts']}})
     sort = [("last_reply",-1),("created",-1)]
     results = db.posts.find(query).sort(sort).limit(1)
     for comment in results:
@@ -51,9 +53,11 @@ def update_posts(data):
         response = db.forums.update(query, {'$set': updates}, upsert=True)
 
 def update_replies(data):
-    query = {
-        'category': {'$in': data['tags']}
-    }
+    query = {}
+    if 'tags' in data and len(data['tags']) > 0:
+        query.update({'category': {'$in': data['tags']}})
+    if 'accounts' in data and len(data['accounts']) > 0:
+        query.update({'author': {'$in': data['accounts']}})
     sort = [("last_reply",-1),("created",-1)]
     results = db.replies.find(query).sort(sort).limit(1)
     for comment in results:
