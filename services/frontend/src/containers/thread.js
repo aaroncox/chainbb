@@ -80,7 +80,7 @@ class Thread extends React.Component {
   componentDidMount() {
     const { hash } = location;
     const regexPage = /#comments-page-(\d+)+$/
-    const regexPost = /#([A-Za-z0-9\-_]+)\/([A-Za-z0-9\-_]+)$/
+    const regexPost = /#@?([A-Za-z0-9\-_]+)\/([A-Za-z0-9\-_]+)$/
     let matchesPage = hash.match(regexPage)
     let matchesPost = hash.match(regexPost)
     if(matchesPage) {
