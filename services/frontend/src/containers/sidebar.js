@@ -29,10 +29,10 @@ class Sidebar extends React.Component {
         ,
         categories = (
           <Menu vertical fluid size='small'>
-            <Link className={`item ${(!forums.group) ? 'active' : ''}`} to='/'>
+            <Link className={`item ${(!forums || !forums.group) ? 'active' : ''}`} to='/'>
               General Forums
             </Link>
-            <Link className={`item ${(forums.group === 'crypto') ? 'active' : ''}`} to='/forums/crypto'>
+            <Link className={`item ${(forums && forums.group === 'crypto') ? 'active' : ''}`} to='/forums/crypto'>
               Crypto Forums
             </Link>
             {/*
