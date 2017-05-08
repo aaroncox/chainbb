@@ -12,8 +12,12 @@ mongo = MongoClient("mongodb://mongo")
 db = mongo.forums
 
 def response(json, forum=False):
+    # Load height
+    # NYI - should be cached at for 3 seconds
+    height = db.status.find_one({'_id': 'height'})
     response = {
         'status': 'ok',
+        'height': height['value'],
         'data': json
     }
     if forum:
