@@ -63,12 +63,6 @@ export default class PostSidebar extends React.Component {
                     {post.net_votes}
                   </Table.Cell>
                 </Table.Row>
-                <Table.Row>
-                  <Table.Cell>Reward Share</Table.Cell>
-                  <Table.Cell>
-                    {payout}
-                  </Table.Cell>
-                </Table.Row>
               </Table.Body>
             </Table>
           </Segment>
