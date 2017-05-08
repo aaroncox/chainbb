@@ -5,7 +5,7 @@ import { Container, Grid, Segment } from 'semantic-ui-react'
 export default class HeaderMenu extends Component {
   render() {
     return (
-      <Segment inverted vertical className="footer">
+      <Segment inverted vertical className="footer" style={{marginTop: "2em"}}>
         <Container>
           <Grid stackable className="divided equal height stackable">
             {/*
