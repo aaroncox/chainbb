@@ -98,7 +98,7 @@ export default class LoginModal extends React.Component {
         <Modal.Content>
           <h3>Please use your use your keys responsibly.</h3>
           <h5>This is beta software and you use it at your own risk. Please ensure you are only using your posting key within the site to ensure your account balance is safe.</h5>
-          <p>For more information and best practices, please <Link to='#' rel='nofollow' target='_blank'>read our post about security and your keys</Link>.</p>
+          {/*<p>For more information and best practices, please <Link to='#' rel='nofollow' target='_blank'>read our post about security and your keys</Link>.</p>*/}
         </Modal.Content>
         <Modal.Actions>
           <Button color='orange' onClick={this.handleClose}>Cancel</Button>
