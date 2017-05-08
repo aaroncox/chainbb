@@ -84,6 +84,15 @@ def crypto():
     results = db.forums.find(query).sort(sort)
     return response(list(results))
 
+@app.route("/steem")
+def steem():
+    query = {
+      "group": {"$in": ["steem-general", "steem-projects"]}
+    }
+    sort = [("group_order",1),("forum_order",1)]
+    results = db.forums.find(query).sort(sort)
+    return response(list(results))
+
 @app.route("/tags")
 def tags():
     query = {}

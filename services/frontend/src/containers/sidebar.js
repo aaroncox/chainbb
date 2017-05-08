@@ -30,6 +30,9 @@ class Sidebar extends React.Component {
             <Link className={`item ${(!forums || !forums.group) ? 'active' : ''}`} to='/'>
               General Forums
             </Link>
+            <Link className={`item ${(forums && forums.group === 'steem') ? 'active' : ''}`} to='/forums/steem'>
+              Steem Forums
+            </Link>
             <Link className={`item ${(forums && forums.group === 'crypto') ? 'active' : ''}`} to='/forums/crypto'>
               Crypto Forums
             </Link>

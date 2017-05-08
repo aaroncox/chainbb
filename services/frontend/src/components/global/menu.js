@@ -18,6 +18,7 @@ class HeaderMenu extends Component {
             <strong>chainBB.com</strong>
           </Link>
           <Link to='/' className='title item'>General</Link>
+          <Link to='/forums/steem' className='title item'>Steem</Link>
           <Link to='/forums/crypto' className='title item'>Crypto</Link>
           <Menu.Item position='right'>
             <a href='https://steemdb.com' target='_blank'>

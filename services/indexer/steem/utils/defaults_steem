@@ -1,0 +1,76 @@
+python3 reindex.py '{
+  "_id": "steem-announcements",
+  "name": "Official Announcements",
+  "group": "steem-general",
+  "group_order": 1,
+  "forum_order": 1,
+  "description": "",
+  "tags": [],
+  "accounts": ["steemitblog"]
+}'
+python3 reindex.py '{
+  "_id": "steem-general",
+  "name": "General Discussion",
+  "group": "steem-general",
+  "group_order": 1,
+  "forum_order": 2,
+  "description": "",
+  "tags": ["steemit", "steemit"]
+}'
+python3 reindex.py '{
+  "_id": "steem-help",
+  "name": "Steem Support",
+  "group": "steem-general",
+  "group_order": 1,
+  "forum_order": 3,
+  "description": "",
+  "tags": ["steemit-help", "steem-help", "steemit-support", "steem-support"]
+}'
+python3 reindex.py '{
+  "_id": "steem-witnesses",
+  "name": "Witnesses",
+  "group": "steem-general",
+  "group_order": 1,
+  "forum_order": 4,
+  "description": "",
+  "tags": [
+    "witness-category",
+    "witness-update"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "steem-projects",
+  "name": "Project Announcements",
+  "group": "steem-projects",
+  "group_order": 5,
+  "forum_order": 1,
+  "description": "",
+  "tags": ["steem-project"]
+}'
+python3 reindex.py '{
+  "_id": "steem-chainbb",
+  "name": "chainBB",
+  "group": "steem-projects",
+  "group_order": 5,
+  "forum_order": 2,
+  "description": "",
+  "tags": ["chainbb", "chainbb.com"]
+}'
+python3 reindex.py '{
+  "_id": "steem-steemdb",
+  "name": "steemdb.com",
+  "group": "steem-projects",
+  "group_order": 5,
+  "forum_order": 3,
+  "description": "",
+  "tags": ["steemdb", "steemdb.com"]
+}'
+python3 reindex.py '{
+  "_id": "steem-steemstats",
+  "name": "steemstats.com",
+  "group": "steem-projects",
+  "group_order": 5,
+  "forum_order": 4,
+  "description": "",
+  "tags": ["steemstats", "steemstats.com"]
+}'
