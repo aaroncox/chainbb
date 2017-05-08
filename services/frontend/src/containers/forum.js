@@ -152,7 +152,7 @@ class Forum extends React.Component {
           </div>
         )
       } else {
-        display = <Forum404 forum={forum} />
+        display = <Forum404 forum={forum} isUser={isUser} showNewPost={this.showNewPost} />
       }
     }
     if(forum._id && this.state.showNewPost) {
