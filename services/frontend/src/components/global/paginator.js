@@ -31,7 +31,7 @@ export default class Paginator extends Component {
         onClick: this.changePage
       })
     }
-    if(page > 2) {
+    if(page > 2 && pages > 3) {
       elements.push({
         key: `page-group-previous`,
         disabled: true,
@@ -59,7 +59,7 @@ export default class Paginator extends Component {
         content: '...'
       })
     }
-    if(page + 2 < pages) {
+    if(page !== pages) {
       elements.push({
         key: `page-last`,
         name: pages+'',
