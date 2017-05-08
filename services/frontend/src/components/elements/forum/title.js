@@ -25,7 +25,7 @@ export default class ForumTitle extends React.Component {
             </Header.Subheader>
           </Header>
           <p><em>To write a post in this forum, use one of the following tags as the <strong>first tag</strong>.</em></p>
-          <List horizontal small>
+          <List horizontal size='small'>
             {tags}
           </List>
         </Segment>
