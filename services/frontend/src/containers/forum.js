@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { goToTop } from 'react-scrollable-anchor'
 
-import { Button, Dimmer, Header, Label, Loader, Segment } from 'semantic-ui-react'
+import { Button, Dimmer, Header, Label, Loader, Popup, Segment } from 'semantic-ui-react'
 
 import * as GLOBAL from '../global';
 import * as breadcrumbActions from '../actions/breadcrumbActions'
@@ -91,15 +91,38 @@ class Forum extends React.Component {
   render() {
     let forum = this.state.forum,
         page = this.state.page,
+        isUser = this.props.account.isUser,
         perPage = 20,
         posts = 0,
         loaded = (typeof this.state.topics === 'object'),
         topics = this.state.topics,
+        newPostButton = (
+          <Popup
+            trigger={
+              <Button floated='left' size='large'>
+                <i className='pencil icon'></i>
+                Create new post
+              </Button>
+            }
+            position='bottom center'
+            inverted
+            content='You must be logged in to post.'
+            basic
+          />
+        ),
         display = (
           <Dimmer inverted active style={{minHeight: '100px', display: 'block'}}>
             <Loader size='large' content='Loading'/>
           </Dimmer>
         )
+    if(isUser) {
+      newPostButton = (
+        <Button floated='left' color='green' size='large' onClick={this.showNewPost}>
+          <i className='pencil icon'></i>
+          Create new post
+        </Button>
+      )
+    }
     if(loaded) {
       posts = (forum.stats) ? forum.stats.posts : 0
       if(topics.length > 0) {
@@ -107,10 +130,7 @@ class Forum extends React.Component {
         display = (
           <div>
             <Segment basic clearing>
-              <Button floated='left' color='green' size='large' onClick={this.showNewPost}>
-                <i className='pencil icon'></i>
-                Create new post
-              </Button>
+              {newPostButton}
               <Paginator
                 page={page}
                 perPage={perPage}
@@ -121,10 +141,7 @@ class Forum extends React.Component {
             <ForumHeader />
             {rows}
             <Segment basic clearing>
-              <Button floated='left' color='green' size='large' onClick={this.showNewPost}>
-                <i className='pencil icon'></i>
-                Create new post
-              </Button>
+              {newPostButton}
               <Paginator
                 page={page}
                 perPage={perPage}
