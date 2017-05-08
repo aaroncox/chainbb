@@ -188,7 +188,15 @@ def update_topics(comment):
 
 def update_forums(comment):
     for index in forums_cache:
-        if comment['category'] in forums_cache[index]:
+        if ((
+              'tags' in forums_cache[index]
+              and
+              comment['category'] in forums_cache[index]['tags']
+            ) or (
+              'accounts' in forums_cache[index]
+              and
+              comment['author'] in forums_cache[index]['accounts']
+          )):
             query = {
                 '_id': index,
             }
@@ -295,8 +303,10 @@ def rebuild_forums_cache():
     forums = db.forums.find()
     forums_cache.clear()
     for forum in forums:
-        if forum['tags']:
-            forums_cache.update({str(forum['_id']): forum['tags']})
+        if 'tags' in forum and len(forum['tags']) > 0:
+            forums_cache.update({str(forum['_id']): {'tags': forum['tags']}})
+        if 'accounts' in forum and len(forum['accounts']) > 0:
+            forums_cache.update({str(forum['_id']): {'accounts': forum['accounts']}})
 
 if __name__ == '__main__':
     print("[FORUM][INDEXER] - Starting service")
