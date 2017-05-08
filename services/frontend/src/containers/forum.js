@@ -123,6 +123,10 @@ class Forum extends React.Component {
         </Button>
       )
     }
+    // Disable posting for forums based on a list of accounts
+    if(forum.accounts && forum.accounts.length > 0) {
+      newPostButton = false
+    }
     if(loaded) {
       posts = (forum.stats) ? forum.stats.posts : 0
       if(topics.length > 0) {
