@@ -13,14 +13,14 @@ export default class ForumHeader extends React.Component {
                 Forum
               </Header>
             </Grid.Column>
-            <Grid.Column width={4} only='large screen'>
-              <Header size='small'>
-                Latest Reply
-              </Header>
-            </Grid.Column>
             <Grid.Column width={2} only='large screen' className='center aligned'>
               <Header size='small'>
                 Replies
+              </Header>
+            </Grid.Column>
+            <Grid.Column width={4} only='large screen'>
+              <Header size='small'>
+                Latest Reply
               </Header>
             </Grid.Column>
           </Grid.Row>

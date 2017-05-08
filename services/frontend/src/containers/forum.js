@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { goToTop } from 'react-scrollable-anchor'
 
-import { Dimmer, Header, Label, Loader } from 'semantic-ui-react'
+import { Button, Dimmer, Header, Label, Loader, Segment } from 'semantic-ui-react'
 
 import * as GLOBAL from '../global';
 import * as breadcrumbActions from '../actions/breadcrumbActions'
@@ -104,20 +104,32 @@ class Forum extends React.Component {
         let rows = topics.map((topic, idx) => <ForumPost topic={topic} key={idx} />)
         display = (
           <div>
-            <Paginator
-              page={page}
-              perPage={perPage}
-              total={posts}
-              callback={this.changePage}
-              />
+            <Segment basic clearing>
+              <Button floated='left' color='green' size='large' onClick={this.showNewPost}>
+                <i className='pencil icon'></i>
+                Create new post
+              </Button>
+              <Paginator
+                page={page}
+                perPage={perPage}
+                total={posts}
+                callback={this.changePage}
+                />
+            </Segment>
             <ForumHeader />
             {rows}
-            <Paginator
-              page={page}
-              perPage={perPage}
-              total={posts}
-              callback={this.changePage}
-              />
+            <Segment basic clearing>
+              <Button floated='left' color='green' size='large' onClick={this.showNewPost}>
+                <i className='pencil icon'></i>
+                Create new post
+              </Button>
+              <Paginator
+                page={page}
+                perPage={perPage}
+                total={posts}
+                callback={this.changePage}
+                />
+            </Segment>
           </div>
         )
       } else {
@@ -157,7 +169,6 @@ class Forum extends React.Component {
       <div>
         <ForumTitle
           forum={forum}
-          showNewPost={this.showNewPost}
           { ... this.props } />
         {display}
       </div>
