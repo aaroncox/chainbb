@@ -92,14 +92,16 @@ class Forums extends React.Component {
             if(author) {
               latest_post = <Header size='tiny'>
                               <img alt='{author}' src={`https://img.steemconnect.com/@${author}?size=35`} className="ui rounded floated left mini image" style={{minHeight: '35px', minWidth: '35px'}}/>
-                              <Link to={`${url}`}>
+                              <Link to={`${url.split("#")[0]}`}>
                                 {title}
                               </Link>
                               <Header.Subheader>
                                 {'↳ '}
-                                <UserLink username={author} />
+                                <Link to={`${url}`}>
+                                  <TimeAgo date={`${created}Z`} />
+                                </Link>
                                 {' • '}
-                                <TimeAgo date={`${created}Z`} />
+                                <UserLink username={author} />
                               </Header.Subheader>
                             </Header>
             }
@@ -111,11 +113,6 @@ class Forums extends React.Component {
                     <Header size='medium'>
                       <ForumLink forum={forum}/>
                       <Header.Subheader style={{marginTop: '0.1rem'}}>
-                        {
-                          (forum.description)
-                            ? <p>{forum.description}</p>
-                            : ''
-                        }
                         {'↳ '}
                         <Popup
                           trigger={<a>{forum.tags.length} Tags</a>}
@@ -128,18 +125,25 @@ class Forums extends React.Component {
                             </Link>
                           </span>)}
                         />
-                        {' • '}
-                        <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.posts : '?'}</NumericLabel>
-                        {' '}
-                        posts
-                        {' • '}
-                        <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.replies : '?'}</NumericLabel>
-                        {' '}
-                        replies
+                        {
+                          (forum.description)
+                            ? <p>{forum.description}</p>
+                            : ''
+                        }
                       </Header.Subheader>
                     </Header>
                   </Grid.Column>
-                  <Grid.Column width={9}>
+                  <Grid.Column width={2} textAlign='center'>
+                    <Header size='small'>
+                      <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.posts : '?'}</NumericLabel>
+                    </Header>
+                  </Grid.Column>
+                  <Grid.Column width={2} textAlign='center'>
+                    <Header size='small'>
+                      <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.replies : '?'}</NumericLabel>
+                    </Header>
+                  </Grid.Column>
+                  <Grid.Column width={5}>
                     {latest_post}
                   </Grid.Column>
                 </Grid.Row>
@@ -155,8 +159,18 @@ class Forums extends React.Component {
                               {group}
                             </Header>
                           </Grid.Column>
-                          <Grid.Column width={9}>
-                            <Header size='small'>
+                          <Grid.Column width={2} textAlign='center'>
+                            <Header size='tiny'>
+                              Posts
+                            </Header>
+                          </Grid.Column>
+                          <Grid.Column width={2}>
+                            <Header size='tiny' textAlign='center'>
+                              Replies
+                            </Header>
+                          </Grid.Column>
+                          <Grid.Column width={5}>
+                            <Header size='tiny'>
                               Recently Active
                             </Header>
                           </Grid.Column>
