@@ -103,7 +103,7 @@ class Thread extends React.Component {
         pages = Math.ceil(responses.length / perPage)
     let comments_nav = (
       <Grid id='comments-top'>
-        <Grid.Row stretched>
+        <Grid.Row verticalAlign='middle'>
           <Grid.Column only='tablet computer' width={4}>
             <Header textAlign='right' size='huge' style={{padding: '0.9em 0'}}>
               Comments ({responses.length})

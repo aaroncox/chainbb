@@ -1,7 +1,7 @@
 import React from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { Divider, Icon, Menu, Segment } from 'semantic-ui-react'
+import { Divider, Header, Icon, Menu, Segment } from 'semantic-ui-react'
 import * as accountActions from '../actions/accountActions'
 import { Link } from 'react-router-dom'
 import Login from '../components/elements/login'
@@ -15,20 +15,18 @@ class Sidebar extends React.Component {
   render() {
     const forums = this.props.forums;
     let requestForum = (
-          <div>
-            <Segment secondary attached='top'>
-              <h3>
-                Have an idea for a forum?
-              </h3>
-            </Segment>
-            <Segment attached>
-              <p>Leave a response on the <Link to='/forum/chainbb'>chainBB forum</Link> with what you would like to see!</p>
-            </Segment>
-          </div>
+          <Segment basic textAlign='center'>
+            <Header size='small'>
+              Have an idea for a forum?
+            </Header>
+            <p>
+              Make a post on the <Link to='/forum/chainbb'>chainBB forum</Link> with what you would like to see or any ideas you may have.
+            </p>
+          </Segment>
         )
         ,
         categories = (
-          <Menu vertical fluid size='small'>
+          <Menu vertical fluid color='blue' size='small'>
             <Link className={`item ${(!forums || !forums.group) ? 'active' : ''}`} to='/'>
               General Forums
             </Link>
@@ -49,7 +47,9 @@ class Sidebar extends React.Component {
     return (
       <div>
         <Login {... this.props}/>
-        <Divider hidden />
+        <Divider horizontal>
+          Forum Groups
+        </Divider>
         {categories}
         <Divider hidden />
         {requestForum}

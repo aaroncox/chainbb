@@ -108,7 +108,7 @@ class Forums extends React.Component {
             // (this.state.forums[index-1]) && this.state.forums[index-1].group != forum.group
             return <Segment attached key={forum._id}>
               <Grid>
-                <Grid.Row>
+                <Grid.Row verticalAlign='middle'>
                   <Grid.Column width={7}>
                     <Header size='medium'>
                       <ForumLink forum={forum}/>
