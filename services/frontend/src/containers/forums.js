@@ -21,13 +21,15 @@ class Forums extends React.Component {
     constructor(props, state) {
       goToTop()
       super(props);
-      this.state = { forums: [] };
+      this.state = {
+        group: false,
+        forums: []
+      };
       this.getForums = this.getForums.bind(this);
     }
 
     componentDidMount() {
       this.props.actions.setBreadcrumb([])
-      this.getForums()
     }
 
     componentWillMount() {
@@ -44,7 +46,8 @@ class Forums extends React.Component {
         if (response.ok) {
           const result = await response.json();
           this.setState({
-            forums: result.data
+            forums: result.data,
+            group: this.props.forums.group
           });
           this.props.actions.setStatus({'height': result.height});
         } else {
@@ -67,6 +70,10 @@ class Forums extends React.Component {
           display = <Dimmer active inverted style={loader.style}>
                       <Loader size='large' content={loader.content}/>
                     </Dimmer>
+      if(this.props.forums.group !== this.state.group) {
+        this.props.actions.resetPostState()
+        this.getForums()
+      }
       if(loaded) {
         let forums = this.state.forums,
             // Find the unique forum groupings
