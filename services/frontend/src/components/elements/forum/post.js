@@ -4,15 +4,26 @@ import { Grid, Header, Segment } from 'semantic-ui-react'
 import TimeAgo from 'react-timeago'
 import { Link } from 'react-router-dom'
 import UserLink from '../../../utils/link/user'
+import Paginator from './post/paginator'
 
 export default class ForumHeader extends React.Component {
   render() {
     let {topic} = this.props,
+        paginator = false,
         last_reply = (
           <Grid.Column width={4}>
             No Replies
           </Grid.Column>
         )
+    if(topic.children > 10) {
+      paginator = (
+        <Paginator
+          perPage={10}
+          total={topic.children}
+          url={topic.url}
+        />
+      )
+    }
     if(topic.last_reply) {
       last_reply = (
         <Grid.Column width={4}>
@@ -34,9 +45,10 @@ export default class ForumHeader extends React.Component {
                 </Link>
                 <Header.Subheader>
                   {'↳ '}
-                  <UserLink username={topic.author} />
+                  <TimeAgo date={`${topic.created}Z`} />
                   {' • '}
-                  posted <TimeAgo date={`${topic.created}Z`} />
+                  <UserLink username={topic.author} />
+                  {paginator}
                 </Header.Subheader>
               </Header>
             </Grid.Column>
