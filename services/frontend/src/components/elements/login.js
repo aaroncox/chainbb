@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Divider, List, Segment } from 'semantic-ui-react'
+import { Button, Divider, Icon, List, Segment } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import UserLink from '../../utils/link/user'
 import LoginModal from './login/modal'
@@ -18,7 +18,7 @@ class LogoutButton extends React.Component {
   }
   render() {
     return (
-      <Button color='orange' size='mini' onClick={this.logout}>Sign-out</Button>
+      <Button color='orange' inverted floated='right' size='mini' onClick={this.logout}>Sign-out</Button>
     )
   }
 }
@@ -52,46 +52,13 @@ const Login = (props) => {
           </h3>
         </Segment>
         <Segment attached>
-          <p>Account details and management can be found off-site using one of the following websites.</p>
-          <List>
-            <List.Item>
-              <List.Icon name='external'/>
-              <List.Content>
-                <List.Header>steemit.com</List.Header>
-                <List bulleted>
-                  <List.Item>
-                    <Link to={`https://steemit.com/@${account.name}`} rel='nofollow' target='_blank'>
-                      Manage Account
-                    </Link>
-                  </List.Item>
-                  <List.Item>
-                    <Link to={`https://steemit.com/@${account.name}/settings`} rel='nofollow' target='_blank'>
-                      Edit Profile
-                    </Link>
-                  </List.Item>
-                  <List.Item>
-                    <Link to={`https://steemit.com/@${account.name}/transfers`} rel='nofollow' target='_blank'>
-                      Wallet
-                    </Link>
-                  </List.Item>
-                </List>
-              </List.Content>
-            </List.Item>
-            <List.Item>
-              <List.Icon name='external'/>
-              <List.Content>
-                <List.Header>steemdb.com</List.Header>
-                <List bulleted>
-                  <List.Item>
-                    <Link to={`https://steemdb.com/@${account.name}`} rel='nofollow' target='_blank'>
-                      Recent History
-                    </Link>
-                  </List.Item>
-                </List>
-              </List.Content>
-            </List.Item>
-          </List>
+          <p>Currently, account details and management can be found on steemit.com using the button below.</p>
           <Divider></Divider>
+          <Link to={`https://steemit.com/@${account.name}`} rel='nofollow' target='_blank' className='ui primary icon mini button'>
+            <Icon name='external'></Icon>
+            {' '}
+            Manage Account
+          </Link>
           <LogoutButton {... props} />
         </Segment>
       </div>
