@@ -16,34 +16,26 @@ class BreadcrumbMenu extends Component {
       trail = Array.from(trail.reduce((m, t) => m.set(t.link, t), new Map()).values());
     }
     return (
-      <Grid>
-        <Grid.Row>
-          <Grid.Column width={16}>
-            <Container>
-              <Segment basic>
-                <Grid>
-                  <Grid.Row verticalAlign='middle'>
-                    <Grid.Column width={12}>
-                      <Breadcrumb>
-                        {trail.map((crumb, i) => <span key={i}>
-                          {!!i && <Breadcrumb.Divider style={{margin: '0 0.3rem'}}></Breadcrumb.Divider>}
-                          <Link to={crumb.link} className='section'>
-                            {!i && <Icon name='home' color='blue' />}
-                            {crumb.name}
-                          </Link>
-                        </span>)}
-                      </Breadcrumb>
-                    </Grid.Column>
-                    <Grid.Column width={4}>
-                      <SearchBox />
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
-              </Segment>
-            </Container>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+      <Container>
+        <Grid>
+          <Grid.Row verticalAlign='middle'>
+            <Grid.Column width={12}>
+              <Breadcrumb>
+                {trail.map((crumb, i) => <span key={i}>
+                  {!!i && <Breadcrumb.Divider style={{margin: '0 0.3rem'}}></Breadcrumb.Divider>}
+                  <Link to={crumb.link} className='section'>
+                    {!i && <Icon name='home' color='blue' />}
+                    {crumb.name}
+                  </Link>
+                </span>)}
+              </Breadcrumb>
+            </Grid.Column>
+            <Grid.Column width={4}>
+              <SearchBox />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </Container>
     )
   }
 }

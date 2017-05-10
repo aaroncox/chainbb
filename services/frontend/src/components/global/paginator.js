@@ -20,7 +20,7 @@ export default class Paginator extends Component {
         onShowSizeChange={this.onShowSizeChange}
         onChange={this.changePage}
         total={total}
-        style={{ float: 'right' }}
+        style={{ float: 'right', margin: 0 }}
       />
     )
   }

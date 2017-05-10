@@ -99,7 +99,7 @@ class Forum extends React.Component {
         newPostButton = (
           <Popup
             trigger={
-              <Button floated='left' size='large'>
+              <Button floated='left' size='tiny'>
                 <i className='pencil icon'></i>
                 Create new post
               </Button>
@@ -117,7 +117,7 @@ class Forum extends React.Component {
         )
     if(isUser) {
       newPostButton = (
-        <Button floated='left' color='green' size='large' onClick={this.showNewPost}>
+        <Button floated='left' color='green' size='tiny' onClick={this.showNewPost}>
           <i className='pencil icon'></i>
           Create new post
         </Button>

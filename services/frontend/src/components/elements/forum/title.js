@@ -40,18 +40,16 @@ export default class ForumTitle extends React.Component {
       )
     }
     return (
-      <div>
-        <Segment basic>
-          <Header size='huge'>
-            {forum.name}
-            <Header.Subheader>
-              {forum.description}
-            </Header.Subheader>
-          </Header>
-          {tags_header}
-          {accounts_header}
-        </Segment>
-      </div>
+      <Segment basic>
+        <Header size='huge'>
+          {forum.name}
+          <Header.Subheader>
+            {forum.description}
+          </Header.Subheader>
+        </Header>
+        {tags_header}
+        {accounts_header}
+      </Segment>
     )
   }
 }
