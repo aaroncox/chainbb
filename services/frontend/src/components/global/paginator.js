@@ -12,11 +12,12 @@ export default class Paginator extends Component {
 
   render() {
     let { page, perPage, total } = this.props
+    console.log(page);
     return (
       <Pagination
         showLessItems
         defaultPageSize={perPage}
-        defaultCurrent={page}
+        current={page}
         onShowSizeChange={this.onShowSizeChange}
         onChange={this.changePage}
         total={total}
