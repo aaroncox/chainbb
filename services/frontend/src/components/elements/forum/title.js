@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import { Button, Header, List, Segment } from 'semantic-ui-react'
+import { Header, List, Segment } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 
 export default class ForumTitle extends React.Component {

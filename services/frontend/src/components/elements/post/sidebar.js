@@ -1,22 +1,12 @@
 import React from 'react';
 
-import { Divider, Dropdown, Header, Icon, Menu, Popup, Segment, Table } from 'semantic-ui-react'
+import { Divider, Dropdown, Header, Icon, Menu, Segment, Table } from 'semantic-ui-react'
 import UserLink from '../../../utils/link/user'
 
 export default class PostSidebar extends React.Component {
   render() {
     let display = null,
-        post = this.props.post.content,
-        payout = post.pending_payout_value
-    if(post.max_accepted_payout === 0) {
-      payout = (
-        <Popup
-          trigger={<del>~${post.pending_payout_value}</del>}
-          position='right center'
-          content='This user has choosen to decline a payout on this post.'
-        />
-      )
-    }
+        post = this.props.post.content
     if(!this.props.op || (this.props.op && this.props.page === 1)) {
       display = (
         <div>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Divider, Icon, List, Segment } from 'semantic-ui-react'
+import { Button, Divider, Icon, Segment } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import UserLink from '../../utils/link/user'
 import LoginModal from './login/modal'

@@ -1,6 +1,5 @@
 import React from 'react'
 import { Button, Form, Header, Icon, Message, Modal } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
 import steem from 'steem'
 
 export default class LoginModal extends React.Component {

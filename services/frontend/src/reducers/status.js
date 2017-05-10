@@ -1,5 +1,4 @@
 import * as types from '../actions/actionTypes';
-import store from 'store'
 
 const initialStatus = {
   height: false

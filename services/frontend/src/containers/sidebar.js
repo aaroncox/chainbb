@@ -1,7 +1,7 @@
 import React from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { Divider, Header, Icon, Menu, Segment } from 'semantic-ui-react'
+import { Divider, Header, Menu, Segment } from 'semantic-ui-react'
 import * as accountActions from '../actions/accountActions'
 import { Link } from 'react-router-dom'
 import Login from '../components/elements/login'

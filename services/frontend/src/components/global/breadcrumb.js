@@ -9,19 +9,10 @@ class BreadcrumbMenu extends Component {
 
   render() {
     let trail = this.props.breadcrumb.trail,
-        post = this.props.post,
-        power = (this.props.account && this.props.account.data) ? this.props.account.data.voting_power : false,
-        effectiveness = false
+        post = this.props.post
     if(post && post.breadcrumb) {
       trail = trail.concat(post.breadcrumb)
       trail = Array.from(trail.reduce((m, t) => m.set(t.link, t), new Map()).values());
-    }
-    if(power) {
-      // effectiveness = (
-      //   <Progress progress='percent' percent={power/100} size='small'>
-      //     Voting Effectiveness
-      //   </Progress>
-      // )
     }
     return (
       <Grid>

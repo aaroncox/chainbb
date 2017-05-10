@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 
 import { Container, Menu } from 'semantic-ui-react'
 
-import * as GLOBAL from '../../global';
 import * as statusActions from '../../actions/statusActions'
 
 class HeaderMenu extends Component {

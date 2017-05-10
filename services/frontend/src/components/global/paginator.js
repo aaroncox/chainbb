@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { Grid, Menu, Segment } from 'semantic-ui-react'
+import { Menu } from 'semantic-ui-react'
 
 export default class Paginator extends Component {
 
