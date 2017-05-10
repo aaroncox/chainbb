@@ -34,7 +34,7 @@ export default class ForumTitle extends React.Component {
       tags_header = (
         <Message
           icon='hashtag'
-          header='Posts in this forum require one of the following tags as the FIRST tag on each post.'
+          header='Posts in this forum require one of the following tags as the FIRST tag.'
           content={tags}
         />
       )
