@@ -11,7 +11,7 @@ class HeaderMenu extends Component {
   render() {
     const { height } = this.props.status
     return (
-      <Menu color='blue' inverted>
+      <Menu color='blue' inverted style={{borderBottom: '3px solid #767676'}}>
         <Container>
           <Link to='/' className='title active item'>
             <strong>chainBB.com</strong>

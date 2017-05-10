@@ -57,6 +57,7 @@ class SearchBox extends React.Component {
         onSearchChange={this.handleSearchChange}
         resultRenderer={resultRenderer}
         results={results}
+        size='mini'
       />
     )
   }

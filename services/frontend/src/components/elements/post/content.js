@@ -74,9 +74,11 @@ export default class PostContent extends React.Component {
         </span>)
       }
       title = (
-        <Segment piled attached='top'>
+        <Segment color='blue' secondary attached={(this.props.op && this.props.page === 1) ? 'top' : false} stacked={(this.props.op && this.props.page !== 1)}>
           <div className='ui huge header'>
-            <h1 style={{margin: 0}}>{post.title}</h1>
+            <h1 style={{margin: 0}}>
+              {post.title}
+            </h1>
             <Header.Subheader>
             {'↳ '}
             tagged
@@ -90,7 +92,7 @@ export default class PostContent extends React.Component {
     if(!this.props.op || (this.props.op && this.props.page === 1)) {
       postContent = (
         <div>
-          <Segment attached className="thread-post">
+          <Segment attached='top' className='thread-post'>
             {quote}
             <MarkdownViewer formId={'viewer'} text={post.body} jsonMetadata={{}} large highQualityPost={true}  />
             <Divider hidden></Divider>

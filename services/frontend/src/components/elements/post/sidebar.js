@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Divider, Dropdown, Header, Icon, Menu, Segment, Table } from 'semantic-ui-react'
 import UserLink from '../../../utils/link/user'
+import TimeAgo from 'react-timeago'
 
 export default class PostSidebar extends React.Component {
   render() {
@@ -61,11 +62,16 @@ export default class PostSidebar extends React.Component {
     } else {
       display = (
         <div>
-          <Segment basic className="thread-author">
+          <Segment clearing basic className="thread-author">
             <Header>
               <img alt={post.author} src={`https://img.steemconnect.com/@${post.author}?size=50`} className="ui left floated rounded bordered image" style={{minHeight: '50px', minWidth: '50px'}}/>
-              thread started by:<br/>
+              <Header.Subheader>
+                thread started by:
+              </Header.Subheader>
               <UserLink username={post.author} />
+              <Header.Subheader>
+                <TimeAgo date={`${post.created}Z`} />
+              </Header.Subheader>
             </Header>
           </Segment>
         </div>

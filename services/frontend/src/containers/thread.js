@@ -113,7 +113,7 @@ class Thread extends React.Component {
       <Grid id={(page ? `comments-page-${page}` : '')}>
         <Grid.Row verticalAlign='middle'>
           <Grid.Column only='tablet computer' width={4}>
-            <Header textAlign='right' size='huge' style={{padding: '0.9em 0'}}>
+            <Header textAlign='center' size='huge' style={{padding: '0.9em 0'}}>
               Comments ({responses.length})
               <Header.Subheader>
                 Page {page} of {pages}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Breadcrumb, Container, Grid, Segment } from 'semantic-ui-react'
+import { Breadcrumb, Container, Grid, Icon, Segment } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
@@ -20,14 +20,17 @@ class BreadcrumbMenu extends Component {
         <Grid.Row>
           <Grid.Column width={16}>
             <Container>
-              <Segment attached>
+              <Segment basic>
                 <Grid>
-                  <Grid.Row>
+                  <Grid.Row verticalAlign='middle'>
                     <Grid.Column width={12}>
                       <Breadcrumb>
                         {trail.map((crumb, i) => <span key={i}>
-                          {!!i && <Breadcrumb.Divider></Breadcrumb.Divider>}
-                          <Link to={crumb.link} className='section'>{crumb.name}</Link>
+                          {!!i && <Breadcrumb.Divider style={{margin: '0 0.3rem'}}></Breadcrumb.Divider>}
+                          <Link to={crumb.link} className='section'>
+                            {!i && <Icon name='home' color='blue' />}
+                            {crumb.name}
+                          </Link>
                         </span>)}
                       </Breadcrumb>
                     </Grid.Column>
