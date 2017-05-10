@@ -38,7 +38,7 @@ class Forums extends React.Component {
 
     async getForums() {
       try {
-        const uri = GLOBAL.REST_API;
+        let uri = GLOBAL.REST_API;
         if(this.props.forums && this.props.forums.group) {
           uri = uri + '/' + this.props.forums.group;
         }
@@ -86,10 +86,10 @@ class Forums extends React.Component {
           let groupings = forums.filter(function(forum) {
             return forum['group'] === group
           }).map((forum, index) => {
-            let author = (forum.last_reply && forum.last_reply.created === forum.updated) ? forum.last_reply['author'] : ((forum.last_post) ? forum.last_post['author'] : null),
-                url = (forum.last_reply && forum.last_reply.created === forum.updated) ? forum.last_reply['url'] : ((forum.last_post) ? forum.last_post['url'] : null),
-                created = (forum.last_reply && forum.last_reply.created === forum.updated) ? forum.last_reply['created'] : ((forum.last_post) ? forum.last_post['created'] : null),
-                title = (forum.last_reply && forum.last_reply.created === forum.updated) ? forum.last_reply['title'] : ((forum.last_post) ? forum.last_post['title'].substring(0, 100) : null),
+            let lastPost = (forum.last_post) ? (new Date(forum.last_post['created']).getTime()) : 0,
+                lastReply = (forum.last_reply) ? (new Date(forum.last_reply['created']).getTime()) : 0,
+                newest = (lastPost > lastReply) ? 'last_post' : 'last_reply',
+                { author, url, created, title } = (typeof forum[newest] === 'object') ? forum[newest] : {},
                 latest_post = null,
                 numberFormat = {
                   shortFormat: true,
