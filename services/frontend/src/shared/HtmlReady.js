@@ -182,7 +182,7 @@ function linkify(content, mutate, hashtags, usertags, images, links) {
         const tagLower = tag2.toLowerCase()
         if(hashtags) hashtags.add(tagLower)
         if(!mutate) return tag
-        return space + `<a href="/trending/${tagLower}">${tag}</a>`
+        return space + `<a href="/topics/${tagLower}">${tag}</a>`
     })
 
     // usertag (mention)
