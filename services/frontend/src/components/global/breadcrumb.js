@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import * as breadcrumbActions from '../../actions/breadcrumbActions'
+import SearchBox from '../../containers/search'
 
 class BreadcrumbMenu extends Component {
 
@@ -31,7 +32,7 @@ class BreadcrumbMenu extends Component {
                       </Breadcrumb>
                     </Grid.Column>
                     <Grid.Column width={4}>
-                      {effectiveness}
+                      <SearchBox />
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>

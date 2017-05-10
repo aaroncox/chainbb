@@ -21,5 +21,9 @@ export const POST_LOAD_RESPONSES_RESOLVED = 'POST_LOAD_RESPONSES_RESOLVED'
 // Preferences
 export const SET_PREFERENCE = 'SET_PREFERENCE'
 
+// search
+export const SEARCH = 'SEARCH'
+export const SEARCH_RESOLVED = 'SEARCH_RESOLVED'
+
 // status
 export const SET_STATUS = 'SET_STATUS'

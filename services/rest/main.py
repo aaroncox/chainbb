@@ -100,6 +100,36 @@ def tags():
     results = db.topics.find(query).sort(sort)
     return response(list(results))
 
+@app.route("/search")
+def search():
+    pipeline = [
+      {
+        '$match': {
+          '$text': {
+            '$search': request.args.get('q')
+          }
+        }
+      },
+      {
+        '$sort': {
+          'score': {
+            '$meta': "textScore"
+          }
+        }
+      },
+      {
+        '$project': {
+          'title': '$title',
+          'description': '$url'
+        }
+      },
+      {
+        '$limit': 5
+      }
+    ]
+    results = db.posts.aggregate(pipeline)
+    return response(list(results))
+
 @app.route('/forum/<slug>')
 def forum(slug):
     # Load the specified forum
