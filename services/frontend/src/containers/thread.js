@@ -17,6 +17,10 @@ import Paginator from '../components/global/paginator'
 class Thread extends React.Component {
 
   componentWillMount() {
+    this.fetchPost()
+  }
+
+  fetchPost() {
     this.props.actions.resetPostState()
     this.props.actions.fetchPost(this.props.match.params)
     this.props.actions.fetchPostResponses(this.props.match.params)
@@ -75,6 +79,9 @@ class Thread extends React.Component {
       this.setState({
         scrollToWhenReady: false
       })
+    }
+    if(this.props.match.url !== this.props.post.content.url) {
+      this.fetchPost();
     }
   }
 
