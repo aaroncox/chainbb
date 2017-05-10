@@ -110,7 +110,7 @@ class Thread extends React.Component {
         responses = (this.props.post) ? this.props.post.responses : 0,
         pages = Math.ceil(responses.length / perPage)
     let comments_nav = (
-      <Grid id='comments-top'>
+      <Grid id={(page ? `comments-page-${page}` : '')}>
         <Grid.Row verticalAlign='middle'>
           <Grid.Column only='tablet computer' width={4}>
             <Header textAlign='right' size='huge' style={{padding: '0.9em 0'}}>
@@ -120,7 +120,7 @@ class Thread extends React.Component {
               </Header.Subheader>
             </Header>
           </Grid.Column>
-          <Grid.Column mobile={16} tablet={12} computer={12} id={`comments-page-${page}`}>
+          <Grid.Column mobile={16} tablet={12} computer={12}>
             <Paginator
               page={page}
               perPage={perPage}
