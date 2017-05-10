@@ -188,7 +188,7 @@ export default class PostForm extends React.Component {
             <Grid.Column width={8}>
               <Form.Field>
                 <label>Active Tags</label>
-                {tags.map((tag, i) => <Label horizontal basic size='large' onRemove={this.removeTag} content={tag} key={tag} />)}
+                {tags.map((tag, i) => <Label horizontal size='large' color='green' onRemove={this.removeTag} content={tag} key={tag} />)}
               </Form.Field>
             </Grid.Column>
           </Grid.Row>
