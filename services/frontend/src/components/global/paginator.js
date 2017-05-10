@@ -12,7 +12,6 @@ export default class Paginator extends Component {
 
   render() {
     let { page, perPage, total } = this.props
-    console.log(page);
     return (
       <Pagination
         showLessItems
