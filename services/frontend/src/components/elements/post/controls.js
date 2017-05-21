@@ -2,7 +2,9 @@ import React from 'react';
 
 import { Label, Popup, Segment } from 'semantic-ui-react'
 
-import VoteButton from './button/vote.js'
+import VoteButton from './button/vote'
+import VoterAvatars from '../vote/avatars.js'
+import VoterList from '../vote/list.js'
 
 export default class PostControls extends React.Component {
 
@@ -19,33 +21,19 @@ export default class PostControls extends React.Component {
         accounts = Object.keys(votes).filter((k) => votes[k] !== 0).sort((a,b) => votes[b]-votes[a]),
         extra = accounts.length - 10,
         processing = data.processing,
-        voters = accounts.slice(0,10).map((account, i) => (
-          <a href={`https://steemit.com/@${account}`} target='_blank' key={i}>
-            <Popup
-              trigger={<img key={i} alt='{account}' src={`https://img.steemconnect.com/@${account}?size=35`} className="ui rounded image" />}
-              position='bottom center'
-              content={`@${account}`}
-            />
-          </a>
-        )),
+        voters = (
+          <VoterAvatars
+            accounts={accounts}
+            votes={votes}
+          />
+        ),
         moreVoters = ''
     if(extra > 0) {
       moreVoters = (
-        <Popup
-          trigger={
-            <Label basic size='large' style={{margin: '0 .25rem .5rem .5rem', minHeight: '35px'}}>
-              +{extra} more
-            </Label>
-          }
-          position='bottom center'
-          hoverable={true}
-          wide='very'
-          content={accounts.slice(9,-1).map((account, i) => <span key={i}>
-            {!!i && ", "}
-            <a href={`https://steemit.com/@${account}`} target='_blank' key={i}>
-              @{account}
-            </a>
-          </span>)}
+        <VoterList
+          count={extra}
+          accounts={accounts}
+          votes={votes}
         />
       )
     }
@@ -63,16 +51,6 @@ export default class PostControls extends React.Component {
           {voters}
         </div>
         {moreVoters}
-        {/*
-        <Button.Group basic floated='right'>
-          <Button icon='expand'></Button>
-        </Button.Group>
-        {' '}
-        <Button.Group basic floated='right' style={{marginRight: '0.5rem'}}>
-          <Button icon='pencil'></Button>
-        </Button.Group>
-        */}
-
       </Segment>
     )
   }
