@@ -5,12 +5,13 @@ import { Link } from 'react-router-dom'
 import { goToTop } from 'react-scrollable-anchor'
 import NumericLabel from '../utils/NumericLabel'
 
-import { Dimmer, Divider, Loader, Grid, Header, Popup, Segment  } from 'semantic-ui-react'
+import { Button, Dimmer, Divider, Loader, Grid, Header, Popup, Segment  } from 'semantic-ui-react'
 
 import * as GLOBAL from '../global';
 import * as breadcrumbActions from '../actions/breadcrumbActions'
 import * as postActions from '../actions/postActions'
 import * as statusActions from '../actions/statusActions'
+import * as preferenceActions from '../actions/preferenceActions'
 
 import ForumLink from '../utils/forumlink'
 import UserLink from '../utils/link/user'
@@ -23,6 +24,7 @@ class Forums extends React.Component {
       super(props);
       this.state = {
         group: false,
+        minimized: props.preferences.forums_minimized || [],
         forums: []
       };
       this.getForums = this.getForums.bind(this);
@@ -34,6 +36,19 @@ class Forums extends React.Component {
 
     componentWillMount() {
       this.props.actions.resetPostState()
+    }
+
+    toggleVisibility = (e, props) => {
+      const forum = props.value;
+      let { minimized } = this.state;
+      if(minimized.indexOf(forum) !== -1) {
+        const index = minimized.indexOf(forum);
+        minimized.splice(index, 1);
+      } else {
+        minimized.push(forum);
+      }
+      this.props.actions.setPreference({ 'forums_minimized': minimized });
+      this.setState({ minimized });
     }
 
     async getForums() {
@@ -83,6 +98,7 @@ class Forums extends React.Component {
               return name !== null
             })
         display = groups.map((group) => {
+          const isMinimized = this.state.minimized.indexOf(group) >= 0
           let groupings = forums.filter(function(forum) {
             return forum['group'] === group
           }).map((forum, index) => {
@@ -115,70 +131,86 @@ class Forums extends React.Component {
                             </Header>
             }
             // (this.state.forums[index-1]) && this.state.forums[index-1].group != forum.group
-            return <Segment attached key={forum._id}>
-              <Grid>
-                <Grid.Row verticalAlign='middle'>
-                  <Grid.Column width={7}>
-                    <Header size='medium'>
-                      <ForumLink forum={forum}/>
-                      <Header.Subheader style={{marginTop: '0.1rem'}}>
-                        {'↳ '}
-                        <Popup
-                          trigger={<a>{forum.tags.length} Tags</a>}
-                          position='left center'
-                          hoverable={true}
-                          content={forum.tags.map((tag, i) => <span key={i}>
-                            {!!i && ", "}
-                            <Link to={`/topic/${tag}`}>
-                              #{tag}
-                            </Link>
-                          </span>)}
-                        />
-                        {
-                          (forum.description)
-                            ? <p>{forum.description}</p>
-                            : ''
-                        }
-                      </Header.Subheader>
-                    </Header>
-                  </Grid.Column>
-                  <Grid.Column width={2} textAlign='center'>
-                    <Header size='small'>
-                      <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.posts : '?'}</NumericLabel>
-                    </Header>
-                  </Grid.Column>
-                  <Grid.Column width={2} textAlign='center'>
-                    <Header size='small'>
-                      <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.replies : '?'}</NumericLabel>
-                    </Header>
-                  </Grid.Column>
-                  <Grid.Column width={5}>
-                    {latest_post}
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
-            </Segment>
+            return (
+              <Segment
+                attached key={forum._id}
+                style={{ display: isMinimized ? "none" : "" }}
+                >
+                <Grid>
+                  <Grid.Row
+                    verticalAlign='middle'
+                    >
+                    <Grid.Column width={7}>
+                      <Header size='medium'>
+                        <ForumLink forum={forum}/>
+                        <Header.Subheader style={{marginTop: '0.1rem'}}>
+                          {'↳ '}
+                          <Popup
+                            trigger={<a>{forum.tags.length} Tags</a>}
+                            position='left center'
+                            hoverable={true}
+                            content={forum.tags.map((tag, i) => <span key={i}>
+                              {!!i && ", "}
+                              <Link to={`/topic/${tag}`}>
+                                #{tag}
+                              </Link>
+                            </span>)}
+                          />
+                          {
+                            (forum.description)
+                              ? <p>{forum.description}</p>
+                              : ''
+                          }
+                        </Header.Subheader>
+                      </Header>
+                    </Grid.Column>
+                    <Grid.Column width={2} textAlign='center'>
+                      <Header size='small'>
+                        <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.posts : '?'}</NumericLabel>
+                      </Header>
+                    </Grid.Column>
+                    <Grid.Column width={2} textAlign='center'>
+                      <Header size='small'>
+                        <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.replies : '?'}</NumericLabel>
+                      </Header>
+                    </Grid.Column>
+                    <Grid.Column width={5}>
+                      {latest_post}
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+              </Segment>
+            )
           })
-          return  <div key={group}>
+          return  <div key={group} style={{marginBottom: "10px"}}>
                     <Segment secondary attached>
                       <Grid stackable>
-                        <Grid.Row>
-                          <Grid.Column width={7}>
-                            <Header size='small'>
+                        <Grid.Row verticalAlign="middle">
+                          <Grid.Column width={1}>
+                            <Button
+                              basic
+                              onClick={this.toggleVisibility}
+                              value={group}
+                              icon={isMinimized ? "plus" : "minus"}
+                              size="small"
+                            />
+                          </Grid.Column>
+                          <Grid.Column width={6}>
+                            <Header>
                               {group}
                             </Header>
                           </Grid.Column>
                           <Grid.Column width={2} textAlign='center'>
-                            <Header size='tiny'>
+                            <Header size='tiny' style={{ display: isMinimized ? "none" : "" }}>
                               Posts
                             </Header>
                           </Grid.Column>
                           <Grid.Column width={2}>
-                            <Header size='tiny' textAlign='center'>
+                            <Header size='tiny' textAlign='center' style={{ display: isMinimized ? "none" : "" }}>
                               Replies
                             </Header>
                           </Grid.Column>
-                          <Grid.Column width={5}>
+                          <Grid.Column width={5} style={{ display: isMinimized ? "none" : "" }}>
                             <Header size='tiny'>
                               Recently Active
                             </Header>
@@ -187,7 +219,6 @@ class Forums extends React.Component {
                       </Grid>
                     </Segment>
                     {groupings}
-                    <Divider hidden></Divider>
                   </div>
         })
       }
@@ -208,7 +239,8 @@ function mapDispatchToProps(dispatch) {
   return {actions: bindActionCreators({
     ...breadcrumbActions,
     ...postActions,
-    ...statusActions
+    ...statusActions,
+    ...preferenceActions
   }, dispatch)}
 }
 
