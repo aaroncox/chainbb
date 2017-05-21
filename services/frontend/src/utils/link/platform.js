@@ -7,11 +7,17 @@ export default class PlatformLink extends React.Component {
       if(platform) {
         let [id, version] = platform.split("/")
         switch(id) {
+          case "busy":
+            link = <a rel='nofollow' alt={`${id}/${version}`} href='https://busy.org'>busy/{version}</a>
+            break
           case "chainbb":
-            link = <a rel='nofollow' alt={`${id}/${version}`} href='https://chainbb.com'>chainbb.com</a>
+            link = <a rel='nofollow' alt={`${id}/${version}`} href='https://chainbb.com'>chainbb/{version}</a>
+            break
+          case "esteem":
+            link = <a rel='nofollow' alt={`${id}/${version}`} href='http://esteem.ws'>esteem/{version}</a>
             break
           case "steemit":
-            link = <a rel='nofollow' alt={`${id}/${version}`} href='https://steemit.com'>steemit.com</a>
+            link = <a rel='nofollow' alt={`${id}/${version}`} href='https://steemit.com'>steemit/{version}</a>
             break
           default:
             break
