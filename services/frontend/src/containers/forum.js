@@ -73,7 +73,7 @@ class Forum extends React.Component {
           forum: result.forum,
           topics: result.data
         });
-        this.props.actions.setStatus({'height': result.height});
+        this.props.actions.setStatus({'network': result.network});
         this.props.actions.setBreadcrumb([
           {
             name: result.forum.name,

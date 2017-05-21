@@ -324,6 +324,8 @@ if __name__ == '__main__':
         props = s.get_dynamic_global_properties()
         # Work off head as opposed to irreverisable since data will be overwritten anyways
         block_number = props['head_block_number']
+        # Store the head_block_number so the website can show how far behind it is
+        db.status.update({'_id': 'head_block_number'}, {"$set": {'value': block_number}}, upsert=True)
         # Update our indexes cache
         rebuild_forums_cache();
         # Process new blocks

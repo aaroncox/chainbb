@@ -11,6 +11,7 @@ import TopicLayout from '../components/layouts/topic'
 import BreadcrumbMenu from '../components/global/breadcrumb'
 import FooterMenu from '../components/global/footer'
 import HeaderMenu from '../components/global/menu'
+import GlobalNotice from '../components/global/notice'
 
 import './app.css'
 
@@ -19,6 +20,7 @@ const App = () => (
     <div className="AppContainer">
       <HeaderMenu />
       <BreadcrumbMenu />
+      <GlobalNotice />
       <Container>
         <Route exact path="/" component={IndexLayout} />
         <Route path="/forums/:group" component={IndexLayout} />

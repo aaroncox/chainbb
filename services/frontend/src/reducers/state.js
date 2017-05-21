@@ -1,12 +1,8 @@
 import * as types from '../actions/actionTypes';
 
-const initialStatus = {
-  network: {}
-}
-
-export default function preferences(state = initialStatus, action) {
+export default function state(state = false, action) {
   switch(action.type) {
-    case types.SET_STATUS:
+    case types.STATE_RESOLVED:
       return Object.assign({}, state, action.payload)
     default:
       return state

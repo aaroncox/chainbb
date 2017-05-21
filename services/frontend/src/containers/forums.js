@@ -49,7 +49,7 @@ class Forums extends React.Component {
             forums: result.data,
             group: this.props.forums.group
           });
-          this.props.actions.setStatus({'height': result.height});
+          this.props.actions.setStatus({'network': result.network});
         } else {
           console.error(response.status);
         }

@@ -2,6 +2,7 @@
 export const ACCOUNT_FETCH = 'ACCOUNT_FETCH'
 export const ACCOUNT_SIGNIN = 'ACCOUNT_SIGNIN'
 export const ACCOUNT_SIGNOUT = 'ACCOUNT_SIGNOUT'
+export const ACCOUNT_STATE_RESOLVED = 'ACCOUNT_STATE_RESOLVED'
 
 // Breadcrumb
 export const SET_BREADCRUMB = 'SET_BREADCRUMB'
@@ -24,6 +25,9 @@ export const SET_PREFERENCE = 'SET_PREFERENCE'
 // search
 export const SEARCH = 'SEARCH'
 export const SEARCH_RESOLVED = 'SEARCH_RESOLVED'
+
+// state
+export const STATE_RESOLVED = 'STATE_RESOLVED'
 
 // status
 export const SET_STATUS = 'SET_STATUS'

@@ -67,6 +67,12 @@ export function fetchPost(params) {
           link: `/forum/${result.forum._id}`
         })
       }
+      dispatch({
+        type: types.SET_STATUS,
+        payload: {
+          network: result.network
+        }
+      })
       dispatch(fetchPostResolved(payload))
     } else {
       console.error(response.status);

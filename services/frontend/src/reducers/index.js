@@ -4,16 +4,18 @@ import account from './account'
 import breadcrumb from './breadcrumb'
 import post from './post'
 import preferences from './preferences'
-import status from './status'
 import search from './search'
+import state from './state'
+import status from './status'
 
 const forumReducer = combineReducers({
   account,
   breadcrumb,
   post,
   preferences,
-  status,
-  search
+  search,
+  state,
+  status
 })
 
 export default forumReducer

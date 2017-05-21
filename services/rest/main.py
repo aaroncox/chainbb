@@ -14,10 +14,15 @@ db = mongo.forums
 def response(json, forum=False):
     # Load height
     # NYI - should be cached at for 3 seconds
-    height = db.status.find_one({'_id': 'height'})
+    statuses = db.status.find()
+    status = {}
+    for doc in statuses:
+        status.update({
+          str(doc['_id']): int(doc['value'])
+        })
     response = {
         'status': 'ok',
-        'height': height['value'],
+        'network': status,
         'data': json
     }
     if forum:
