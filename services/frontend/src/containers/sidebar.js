@@ -50,10 +50,6 @@ class Sidebar extends React.Component {
     return (
       <div>
         <Login {... this.props}/>
-        <Divider horizontal>
-          Forum Groups
-        </Divider>
-        {categories}
         <Divider hidden />
         {requestForum}
       </div>
