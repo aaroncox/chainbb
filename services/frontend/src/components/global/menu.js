@@ -9,7 +9,7 @@ import * as statusActions from '../../actions/statusActions'
 
 class HeaderMenu extends Component {
   render() {
-    const { height } = this.props.status
+    const { height } = this.props.status.network
     return (
       <Menu color='blue' inverted style={{borderBottom: '3px solid #767676'}}>
         <Container>
