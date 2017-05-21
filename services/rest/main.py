@@ -69,7 +69,7 @@ def load_replies(query, sort):
 @app.route("/")
 def index():
     query = {
-      "group": {"$in": ["chainbb", "general", "creative", "interests"]}
+      "group": {"$in": ["chainbb", "steem", "requests"]}
     }
     sort = [("group_order",1),("forum_order",1)]
     results = db.forums.find(query).sort(sort)

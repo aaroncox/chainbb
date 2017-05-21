@@ -1,0 +1,112 @@
+python3 reindex.py '{
+  "_id": "chainbb",
+  "name": "chainBB.com Discussion",
+  "group": "chainbb",
+  "group_order": 0,
+  "forum_order": 1,
+  "description": "Discussions, suggestions, and bug reports about chainBB.com",
+  "tags": [
+    "chainbb",
+    "chainbb-support",
+    "chainbb-feedback"
+  ]
+}'
+
+
+python3 reindex.py '{
+  "_id": "steem-announcements",
+  "name": "Official Announcements",
+  "group": "steem",
+  "group_order": 2,
+  "forum_order": 1,
+  "description": "",
+  "tags": [],
+  "accounts": ["steemitblog"]
+}'
+python3 reindex.py '{
+  "_id": "steem-projects",
+  "name": "Community Project Updates",
+  "group": "steem",
+  "group_order": 2,
+  "forum_order": 2,
+  "description": "",
+  "tags": ["steem-project", "chainbb", "esteem", "busy"]
+}'
+python3 reindex.py '{
+  "_id": "steem-general",
+  "name": "Steem Discussion",
+  "group": "steem",
+  "group_order": 2,
+  "forum_order": 3,
+  "description": "",
+  "tags": ["steemit", "steem"]
+}'
+python3 reindex.py '{
+  "_id": "steem-help",
+  "name": "Steem Support",
+  "group": "steem",
+  "group_order": 2,
+  "forum_order": 4,
+  "description": "",
+  "tags": ["steemit-help", "steem-help", "steemit-support", "steem-support"]
+}'
+python3 reindex.py '{
+  "_id": "steem-dev",
+  "name": "Steem Developers",
+  "group": "steem",
+  "group_order": 2,
+  "forum_order": 5,
+  "description": "",
+  "tags": [
+    "steem-dev",
+    "steemdev"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "steem-witnesses",
+  "name": "Witnesses",
+  "group": "steem",
+  "group_order": 2,
+  "forum_order": 6,
+  "description": "",
+  "tags": [
+    "witness-category",
+    "witness-update"
+  ]
+}'
+
+
+
+python3 reindex.py '{
+    "_id": "beer",
+    "name": "Beer Lovers",
+    "group": "requests",
+    "group_order": 9,
+    "forum_order": 1,
+    "description": "",
+    "tags": [
+      "beer","beers"
+    ]
+}'
+python3 reindex.py '{
+  "_id": "cannasteem",
+  "name": "Cannasteem",
+  "group": "requests",
+  "group_order": 9,
+  "forum_order": 2,
+  "description": "",
+  "tags": [
+    "cannabis","marijuana","hemp","pot","weed"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "drones",
+  "name": "Drones",
+  "group": "requests",
+  "group_order": 9,
+  "forum_order": 3,
+  "description": "",
+  "tags": [
+    "drone","drones","quadcopter"
+  ]
+}'
