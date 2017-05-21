@@ -16,14 +16,19 @@ class HeaderMenu extends Component {
           <Link to='/' className='title active item'>
             <strong>chainBB.com</strong>
           </Link>
+          {/*
           <Link to='/' className='title item'>General</Link>
           <Link to='/forums/steem' className='title item'>Steem</Link>
           <Link to='/forums/crypto' className='title item'>Crypto</Link>
-          <Menu.Item position='right'>
-            <a href='https://steemdb.com' target='_blank'>
-              Block Height: {height}
+          */}
+          <Menu.Menu position='right'>
+            <a className='item' href='http://blog.chainbb.com'>
+              Updates
             </a>
-          </Menu.Item>
+            <a className='item' href='https://steemdb.com' target='_blank'>
+              #{height}
+            </a>
+          </Menu.Menu>
         </Container>
       </Menu>
     )
