@@ -1,9 +1,10 @@
 import React from 'react';
 
-import { Button, Dimmer, Divider, Grid, Header, Icon, Label, Loader, Modal, Segment } from 'semantic-ui-react'
+import { Button, Dimmer, Divider, Grid, Header, Icon, Label, Loader, Message, Modal, Segment } from 'semantic-ui-react'
 import { Form, Input } from 'formsy-semantic-ui-react'
 import slug from 'slug'
 import steem from 'steem'
+import { Link } from 'react-router-dom'
 
 export default class PostForm extends React.Component {
 
@@ -101,7 +102,7 @@ export default class PostForm extends React.Component {
             allow_curation_rewards: true,
             allow_votes: true,
             author: account.name,
-            extensions: [[0, { "beneficiaries": [{ "account":"chainbb", "weight":100 }] }]],
+            extensions: [[0, { "beneficiaries": [{ "account":"chainbb", "weight":1500 }] }]],
             max_accepted_payout: "1000000.000 SBD",
             percent_steem_dollars: 10000,
             permlink: permlink
@@ -261,6 +262,16 @@ export default class PostForm extends React.Component {
           />
           {formFieldTags}
           <Divider />
+          <Message
+            header="chainBB.com Beta Forums"
+            content={
+              <div>
+                Notice: These beta forums use the following rewards model: 60% Author, 25% Curators, 15% Platform
+                {' - '}
+                <Link to="/chainbb/@jesta/chainbb-beta-beneficiaries-moving-to-15">read more</Link>.
+              </div>
+            }
+          />
           <Button primary>Submit Post</Button>
           <Button color='orange' onClick={this.handleCancel}>Cancel</Button>
         </Form>
