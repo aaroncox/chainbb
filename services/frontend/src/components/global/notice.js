@@ -15,7 +15,7 @@ class GlobalNotice extends Component {
         <Container style={{margin: '0.5em 0 1em'}}>
           <Message warning>
             <Icon name='warning' />
-            chainBB is currently behind on syncronization due to network issues by <strong>{head_block_number - height} blocks</strong>. Posts may take longer to appear than usual, but will show up.
+            chainBB is currently <strong>{head_block_number - height} blocks</strong> behind on syncronization due to networking issues. This may cause a delay in your actions displaying on chainBB.com.
           </Message>
         </Container>
       )
