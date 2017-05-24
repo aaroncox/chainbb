@@ -64,6 +64,7 @@ class Forum extends React.Component {
       topics: false,
       showNewPost: false
     })
+    if (!page) page = 1;
     try {
       const { forumid } = this.props
       const response = await fetch(`${ GLOBAL.REST_API }/forum/${ forumid }?page=${ page }`)
