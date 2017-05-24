@@ -18,8 +18,7 @@ export default class PostContent extends React.Component {
   }
 
   handleNewPost = (id) => {
-    this.handleResponding()
-    this.props.scrollToPost(id)
+    this.handleResponding();
   }
 
   render() {
