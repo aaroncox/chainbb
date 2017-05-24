@@ -104,16 +104,17 @@ class Forums extends React.Component {
         activeusers = (
           <Segment>
             <Header size='large'>
-              Active Users
+              Active Users (Posting)
               <Header.Subheader>
-                Over the last 24 hours,
                 {' '}<strong>{users.stats.chainbb}</strong>{' '}
-                users have been active on chainBB, with
+                users have posted on chainBB, with
                 {' '}<strong>{users.stats.total}</strong>{' '}
-                users active on the Steem network.
+                users total posting on the Steem network in the last 24 hours.
               </Header.Subheader>
             </Header>
-            <Divider />
+            <Divider horizontal>
+              Recent chainBB users
+            </Divider>
             {users.list.map((user, i) => <span key={i}>
               {!!i && ", "}
               <UserLink username={user['_id']} />
