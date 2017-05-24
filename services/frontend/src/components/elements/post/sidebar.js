@@ -41,22 +41,6 @@ export default class PostSidebar extends React.Component {
               </Dropdown.Menu>
             </Dropdown>
           </Menu>
-          <Segment basic>
-            <Table definition size='small'>
-              <Table.Body>
-                <Table.Row>
-                  <Table.Cell>Replies</Table.Cell>
-                  <Table.Cell>{post.children}</Table.Cell>
-                </Table.Row>
-                <Table.Row>
-                  <Table.Cell>Votes</Table.Cell>
-                  <Table.Cell>
-                    {post.net_votes}
-                  </Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            </Table>
-          </Segment>
         </div>
       )
     } else {
