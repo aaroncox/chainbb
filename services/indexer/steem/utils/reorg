@@ -4,7 +4,7 @@ python3 reindex.py '{
   "group": "chainbb",
   "group_order": 0,
   "forum_order": 1,
-  "description": "Discussions, suggestions, and bug reports about chainBB.com",
+  "description": "Discussions, suggestions, and bug reports",
   "tags": [
     "chainbb",
     "chainbb-support",
@@ -19,7 +19,7 @@ python3 reindex.py '{
   "group": "steem",
   "group_order": 2,
   "forum_order": 1,
-  "description": "",
+  "description": "Announcements from the official Steem team",
   "tags": [],
   "accounts": ["steemitblog"]
 }'
@@ -29,7 +29,7 @@ python3 reindex.py '{
   "group": "steem",
   "group_order": 2,
   "forum_order": 2,
-  "description": "",
+  "description": "Updates for community projects and efforts",
   "tags": ["steem-project", "chainbb", "esteem", "busy"]
 }'
 python3 reindex.py '{
@@ -38,7 +38,7 @@ python3 reindex.py '{
   "group": "steem",
   "group_order": 2,
   "forum_order": 3,
-  "description": "",
+  "description": "General discussions about Steem",
   "tags": ["steemit", "steem"]
 }'
 python3 reindex.py '{
@@ -47,7 +47,7 @@ python3 reindex.py '{
   "group": "steem",
   "group_order": 2,
   "forum_order": 4,
-  "description": "",
+  "description": "Help others and get help regarding Steem",
   "tags": ["steemit-help", "steem-help", "steemit-support", "steem-support"]
 }'
 python3 reindex.py '{
@@ -56,7 +56,7 @@ python3 reindex.py '{
   "group": "steem",
   "group_order": 2,
   "forum_order": 5,
-  "description": "",
+  "description": "Developer chat, guides and project chatter.",
   "tags": [
     "steem-dev",
     "steemdev"
@@ -68,7 +68,7 @@ python3 reindex.py '{
   "group": "steem",
   "group_order": 2,
   "forum_order": 6,
-  "description": "",
+  "description": "Steem witness updates",
   "tags": [
     "witness-category",
     "witness-update"
