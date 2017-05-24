@@ -106,7 +106,11 @@ class Forums extends React.Component {
             <Header size='large'>
               Active Users
               <Header.Subheader>
-                Over the last 24 hours, {users.stats.chainbb} users have been active on chainBB, with {users.stats.total} users active on the Steem network.
+                Over the last 24 hours,
+                {' '}<strong>{users.stats.chainbb}</strong>{' '}
+                users have been active on chainBB, with
+                {' '}<strong>{users.stats.total}</strong>{' '}
+                users active on the Steem network.
               </Header.Subheader>
             </Header>
             <Divider />
