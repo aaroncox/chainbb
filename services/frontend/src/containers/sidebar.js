@@ -13,7 +13,7 @@ class Sidebar extends React.Component {
     }
   }
   render() {
-    const forums = this.props.forums;
+    // const forums = this.props.forums;
     let requestForum = (
           <Segment basic textAlign='center'>
             <Header size='small'>
@@ -24,28 +24,28 @@ class Sidebar extends React.Component {
             </p>
           </Segment>
         )
-        ,
-        categories = (
-          <Menu vertical fluid color='blue' size='small'>
-            <Link className={`item ${(!forums || !forums.group) ? 'active' : ''}`} to='/'>
-              General Forums
-            </Link>
-            <Link className={`item ${(forums && forums.group === 'steem') ? 'active' : ''}`} to='/forums/steem'>
-              Steem Forums
-            </Link>
-            <Link className={`item ${(forums && forums.group === 'crypto') ? 'active' : ''}`} to='/forums/crypto'>
-              Crypto Forums
-            </Link>
-            {/*
-            <Menu.Item disabled>My Feed</Menu.Item>
-            <Menu.Item disabled>Communities</Menu.Item>
-            <Menu.Item disabled>Trending</Menu.Item>
-            <Menu.Item disabled>New Posts</Menu.Item>
-            <Menu.Item disabled>Promoted</Menu.Item>
-            <Menu.Item disabled>Tags</Menu.Item>
-            */}
-          </Menu>
-        )
+        // ,
+        // categories = (
+        //   <Menu vertical fluid color='blue' size='small'>
+        //     <Link className={`item ${(!forums || !forums.group) ? 'active' : ''}`} to='/'>
+        //       General Forums
+        //     </Link>
+        //     <Link className={`item ${(forums && forums.group === 'steem') ? 'active' : ''}`} to='/forums/steem'>
+        //       Steem Forums
+        //     </Link>
+        //     <Link className={`item ${(forums && forums.group === 'crypto') ? 'active' : ''}`} to='/forums/crypto'>
+        //       Crypto Forums
+        //     </Link>
+        //     {/*
+        //     <Menu.Item disabled>My Feed</Menu.Item>
+        //     <Menu.Item disabled>Communities</Menu.Item>
+        //     <Menu.Item disabled>Trending</Menu.Item>
+        //     <Menu.Item disabled>New Posts</Menu.Item>
+        //     <Menu.Item disabled>Promoted</Menu.Item>
+        //     <Menu.Item disabled>Tags</Menu.Item>
+        //     */}
+        //   </Menu>
+        // )
 
     return (
       <div>
