@@ -15,6 +15,7 @@ import * as preferenceActions from '../actions/preferenceActions'
 
 import ForumLink from '../utils/forumlink'
 import UserLink from '../utils/link/user'
+import UserAvatar from '../components/elements/account/card'
 import TimeAgo from 'react-timeago'
 
 class Forums extends React.Component {
@@ -116,8 +117,14 @@ class Forums extends React.Component {
             }
             if(author) {
               latest_post = <Header size='tiny'>
-                              <img alt='{author}' src={`https://img.steemconnect.com/@${author}?size=35`} className="ui rounded floated left mini image" style={{minHeight: '35px', minWidth: '35px'}}/>
-                              <Link to={`${url.split("#")[0]}`}>
+                              <UserAvatar username={author} />
+                              <Link
+                                to={`${url.split("#")[0]}`}
+                                style={{
+                                  display: 'block',
+                                  maxHeight: '35px',
+                                  overflow: 'hidden'
+                                }}>
                                 {title}
                               </Link>
                               <Header.Subheader>
