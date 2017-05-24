@@ -11,7 +11,8 @@ import * as postActions from '../../actions/postActions'
 import * as preferenceActions from '../../actions/preferenceActions'
 
 import MarkdownViewer from '../../utils/MarkdownViewer';
-import PostContent from './post/content.js'
+import PostContent from './post/content'
+import Response404 from './response/404'
 import UserLink from '../../utils/link/user'
 
 class Response extends React.Component {
@@ -35,34 +36,7 @@ class Response extends React.Component {
         ),
         count = (this.props.post && this.props.post.responses) ? this.props.post.responses.length : false
     if(count === 0) {
-      display = (
-        <Grid.Row>
-          <Grid.Column width={16}>
-            <Segment basic padded textAlign='center'>
-              <Header size='huge'>
-                No Responses yet!
-                <Header.Subheader>
-                  Be the first to leave a reply
-                </Header.Subheader>
-              </Header>
-              <Popup
-                trigger={
-                  <div>
-                    <Button primary size='large'>
-                      <i className='pencil icon'></i>
-                      Leave a Reply
-                    </Button>
-                  </div>
-                }
-                title='Not yet implemented'
-                content='This is a placeholder - and will work in a later build!'
-                position='left center'
-                basic
-                />
-            </Segment>
-          </Grid.Column>
-        </Grid.Row>
-      )
+      display = <Response404 {...this.props} />
     }
     if(count && count > 0) {
       let start = (this.props.page - 1) * this.props.perPage,
