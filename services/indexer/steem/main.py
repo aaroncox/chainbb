@@ -277,9 +277,9 @@ def process_post(op, block, blockid):
       }, {
         '$set': {
           '_id': comment['author'],
-          'app': app,
           'ts': ts
-        }
+        },
+        '$addToSet': {'app': app},
       }, upsert=True)
     # Update the indexes it's contained within
     update_indexes(comment)
