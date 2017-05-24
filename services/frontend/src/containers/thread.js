@@ -157,7 +157,8 @@ class Thread extends React.Component {
 function mapStateToProps(state, ownProps) {
   return {
     post: state.post,
-    preferences: state.preferences
+    preferences: state.preferences,
+    status: state.status
   }
 }
 
