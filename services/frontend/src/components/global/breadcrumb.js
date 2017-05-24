@@ -17,7 +17,7 @@ class BreadcrumbMenu extends Component {
     }
     return (
       <Container>
-        <Grid>
+        <Grid stackable>
           <Grid.Row verticalAlign='middle'>
             <Grid.Column width={12}>
               <Breadcrumb>

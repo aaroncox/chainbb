@@ -1,13 +1,15 @@
 import React from 'react';
 
 import { Link } from 'react-router-dom'
-import { Button, Divider, Header, Popup, Segment } from 'semantic-ui-react'
+import { Button, Divider, Grid, Header, Popup, Segment } from 'semantic-ui-react'
 import MarkdownViewer from '../../../utils/MarkdownViewer';
 import PostControls from './controls'
 import PostForm from './form'
 import PostFormHeader from './form/header'
 import PlatformLink from '../../../utils/link/platform'
 import TimeAgo from 'react-timeago'
+import UserAvatar from '../account/card'
+import UserLink from '../../../utils/link/user'
 
 export default class PostContent extends React.Component {
 
@@ -73,19 +75,23 @@ export default class PostContent extends React.Component {
         </span>)
       }
       title = (
-        <Segment color='blue' secondary attached={(this.props.op && this.props.page === 1) ? 'top' : false} stacked={(this.props.op && this.props.page !== 1)}>
-          <div className='ui huge header'>
-            <h1 style={{margin: 0}}>
-              {post.title}
-            </h1>
-            <Header.Subheader>
-            {'↳ '}
-            tagged
-            {' '}
-            {tags}
-            </Header.Subheader>
-          </div>
-        </Segment>
+        <Grid.Row>
+          <Grid.Column width={16}>
+            <Segment color='blue' secondary stacked={(this.props.op && this.props.page !== 1)}>
+              <div className='ui huge header'>
+                <h1 style={{margin: 0}}>
+                  {post.title}
+                </h1>
+                <Header.Subheader>
+                {'↳ '}
+                tagged
+                {' '}
+                {tags}
+                </Header.Subheader>
+              </div>
+            </Segment>
+          </Grid.Column>
+        </Grid.Row>
       )
     }
     if(!this.props.op || (this.props.op && this.props.page === 1)) {
@@ -116,11 +122,26 @@ export default class PostContent extends React.Component {
       )
     }
     return (
-      <div>
+      <Grid>
         {title}
-        {postContent}
-        {postForm}
-      </div>
+        <Grid.Row only='mobile'>
+          <Grid.Column width={16}>
+            <Header size='small'>
+              <UserAvatar username={post.author} />
+              <Header.Subheader>
+                posted by
+              </Header.Subheader>
+              <UserLink username={post.author} />
+            </Header>
+          </Grid.Column>
+        </Grid.Row>
+        <Grid.Row>
+          <Grid.Column width={16}>
+            {postContent}
+            {postForm}
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
     )
   }
 }

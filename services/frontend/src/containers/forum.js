@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { goToTop } from 'react-scrollable-anchor'
 
-import { Button, Dimmer, Header, Label, Loader, Popup, Segment } from 'semantic-ui-react'
+import { Button, Dimmer, Grid, Header, Label, Loader, Popup, Segment } from 'semantic-ui-react'
 
 import * as GLOBAL from '../global';
 import * as breadcrumbActions from '../actions/breadcrumbActions'
@@ -132,29 +132,32 @@ class Forum extends React.Component {
       posts = (forum.stats) ? forum.stats.posts : 0
       if(topics.length > 0) {
         let rows = topics.map((topic, idx) => <ForumPost topic={topic} key={idx} />)
+        const controls = (
+          <Grid.Row>
+            <Grid.Column width={8} verticalAlign="middle">
+              {newPostButton}
+            </Grid.Column>
+            <Grid.Column width={8} verticalAlign="middle">
+              <Paginator
+                page={page}
+                perPage={perPage}
+                total={posts}
+                callback={this.changePage}
+                />
+            </Grid.Column>
+          </Grid.Row>
+        )
         display = (
-          <div>
-            <Segment basic clearing>
-              {newPostButton}
-              <Paginator
-                page={page}
-                perPage={perPage}
-                total={posts}
-                callback={this.changePage}
-                />
-            </Segment>
-            <ForumHeader />
-            {rows}
-            <Segment basic clearing>
-              {newPostButton}
-              <Paginator
-                page={page}
-                perPage={perPage}
-                total={posts}
-                callback={this.changePage}
-                />
-            </Segment>
-          </div>
+          <Grid>
+            {controls}
+            <Grid.Row>
+              <Grid.Column width={16}>
+                <ForumHeader />
+                {rows}
+              </Grid.Column>
+            </Grid.Row>
+            {controls}
+          </Grid>
         )
       } else {
         display = <Forum404 forum={forum} isUser={isUser} showNewPost={this.showNewPost} />

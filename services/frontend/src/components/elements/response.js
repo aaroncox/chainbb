@@ -105,11 +105,9 @@ class Response extends React.Component {
       }
 
     }
-    return  <Segment basic>
-              <Grid stackable divided='vertically'>
-                {display}
-              </Grid>
-            </Segment>
+    return <Grid stackable divided='vertically'>
+             {display}
+           </Grid>
   }
 
 }

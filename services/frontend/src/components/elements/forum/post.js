@@ -11,7 +11,7 @@ export default class ForumHeader extends React.Component {
     let {topic} = this.props,
         paginator = false,
         last_reply = (
-          <Grid.Column width={4}>
+          <Grid.Column tablet={4} computer={4} mobile={8} textAlign="center">
             No Replies
           </Grid.Column>
         )
@@ -26,7 +26,7 @@ export default class ForumHeader extends React.Component {
     }
     if(topic.last_reply) {
       last_reply = (
-        <Grid.Column width={4}>
+        <Grid.Column tablet={4} computer={4} mobile={8}>
           <img alt='{topic.last_reply_by}' src={`https://img.steemconnect.com/@${topic.last_reply_by}?size=35`} className="ui rounded floated left mini image" style={{minHeight: '35px', minWidth: '35px', marginBottom: 0}}/>
           <UserLink username={topic.last_reply_by} />
           <br/>
@@ -36,9 +36,9 @@ export default class ForumHeader extends React.Component {
     }
     return (
       <Segment attached key={topic._id}>
-        <Grid stackable>
+        <Grid>
           <Grid.Row verticalAlign='middle'>
-            <Grid.Column width={10}>
+            <Grid.Column tablet={10} computer={10} mobile={8}>
               <Header size='small'>
                 <Link to={`${topic.url}`}>
                   {topic.title}
