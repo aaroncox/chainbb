@@ -47,8 +47,10 @@ export default class ForumTitle extends React.Component {
             {forum.description}
           </Header.Subheader>
         </Header>
+        {/*
         {tags_header}
         {accounts_header}
+        */}
       </Segment>
     )
   }
