@@ -125,8 +125,6 @@ class Forums extends React.Component {
                                 <Link to={`${url}`}>
                                   <TimeAgo date={`${created}Z`} />
                                 </Link>
-                                {' • '}
-                                <UserLink username={author} />
                               </Header.Subheader>
                             </Header>
             }
@@ -140,41 +138,29 @@ class Forums extends React.Component {
                   <Grid.Row
                     verticalAlign='middle'
                     >
-                    <Grid.Column width={7}>
+                    <Grid.Column computer={7} tablet={7} mobile={8}>
                       <Header size='medium'>
                         <ForumLink forum={forum}/>
                         <Header.Subheader style={{marginTop: '0.1rem'}}>
-                          {'↳ '}
-                          <Popup
-                            trigger={<a>{forum.tags.length} Tags</a>}
-                            position='left center'
-                            hoverable={true}
-                            content={forum.tags.map((tag, i) => <span key={i}>
-                              {!!i && ", "}
-                              <Link to={`/topic/${tag}`}>
-                                #{tag}
-                              </Link>
-                            </span>)}
-                          />
                           {
                             (forum.description)
-                              ? <p>{forum.description}</p>
+                              ? <p>{'↳ '}{forum.description}</p>
                               : ''
                           }
                         </Header.Subheader>
                       </Header>
                     </Grid.Column>
-                    <Grid.Column width={2} textAlign='center'>
-                      <Header size='small'>
+                    <Grid.Column width={2} only='large screen' textAlign='center'>
+                      <Header size='medium'>
                         <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.posts : '?'}</NumericLabel>
                       </Header>
                     </Grid.Column>
-                    <Grid.Column width={2} textAlign='center'>
-                      <Header size='small'>
+                    <Grid.Column width={2} only='large screen' textAlign='center'>
+                      <Header size='medium'>
                         <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.replies : '?'}</NumericLabel>
                       </Header>
                     </Grid.Column>
-                    <Grid.Column width={5}>
+                    <Grid.Column computer={5} tablet={5} mobile={8}>
                       {latest_post}
                     </Grid.Column>
                   </Grid.Row>
@@ -184,9 +170,9 @@ class Forums extends React.Component {
           })
           return  <div key={group} style={{marginBottom: "10px"}}>
                     <Segment secondary attached>
-                      <Grid stackable>
+                      <Grid>
                         <Grid.Row verticalAlign="middle">
-                          <Grid.Column width={1}>
+                          <Grid.Column computer={1} tablet={1} mobile={3}>
                             <Button
                               basic
                               onClick={this.toggleVisibility}
@@ -195,22 +181,22 @@ class Forums extends React.Component {
                               size="small"
                             />
                           </Grid.Column>
-                          <Grid.Column width={6}>
+                          <Grid.Column computer={6} tablet={6} mobile={13}>
                             <Header>
                               {group}
                             </Header>
                           </Grid.Column>
-                          <Grid.Column width={2} textAlign='center'>
+                          <Grid.Column width={2} only='large screen' textAlign='center'>
                             <Header size='tiny' style={{ display: isMinimized ? "none" : "" }}>
                               Posts
                             </Header>
                           </Grid.Column>
-                          <Grid.Column width={2}>
+                          <Grid.Column width={2} only='large screen'>
                             <Header size='tiny' textAlign='center' style={{ display: isMinimized ? "none" : "" }}>
                               Replies
                             </Header>
                           </Grid.Column>
-                          <Grid.Column width={5} style={{ display: isMinimized ? "none" : "" }}>
+                          <Grid.Column width={5}  only='large screen' style={{ display: isMinimized ? "none" : "" }}>
                             <Header size='tiny'>
                               Recently Active
                             </Header>
