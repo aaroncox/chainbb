@@ -76,13 +76,14 @@ def index():
     query = {
       "group": {"$in": [
         "localtesting", # localtesting never exists on live, only in dev
-        "chainbb",
+        "projects",
         "steem",
-        "requests"
+        "community"
       ]}
     }
     sort = [("group_order",1),("forum_order",1)]
     results = db.forums.find(query).sort(sort)
+    chainbbusers = db.activeusers.find({'app': 'chainbb'}, {'_id': 1})
     return response({
       'forums': list(results),
       'users': {
@@ -90,7 +91,7 @@ def index():
           'total': db.activeusers.count(),
           'chainbb': db.activeusers.count({'app': 'chainbb'}),
         },
-        'list': list(db.activeusers.find({'app': 'chainbb'}))
+        'list': list(chainbbusers)
       }
     })
 
