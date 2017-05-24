@@ -269,6 +269,18 @@ def process_post(op, block, blockid):
     # Grab the parsed data of the post
     l(_id)
     comment = parse_post(_id, author, permlink)
+    # Determine where it's posted from, and record for active users
+    if 'app' in comment['json_metadata']:
+      app = comment['json_metadata']['app'].split("/")[0]
+      db.activeusers.update({
+        '_id': comment['author']
+      }, {
+        '$set': {
+          '_id': comment['author'],
+          'app': app,
+          'ts': ts
+        }
+      }, upsert=True)
     # Update the indexes it's contained within
     update_indexes(comment)
     # Collapse the votes

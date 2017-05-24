@@ -1,3 +1,6 @@
+db.activeusers.createIndex({app: 1})
+db.activeusers.createIndex({ "ts": 1 }, { expireAfterSeconds: 86400 })
+
 db.posts.createIndex({category: 1}, { sparse: true });
 db.posts.createIndex({author: 1, permlink: 1});
 db.posts.createIndex({category: 1, last_reply: 1, created: 1});

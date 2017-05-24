@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { goToTop } from 'react-scrollable-anchor'
 import NumericLabel from '../utils/NumericLabel'
 
-import { Button, Dimmer, Loader, Grid, Header, Segment  } from 'semantic-ui-react'
+import { Button, Dimmer, Divider, List, Loader, Grid, Header, Segment  } from 'semantic-ui-react'
 
 import * as GLOBAL from '../global';
 import * as breadcrumbActions from '../actions/breadcrumbActions'
@@ -62,7 +62,8 @@ class Forums extends React.Component {
         if (response.ok) {
           const result = await response.json();
           this.setState({
-            forums: result.data,
+            forums: result.data.forums,
+            users: result.data.users,
             group: this.props.forums.group
           });
           this.props.actions.setStatus({'network': result.network});
@@ -83,6 +84,7 @@ class Forums extends React.Component {
             },
             content: 'Loading'
           },
+          activeusers = false,
           display = <Dimmer active inverted style={loader.style}>
                       <Loader size='large' content={loader.content}/>
                     </Dimmer>
@@ -91,13 +93,29 @@ class Forums extends React.Component {
         this.getForums()
       }
       if(loaded) {
-        let forums = this.state.forums,
+        let { forums, users } = this.state,
             // Find the unique forum groupings
             groups = forums.map((forum, index) => {
               return (!this.state.forums[index-1] || this.state.forums[index-1].group !== forum.group) ? forum['group'] : null
             }).filter(function(name) {
               return name !== null
             })
+
+        activeusers = (
+          <Segment>
+            <Header size='large'>
+              Active Users
+              <Header.Subheader>
+                Over the last 24 hours, {users.chainbb} users have been active on chainBB, with {users.total} users active on the Steem network.
+              </Header.Subheader>
+            </Header>
+            <Divider />
+            {users.list.map((user, i) => <span key={i}>
+              {!!i && ", "}
+              <UserLink username={user['_id']} />
+            </span>)}
+          </Segment>
+        )
         display = groups.map((group) => {
           const isMinimized = this.state.minimized.indexOf(group) >= 0
           let groupings = forums.filter(function(forum) {
@@ -215,9 +233,14 @@ class Forums extends React.Component {
                   </div>
         })
       }
-      return(<div>
-        {display}
-      </div>);
+      console.log(activeusers);
+      return(
+        <div>
+          {display}
+          <Divider />
+          {activeusers}
+        </div>
+      );
     }
 }
 

@@ -83,7 +83,16 @@ def index():
     }
     sort = [("group_order",1),("forum_order",1)]
     results = db.forums.find(query).sort(sort)
-    return response(list(results))
+    return response({
+      'forums': list(results),
+      'users': {
+        'stats': {
+          'total': db.activeusers.count(),
+          'chainbb': db.activeusers.count({'app': 'chainbb'}),
+        },
+        'list': list(db.activeusers.find({'app': 'chainbb'}))
+      }
+    })
 
 @app.route("/crypto")
 def crypto():
