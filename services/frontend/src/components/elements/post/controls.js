@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Label, Popup, Segment } from 'semantic-ui-react'
+import { Segment } from 'semantic-ui-react'
 
 import VoteButton from './button/vote'
 import VoterAvatars from '../vote/avatars.js'

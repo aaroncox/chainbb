@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 
-import { Menu, Select } from 'semantic-ui-react'
 import Pagination from 'rc-pagination';
 import 'rc-pagination/assets/index.css';
 

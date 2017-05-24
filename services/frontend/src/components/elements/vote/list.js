@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Label, Popup, Segment } from 'semantic-ui-react'
+import { Label, Popup } from 'semantic-ui-react'
 
 export default class VoterAvatars extends React.Component {
 

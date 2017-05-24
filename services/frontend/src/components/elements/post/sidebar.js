@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Divider, Dropdown, Header, Icon, Menu, Segment, Table } from 'semantic-ui-react'
+import { Divider, Dropdown, Header, Icon, Menu, Segment } from 'semantic-ui-react'
 import UserLink from '../../../utils/link/user'
 import TimeAgo from 'react-timeago'
 

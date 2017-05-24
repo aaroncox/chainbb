@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import TimeAgo from 'react-timeago'
 
-import { Button, Dimmer, Divider, Grid, Header, Icon, Label, Loader, Popup, Segment } from 'semantic-ui-react'
+import { Dimmer, Divider, Grid, Header, Icon, Label, Loader, Segment } from 'semantic-ui-react'
 
 import * as accountActions from '../../actions/accountActions'
 import * as breadcrumbActions from '../../actions/breadcrumbActions'

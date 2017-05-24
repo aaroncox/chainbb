@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Breadcrumb, Container, Grid, Icon, Segment } from 'semantic-ui-react'
+import { Breadcrumb, Container, Grid, Icon } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
