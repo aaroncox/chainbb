@@ -77,6 +77,7 @@ def index():
       "group": {"$in": [
         "localtesting", # localtesting never exists on live, only in dev
         "projects",
+        "crypto",
         "steem",
         "community"
       ]}
