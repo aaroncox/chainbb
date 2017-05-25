@@ -54,11 +54,43 @@ python3 reindex.py '{
   ]
 }'
 
+
+
+
+
+
+
+python3 reindex.py '{
+  "_id": "crypto",
+  "name": "Crypto Discussion",
+  "group": "crypto",
+  "group_order": 3,
+  "forum_order": 1,
+  "description": "",
+  "tags": [ "cryptocurrency", "crypto", "crypto-news", "altcoin", "blockchain", "mining" ]
+}'
+
+python3 reindex.py '{
+  "_id": "eos",
+  "name": "EOS",
+  "group": "crypto",
+  "group_order": 3,
+  "forum_order": 2,
+  "description": "",
+  "tags": [ "eos" ]
+}'
+
+
+
+
+
+
+
 python3 reindex.py '{
   "_id": "chainbb",
   "name": "chainBB.com Discussion",
   "group": "projects",
-  "group_order": 2,
+  "group_order": 3,
   "forum_order": 1,
   "description": "Discussions, suggestions, and bug reports",
   "tags": [
@@ -71,7 +103,7 @@ python3 reindex.py '{
   "_id": "zappl",
   "name": "zappl.io Discussion",
   "group": "projects",
-  "group_order": 2,
+  "group_order": 3,
   "forum_order": 2,
   "description": "Discussions, suggestions, and bug reports",
   "tags": [
@@ -81,11 +113,19 @@ python3 reindex.py '{
   ]
 }'
 
+
+
+
+
+
+
+
+
 python3 reindex.py '{
   "_id": "steem-announcements",
   "name": "Official Announcements",
   "group": "steem",
-  "group_order": 3,
+  "group_order": 4,
   "forum_order": 1,
   "description": "Announcements from the official Steem team",
   "tags": [],
@@ -95,7 +135,7 @@ python3 reindex.py '{
   "_id": "steem-projects",
   "name": "Community Project Updates",
   "group": "steem",
-  "group_order": 3,
+  "group_order": 4,
   "forum_order": 2,
   "description": "Updates for community projects and efforts",
   "tags": ["steem-project", "chainbb", "esteem", "busy"]
@@ -104,7 +144,7 @@ python3 reindex.py '{
   "_id": "steem-general",
   "name": "Steem Discussion",
   "group": "steem",
-  "group_order": 3,
+  "group_order": 4,
   "forum_order": 3,
   "description": "General discussions about Steem",
   "tags": ["steemit", "steem"]
@@ -113,7 +153,7 @@ python3 reindex.py '{
   "_id": "steem-help",
   "name": "Steem Support",
   "group": "steem",
-  "group_order": 3,
+  "group_order": 4,
   "forum_order": 4,
   "description": "Help others and get help regarding Steem",
   "tags": ["steemit-help", "steem-help", "steemit-support", "steem-support"]
@@ -122,7 +162,7 @@ python3 reindex.py '{
   "_id": "steem-dev",
   "name": "Steem Developers",
   "group": "steem",
-  "group_order": 3,
+  "group_order": 4,
   "forum_order": 5,
   "description": "Developer chat, guides and project chatter.",
   "tags": [
@@ -134,7 +174,7 @@ python3 reindex.py '{
   "_id": "steem-witnesses",
   "name": "Witnesses",
   "group": "steem",
-  "group_order": 3,
+  "group_order": 4,
   "forum_order": 6,
   "description": "Steem witness updates",
   "tags": [
