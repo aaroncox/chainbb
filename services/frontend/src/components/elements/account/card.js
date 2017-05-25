@@ -1,27 +1,17 @@
 import React from 'react';
 
 import { Card, Image, Popup } from 'semantic-ui-react'
-import UserLink from '../../../utils/link/user'
+import AccountLink from './link'
 // import TimeAgo from 'react-timeago'
 
-export default class UserAvatar extends React.Component {
+export default class AccountCard extends React.Component {
   render() {
-    let { username } = this.props;
+    let { username, trigger } = this.props;
     return (
       <Popup
         hoverable
         basic
-        trigger={
-          <img
-            alt='{username}'
-            src={`https://img.steemconnect.com/@${username}?size=35`}
-            className="ui rounded floated left mini image"
-            style={{
-              minHeight: '35px',
-              minWidth: '35px'
-            }}
-          />
-        }
+        trigger={trigger}
         content={
           <Card>
             <Image
@@ -33,7 +23,7 @@ export default class UserAvatar extends React.Component {
             />
             <Card.Content>
               <Card.Header>
-                <UserLink username={username} />
+                <AccountLink username={username} />
               </Card.Header>
             </Card.Content>
           </Card>

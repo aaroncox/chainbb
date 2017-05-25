@@ -10,10 +10,10 @@ import * as breadcrumbActions from '../../actions/breadcrumbActions'
 import * as postActions from '../../actions/postActions'
 import * as preferenceActions from '../../actions/preferenceActions'
 
+import AccountLink from './account/link'
 import MarkdownViewer from '../../utils/MarkdownViewer';
 import PostContent from './post/content'
 import Response404 from './response/404'
-import UserLink from '../../utils/link/user'
 
 class Response extends React.Component {
 
@@ -51,7 +51,7 @@ class Response extends React.Component {
                           <Segment basic className="thread-author center aligned">
                             <img alt={post.author} src={`https://img.steemconnect.com/@${post.author}?size=80`} className="ui centered spaced rounded bordered image" />
                             <Header>
-                              <UserLink username={post.author} />
+                              <AccountLink username={post.author} />
                             </Header>
                           </Segment>
                         ),
@@ -62,7 +62,7 @@ class Response extends React.Component {
                         <div>
                           <Segment padded>
                             <Header size='small'>
-                              <UserLink username={parent_post.author} />
+                              <AccountLink username={parent_post.author} />
                               {' '}
                               said
                               {' '}

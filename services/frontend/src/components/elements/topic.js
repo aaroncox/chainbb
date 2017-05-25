@@ -3,7 +3,7 @@ import React from 'react';
 import { Breadcrumb, Dimmer, Loader, Grid, Header, Segment } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import * as GLOBAL from '../../global';
-import UserLink from '../../utils/link/user'
+import AccountLink from './account/link'
 import TimeAgo from 'react-timeago'
 
 export default class Forum extends React.Component {
@@ -58,7 +58,7 @@ export default class Forum extends React.Component {
                                 {topic.title}
                               </Link>
                               <Header.Subheader>
-                                <UserLink username={topic.author} />
+                                <AccountLink username={topic.author} />
                                 {' • '}
                                 <TimeAgo date={topic.created} />
                               </Header.Subheader>

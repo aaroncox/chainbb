@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Divider, Dropdown, Header, Icon, Menu, Segment } from 'semantic-ui-react'
-import UserLink from '../../../utils/link/user'
+import AccountLink from '../account/link'
 import TimeAgo from 'react-timeago'
 
 export default class PostSidebar extends React.Component {
@@ -15,7 +15,7 @@ export default class PostSidebar extends React.Component {
           <Segment basic className="thread-author center aligned">
             <img alt='' src={`https://img.steemconnect.com/@${post.author}?size=150`} className="ui centered spaced rounded bordered image" />
             <Header size='large'>
-              <UserLink username={post.author} />
+              <AccountLink username={post.author} />
             </Header>
           </Segment>
           <Divider horizontal>Post Info</Divider>
@@ -52,7 +52,7 @@ export default class PostSidebar extends React.Component {
               <Header.Subheader>
                 thread started by:
               </Header.Subheader>
-              <UserLink username={post.author} />
+              <AccountLink username={post.author} />
               <Header.Subheader>
                 <TimeAgo date={`${post.created}Z`} />
               </Header.Subheader>

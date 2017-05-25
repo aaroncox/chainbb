@@ -14,8 +14,8 @@ import * as statusActions from '../actions/statusActions'
 import * as preferenceActions from '../actions/preferenceActions'
 
 import ForumLink from '../utils/forumlink'
-import UserLink from '../utils/link/user'
-import UserAvatar from '../components/elements/account/card'
+import AccountLink from '../components/elements/account/link'
+import UserAvatar from '../components/elements/account/avatar'
 import TimeAgo from 'react-timeago'
 
 class Forums extends React.Component {
@@ -117,7 +117,7 @@ class Forums extends React.Component {
             </Divider>
             {users.list.map((user, i) => <span key={i}>
               {!!i && ", "}
-              <UserLink username={user['_id']} />
+              <AccountLink username={user['_id']} />
             </span>)}
           </Segment>
         )

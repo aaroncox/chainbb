@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Divider, Icon, Segment } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
-import UserLink from '../../utils/link/user'
+import AccountLink from './account/link'
 import LoginModal from './login/modal'
 
 class LoginButton extends React.Component {
@@ -48,7 +48,7 @@ const Login = (props) => {
           <h3>
             Welcome
             {' '}
-            <UserLink username={account.name} />!
+            <AccountLink username={account.name} />!
           </h3>
         </Segment>
         <Segment attached>

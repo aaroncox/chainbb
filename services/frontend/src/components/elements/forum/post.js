@@ -3,7 +3,8 @@ import React from 'react';
 import { Grid, Header, Segment } from 'semantic-ui-react'
 import TimeAgo from 'react-timeago'
 import { Link } from 'react-router-dom'
-import UserLink from '../../../utils/link/user'
+import AccountAvatar from '../account/avatar'
+import AccountLink from '../account/link'
 import Paginator from './post/paginator'
 
 export default class ForumHeader extends React.Component {
@@ -27,8 +28,11 @@ export default class ForumHeader extends React.Component {
     if(topic.last_reply) {
       last_reply = (
         <Grid.Column tablet={4} computer={4} mobile={8}>
-          <img alt='{topic.last_reply_by}' src={`https://img.steemconnect.com/@${topic.last_reply_by}?size=35`} className="ui rounded floated left mini image" style={{minHeight: '35px', minWidth: '35px', marginBottom: 0}}/>
-          <UserLink username={topic.last_reply_by} />
+          <AccountAvatar
+            username={topic.last_reply_by}
+            style={{minHeight: '35px', minWidth: '35px', marginBottom: 0}}
+          />
+          <AccountLink username={topic.last_reply_by} />
           <br/>
           <TimeAgo date={`${topic.last_reply}Z`} />
         </Grid.Column>
@@ -47,7 +51,7 @@ export default class ForumHeader extends React.Component {
                   {'↳ '}
                   <TimeAgo date={`${topic.created}Z`} />
                   {' • '}
-                  <UserLink username={topic.author} />
+                  <AccountLink username={topic.author} />
                   {paginator}
                 </Header.Subheader>
               </Header>

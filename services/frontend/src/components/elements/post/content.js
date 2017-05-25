@@ -9,7 +9,7 @@ import PostFormHeader from './form/header'
 import PlatformLink from '../../../utils/link/platform'
 import TimeAgo from 'react-timeago'
 import UserAvatar from '../account/card'
-import UserLink from '../../../utils/link/user'
+import AccountLink from '../account/link'
 
 export default class PostContent extends React.Component {
 
@@ -131,7 +131,7 @@ export default class PostContent extends React.Component {
               <Header.Subheader>
                 posted by
               </Header.Subheader>
-              <UserLink username={post.author} />
+              <AccountLink username={post.author} />
             </Header>
           </Grid.Column>
         </Grid.Row>
