@@ -133,6 +133,7 @@ export default class PostContent extends React.Component {
         <Popup
           trigger={
             <Button
+              basic
               onClick={this.handleEditing}
               color='grey'
               icon='pencil'
