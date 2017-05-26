@@ -6,7 +6,7 @@ import { goToTop } from 'react-scrollable-anchor'
 import ReactDOMServer from 'react-dom/server';
 import Noty from 'noty';
 
-import { Button, Dimmer, Grid, Header, Label, Loader, Popup, Segment } from 'semantic-ui-react'
+import { Button, Dimmer, Grid, Header, Label, Loader, Popup } from 'semantic-ui-react'
 
 import * as GLOBAL from '../global';
 import * as breadcrumbActions from '../actions/breadcrumbActions'
@@ -14,7 +14,6 @@ import * as postActions from '../actions/postActions'
 import * as statusActions from '../actions/statusActions'
 
 import Paginator from '../components/global/paginator'
-import AccountLink from '../components/elements/account/link'
 import ForumHeader from '../components/elements/forum/header'
 import ForumTitle from '../components/elements/forum/title'
 import Forum404 from '../components/elements/forum/404'

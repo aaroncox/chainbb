@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { goToTop } from 'react-scrollable-anchor'
 import NumericLabel from '../utils/NumericLabel'
 
-import { Button, Dimmer, Divider, List, Loader, Grid, Header, Segment  } from 'semantic-ui-react'
+import { Button, Dimmer, Divider, Loader, Grid, Header, Segment  } from 'semantic-ui-react'
 
 import * as GLOBAL from '../global';
 import * as breadcrumbActions from '../actions/breadcrumbActions'
@@ -238,7 +238,6 @@ class Forums extends React.Component {
                   </div>
         })
       }
-      console.log(activeusers);
       return(
         <div>
           {display}
