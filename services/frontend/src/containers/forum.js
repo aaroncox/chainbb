@@ -3,6 +3,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { goToTop } from 'react-scrollable-anchor'
+import ReactDOMServer from 'react-dom/server';
+import Noty from 'noty';
 
 import { Button, Dimmer, Grid, Header, Label, Loader, Popup, Segment } from 'semantic-ui-react'
 
@@ -47,6 +49,22 @@ class Forum extends React.Component {
   }
 
   handleNewPost = (data) => {
+    new Noty({
+      closeWith: ['click', 'button'],
+      layout: 'topRight',
+      progressBar: true,
+      theme: 'semanticui',
+      text: ReactDOMServer.renderToString(
+        <Header>
+          Your post has been submitted!
+          <Header.Subheader>
+            It may take a few moments to appear on chainBB.com.
+          </Header.Subheader>
+        </Header>
+      ),
+      type: 'success',
+      timeout: 8000
+    }).show();
     this.getForum(1);
   }
 

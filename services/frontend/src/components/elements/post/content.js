@@ -1,4 +1,6 @@
 import React from 'react';
+import ReactDOMServer from 'react-dom/server';
+import Noty from 'noty';
 
 import { Link } from 'react-router-dom'
 import { Button, Divider, Grid, Header, Popup, Segment } from 'semantic-ui-react'
@@ -20,6 +22,28 @@ export default class PostContent extends React.Component {
     })
   }
 
+  handleRespondingComplete = (e) => {
+    new Noty({
+      closeWith: ['click', 'button'],
+      layout: 'topRight',
+      progressBar: true,
+      theme: 'semanticui',
+      text: ReactDOMServer.renderToString(
+        <Header>
+          Your post has been submitted!
+          <Header.Subheader>
+            It may take a few moments to appear on chainBB.com.
+          </Header.Subheader>
+        </Header>
+      ),
+      type: 'success',
+      timeout: 8000
+    }).show();
+    this.setState({
+      responding: false
+    })
+  }
+
   handleEditing = () => {
     this.setState({
       editing: (this.state && this.state.editing) ? !this.state.editing : true,
@@ -27,6 +51,22 @@ export default class PostContent extends React.Component {
   }
 
   handleEditingComplete = (data) => {
+    new Noty({
+      closeWith: ['click', 'button'],
+      layout: 'topRight',
+      progressBar: true,
+      theme: 'semanticui',
+      text: ReactDOMServer.renderToString(
+        <Header>
+          Your post has been edited
+          <Header.Subheader>
+            It may take a few moments to update throughout chainBB.com.
+          </Header.Subheader>
+        </Header>
+      ),
+      type: 'success',
+      timeout: 8000
+    }).show();
     this.setState({
       editing: false,
       updatedPost: data
@@ -115,7 +155,7 @@ export default class PostContent extends React.Component {
           elements={['body']}
           parent={post}
           onCancel={this.handleResponding}
-          onComplete={this.handleResponding}
+          onComplete={this.handleRespondingComplete}
           { ... this.props } />
       )
     }
