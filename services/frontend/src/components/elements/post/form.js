@@ -154,14 +154,11 @@ export default class PostForm extends React.Component {
             hasError: false
           })
           setTimeout(function() {
-            let id = false
             t.setState({
               waitingforblock: false
             })
             // If we have a parent, reload all of the children
             if(parent) {
-              // This had a parent, so set the callback to include it as the ID
-              id = account.name + '/' + permlink
               let parent_author = (parent.root_author) ? parent.root_author : parent.author,
                   parent_category = (parent.category) ? parent.category : 'tag',
                   parent_permlink = (parent.root_permlink) ? parent.root_permlink : parent.permlink
