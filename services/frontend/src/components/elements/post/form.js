@@ -174,7 +174,6 @@ export default class PostForm extends React.Component {
                 permlink: parent_permlink
               })
             }
-            console.log(t.props);
             t.props.onComplete(data)
           }, 5000)
         }, 5000)
