@@ -23,7 +23,10 @@ export default class AccountCard extends React.Component {
             />
             <Card.Content>
               <Card.Header>
-                <AccountLink username={username} />
+                <AccountLink
+                  noPopup={true}
+                  username={username}
+                />
               </Card.Header>
             </Card.Content>
           </Card>
