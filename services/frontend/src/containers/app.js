@@ -14,6 +14,7 @@ import HeaderMenu from '../components/global/menu'
 import GlobalNotice from '../components/global/notice'
 
 import './app.css'
+import '../../node_modules/noty/lib/noty.css'
 
 const App = () => (
   <BrowserRouter history={browserHistory}>
