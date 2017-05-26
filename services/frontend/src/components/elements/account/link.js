@@ -5,18 +5,20 @@ import AccountCard from './card'
 
 export default class AccountLink extends React.Component {
   render() {
-    let { username } = this.props;
+    const { username, noPopup } = this.props;
+    const link = (
+      <a
+        href={`https://steemit.com/@${username}`}
+        target='_blank'
+      >
+        @{username}
+      </a>
+    );
+    if (noPopup) return link;
     return (
       <AccountCard
         username={username}
-        trigger={
-          <a
-            href={`https://steemit.com/@${username}`}
-            target='_blank'
-          >
-            @{username}
-          </a>
-        }
+        trigger={link}
       />
     )
   }
