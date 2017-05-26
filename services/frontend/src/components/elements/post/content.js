@@ -51,7 +51,9 @@ export default class PostContent extends React.Component {
             />
         ),
         responding = (this.state && this.state.responding) ? this.state.responding : false,
-        postForm = false,
+        editing = (this.state && this.state.editing) ? this.state.editing : false,
+        editButton = false,
+        editForm = false,
         postButton = (
           <Popup
             trigger={
