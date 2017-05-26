@@ -11,7 +11,7 @@ import PostForm from './form'
 import PostFormHeader from './form/header'
 import PlatformLink from '../../../utils/link/platform'
 import TimeAgo from 'react-timeago'
-import UserAvatar from '../account/card'
+import UserAvatar from '../account/avatar'
 import AccountLink from '../account/link'
 
 export default class PostContent extends React.Component {

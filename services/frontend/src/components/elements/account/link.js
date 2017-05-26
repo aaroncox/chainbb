@@ -1,7 +1,6 @@
 import React from 'react';
 
-import { Card, Image, Popup } from 'semantic-ui-react'
-import AccountCard from './card'
+import AccountCard from '../../../containers/account/card'
 
 export default class AccountLink extends React.Component {
   render() {

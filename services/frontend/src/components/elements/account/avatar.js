@@ -1,9 +1,6 @@
 import React from 'react';
 
-import { Card, Image, Popup } from 'semantic-ui-react'
-import AccountCard from './card'
-import AccountLink from './link'
-// import TimeAgo from 'react-timeago'
+import AccountCard from '../../../containers/account/card'
 
 export default class AccountAvatar extends React.Component {
   render() {
