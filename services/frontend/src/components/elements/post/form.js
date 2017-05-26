@@ -12,12 +12,20 @@ export default class PostForm extends React.Component {
 
   constructor(props) {
     super(props)
+    const { action, post } = props;
+    let tags = (props.forum && props.forum.tags) ? [props.forum.tags[0]] : [];
+    if (action === 'edit') {
+      if (post.json_metadata && post.json_metadata.tags && post.json_metadata.tags.length) {
+        tags = post.json_metadata.tags;
+      }
+    }
     this.state = {
+      post: post || false,
       category: (props.forum && props.forum.tags) ? props.forum.tags[0] : null,
       recommended: (props.forum && props.forum.tags) ? props.forum.tags : [],
       submitting: false,
       waitingforblock: false,
-      tags: (props.forum && props.forum.tags) ? [props.forum.tags[0]] : []
+      tags: tags
     };
   }
 
@@ -74,6 +82,10 @@ export default class PostForm extends React.Component {
   onValidSubmit = (formData) => {
     const data = {...formData, ...this.state}
     let t = this,
+        // Determine action
+        action = this.props.action,
+        // The post being edited (if any)
+        post = this.props.parent,
         // The parent post (if any)
         parent = this.props.parent,
         // The account posting
@@ -88,26 +100,42 @@ export default class PostForm extends React.Component {
           format: 'markdown+html',
           tags: data.tags
         },
-        ops = [
-          ['comment', {
-            author: account.name,
-            body: data.body,
-            json_metadata: JSON.stringify(json),
-            parent_author: (parent) ? parent.author : '',
-            parent_permlink: (parent) ? parent.permlink : data.category,
-            permlink: permlink,
-            title: title
-          }],
-          ['comment_options', {
-            allow_curation_rewards: true,
-            allow_votes: true,
-            author: account.name,
-            extensions: [[0, { "beneficiaries": [{ "account":"chainbb", "weight":1500 }] }]],
-            max_accepted_payout: "1000000.000 SBD",
-            percent_steem_dollars: 10000,
-            permlink: permlink
-          }]
-        ]
+        ops = []
+    switch(action) {
+      case "edit": {
+        ops.push(['comment', {
+          author: post.author,
+          body: data.body,
+          json_metadata: data.tags ? JSON.stringify(json) : JSON.stringify(post.json_metadata),
+          parent_author: post.parent_author,
+          parent_permlink: post.parent_permlink,
+          permlink: post.permlink,
+          title: data.title || post.title,
+        }])
+        break;
+      }
+      default: {
+        ops.push(['comment', {
+          author: account.name,
+          body: data.body,
+          json_metadata: JSON.stringify(json),
+          parent_author: (parent) ? parent.author : '',
+          parent_permlink: (parent) ? parent.permlink : data.category,
+          permlink: permlink,
+          title: title
+        }])
+        ops.push(['comment_options', {
+          allow_curation_rewards: true,
+          allow_votes: true,
+          author: account.name,
+          extensions: [[0, { "beneficiaries": [{ "account":"chainbb", "weight":1500 }] }]],
+          max_accepted_payout: "1000000.000 SBD",
+          percent_steem_dollars: 10000,
+          permlink: permlink
+        }]);
+        break;
+      }
+    }
     this.setState({
       submitting: true
     })
@@ -146,7 +174,8 @@ export default class PostForm extends React.Component {
                 permlink: parent_permlink
               })
             }
-            t.props.onComplete(id)
+            console.log(t.props);
+            t.props.onComplete(data)
           }, 5000)
         }, 5000)
       }
@@ -160,6 +189,7 @@ export default class PostForm extends React.Component {
 
   render() {
     let formHeader = this.props.formHeader,
+        post = this.state.post,
         tags = this.state.tags,
         formFieldTitle = false,
         formFieldTags = false,
@@ -173,9 +203,7 @@ export default class PostForm extends React.Component {
             <Loader size='large' content='Loading'/>
           </Dimmer>
         )
-
     const errorLabel = <Label color="red" pointing/>
-
     if(this.props.elements.indexOf('tags') !== -1) {
       formFieldTags = (
         <Grid stackable={true}>
@@ -183,7 +211,13 @@ export default class PostForm extends React.Component {
             <Grid.Column width={8}>
               <Form.Field>
                 <label>Add additional tags</label>
-                <Input name='additionalTag' value={this.state.additionalTag} placeholder='Add up to 4 additional tags to this post.' action={addTagButton} onChange={this.handleChange} />
+                <Input
+                  name='additionalTag'
+                  value={this.state.additionalTag}
+                  placeholder='Add up to 4 additional tags to this post.'
+                  action={addTagButton}
+                  onChange={this.handleChange}
+                />
               </Form.Field>
             </Grid.Column>
             <Grid.Column width={8}>
@@ -204,6 +238,7 @@ export default class PostForm extends React.Component {
             name="title"
             label="Post Title"
             required
+            defaultValue={ (post) ? post.title : '' }
             placeholder='What should this post be titled?'
             validationErrors={{
               isDefaultRequiredValue: 'A title is required'
@@ -255,6 +290,7 @@ export default class PostForm extends React.Component {
             label="Post Body (Markdown Supported)"
             placeholder='Write your post here.'
             required
+            defaultValue={ (post) ? post.body : '' }
             errorLabel={ <Label color="red" pointing/> }
             validationErrors={{
               isDefaultRequiredValue: 'A post body is required.',

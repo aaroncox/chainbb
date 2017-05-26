@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Link } from 'react-router-dom'
 import { Button, Divider, Grid, Header, Popup, Segment } from 'semantic-ui-react'
+
 import MarkdownViewer from '../../../utils/MarkdownViewer';
 import PostControls from './controls'
 import PostForm from './form'
@@ -19,8 +20,17 @@ export default class PostContent extends React.Component {
     })
   }
 
-  handleNewPost = (id) => {
-    this.handleResponding();
+  handleEditing = () => {
+    this.setState({
+      editing: (this.state && this.state.editing) ? !this.state.editing : true,
+    })
+  }
+
+  handleEditingComplete = (data) => {
+    this.setState({
+      editing: false,
+      updatedPost: data
+    })
   }
 
   render() {
@@ -28,9 +38,15 @@ export default class PostContent extends React.Component {
         postContent = false,
         quote = this.props.quote,
         title = false,
-        formHeader = (
+        postFormHeader = (
           <PostFormHeader
             title='Leave a Reply'
+            subtitle=''
+            />
+        ),
+        editFormHeader = (
+          <PostFormHeader
+            title='Edit your Post'
             subtitle=''
             />
         ),
@@ -41,7 +57,7 @@ export default class PostContent extends React.Component {
             trigger={
               <Button floated='right'>
                 <i className={"left quote icon"}></i>
-                Leave a Reply
+                Reply
               </Button>
             }
             position='bottom center'
@@ -49,19 +65,71 @@ export default class PostContent extends React.Component {
             content='You must be logged in to post.'
             basic
           />
-        )
+        ),
+        postForm = false
+    if (this.state && this.state.updatedPost) {
+      const { updatedPost } = this.state;
+      post.title = updatedPost.title;
+      post.body = updatedPost.body;
+      if (updatedPost.json_metadata && updatedPost.json_metadata.tags) {
+        post.json_metadata.tags = updatedPost.json_metadata.tags;
+      }
+    }
     if(this.props.account.isUser) {
-      postButton = <Button onClick={this.handleResponding} color='green' icon='left quote' content=' Leave a Reply' floated='right' />
+      postButton = (
+        <Button
+          onClick={this.handleResponding}
+          color='green'
+          icon='left quote'
+          content='Reply'
+          floated='right'
+        />
+      )
+    }
+    if(this.props.account && this.props.account.name === post.author) {
+      editButton = (
+        <Popup
+          trigger={
+            <Button
+              onClick={this.handleEditing}
+              color='grey'
+              icon='pencil'
+              floated='right'
+            />
+          }
+          position='bottom center'
+          inverted
+          content='Edit your post'
+          basic
+        />
+      )
     }
     if(responding) {
       postForm = (
         <PostForm
-          formHeader={formHeader}
+          action='create'
+          actions={this.props.actions}
+          formHeader={postFormHeader}
           elements={['body']}
           parent={post}
           onCancel={this.handleResponding}
-          onComplete={this.handleNewPost}
+          onComplete={this.handleResponding}
           { ... this.props } />
+      )
+    }
+    if(editing) {
+      editForm = (
+        <PostForm
+          action='edit'
+          actions={this.props.actions}
+          formHeader={editFormHeader}
+          elements={(post.depth === 0) ? ['title', 'body', 'tags'] : ['body']}
+          parent={post}
+          post={post}
+          account={this.props.account}
+          onCancel={this.handleEditing}
+          onComplete={this.handleEditingComplete}
+        />
       )
     }
     if(post.depth === 0) {
@@ -108,6 +176,7 @@ export default class PostContent extends React.Component {
             />
           <Segment basic clearing secondary attached='bottom'>
             {postButton}
+            {editButton}
             <Link to={`#${post._id}`}>
               Posted <TimeAgo date={`${post.created}Z`} />
             </Link>
@@ -137,7 +206,7 @@ export default class PostContent extends React.Component {
         </Grid.Row>
         <Grid.Row>
           <Grid.Column width={16}>
-            {postContent}
+            {editForm || postContent}
             {postForm}
           </Grid.Column>
         </Grid.Row>

@@ -46,6 +46,10 @@ class Forum extends React.Component {
     })
   }
 
+  handleNewPost = (data) => {
+    this.getForum(1);
+  }
+
   hideNewPost = (e) => {
     this.setState({
       showNewPost: false
@@ -189,7 +193,7 @@ class Forum extends React.Component {
           forum={forum}
           elements={['body', 'title', 'tags']}
           onCancel={this.hideNewPost}
-          onComplete={this.getForum}
+          onComplete={this.handleNewPost}
           { ... this.props } />
       )
     }
