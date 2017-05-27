@@ -47,13 +47,6 @@ class Thread extends React.Component {
 
   scrollToPost = (id) => {
     let page = this.getPageForPost(id)
-    // Couldn't determine page, goto last and bottom
-    if(page === false) {
-      let total = this.props.post.responses.length,
-          perPage = this.props.preferences.threadPostsPerPage
-      page = Math.ceil(total / perPage)
-    }
-    // Change page and focus
     this.changePage(page, id)
   }
 
@@ -70,9 +63,10 @@ class Thread extends React.Component {
     return Math.floor(position / perPage) + 1;
   }
 
-  changePage = (page, scrollTo = false) => {
-    let state = {
-      page: page
+  changePage = (page = false, scrollTo = false) => {
+    let state = {}
+    if(page) {
+      state.page = page
     }
     if(scrollTo) {
       state.scrollTo = scrollTo
