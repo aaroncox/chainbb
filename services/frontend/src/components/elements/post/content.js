@@ -45,6 +45,7 @@ export default class PostContent extends React.Component {
   }
 
   handleEditing = () => {
+    this.props.scrollToPost(this.props.content._id)
     this.setState({
       editing: (this.state && this.state.editing) ? !this.state.editing : true,
     })
@@ -244,9 +245,16 @@ export default class PostContent extends React.Component {
     return (
       <Segment.Group color='blue'>
         {title}
-        {editForm || postContent}
-        {postControls}
-        {postFooter}
+        {(editForm)
+          ? (editForm)
+          : (
+            <div>
+              {postContent}
+              {postControls}
+              {postFooter}
+            </div>
+          )
+        }
         {postForm}
       </Segment.Group>
     )
