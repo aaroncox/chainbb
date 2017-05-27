@@ -41,7 +41,7 @@ class Post extends React.Component {
       )
     }
     return(
-            <div>
+            <div id={this.props.post.content._id}>
               <Grid>
                 <Grid.Row>
                   {sidebar}
