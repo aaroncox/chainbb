@@ -80,9 +80,6 @@ class Thread extends React.Component {
         scrollToWhenReady: false
       })
     }
-    if(this.props.match.url !== this.props.post.content.url) {
-      this.fetchPost();
-    }
   }
 
   componentDidMount() {
