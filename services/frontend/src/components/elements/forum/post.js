@@ -1,13 +1,13 @@
 import React from 'react';
 
-import { Grid, Header, Segment } from 'semantic-ui-react'
+import { Grid, Header, Icon, Segment } from 'semantic-ui-react'
 import TimeAgo from 'react-timeago'
 import { Link } from 'react-router-dom'
 import AccountAvatar from '../account/avatar'
 import AccountLink from '../account/link'
 import Paginator from './post/paginator'
 
-export default class ForumHeader extends React.Component {
+export default class ForumPost extends React.Component {
   render() {
     let {topic} = this.props,
         paginator = false,
@@ -44,16 +44,30 @@ export default class ForumHeader extends React.Component {
           <Grid.Row verticalAlign='middle'>
             <Grid.Column tablet={10} computer={10} mobile={8}>
               <Header size='small'>
-                <Link to={`${topic.url}`}>
-                  {topic.title}
-                </Link>
-                <Header.Subheader>
-                  {'↳ '}
-                  <TimeAgo date={`${topic.created}Z`} />
-                  {' • '}
-                  <AccountLink username={topic.author} />
-                  {paginator}
-                </Header.Subheader>
+                {(topic.cbb && topic.cbb.sticky)
+                  ? (
+                    <Icon name='pin' />
+                  )
+                  : (topic.children > 50)
+                  ? <Icon color='blue' name='chevron right' />
+                  : (topic.children > 20)
+                  ? <Icon color='blue' name='angle double right' />
+                  : (topic.children > 0)
+                  ? <Icon color='blue' name='angle right' />
+                  : <Icon color='blue' name='' />
+                }
+                <Header.Content>
+                  <Link to={`${topic.url}`}>
+                    {topic.title}
+                  </Link>
+                  <Header.Subheader>
+                    {'↳ '}
+                    <TimeAgo date={`${topic.created}Z`} />
+                    {' • '}
+                    <AccountLink username={topic.author} />
+                    {paginator}
+                  </Header.Subheader>
+                </Header.Content>
               </Header>
             </Grid.Column>
             <Grid.Column width={2} only='large screen' className="center aligned">

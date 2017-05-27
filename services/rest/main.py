@@ -238,6 +238,7 @@ def forum(slug):
     fields = {
         'author': 1,
         'category': 1,
+        'cbb': 1,
         'created': 1,
         'children': 1,
         'json_metadata': 1,
@@ -247,7 +248,7 @@ def forum(slug):
         'title': 1,
         'url': 1
     }
-    sort = [("active",-1)]
+    sort = [("cbb.sticky",-1),("active",-1)]
     page = int(request.args.get('page', 1))
     perPage = 20
     skip = (page - 1) * perPage
