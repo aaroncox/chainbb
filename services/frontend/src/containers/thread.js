@@ -11,21 +11,37 @@ import * as preferenceActions from '../actions/preferenceActions'
 import * as statusActions from '../actions/statusActions'
 
 import Post from '../components/elements/post'
+import PostForm from '../components/elements/post/form'
+import PostFormHeader from '../components/elements/post/form/header'
 import Response from '../components/elements/response'
 import Paginator from '../components/global/paginator'
 
 class Thread extends React.Component {
 
-  componentWillMount() {
-    this.fetchPost()
+  constructor(props) {
+    super(props);
+    const { author, permlink } = props.match.params;
+    this.state = Object.assign({}, props.match.params, { page: 1 })
   }
 
-  fetchPost() {
+  componentWillMount() {
+    this.fetchPost(this.state)
+  }
+
+  fetchPost(params) {
+    goToTop();
     this.props.actions.resetPostState()
-    this.props.actions.fetchPost(this.props.match.params)
-    this.props.actions.fetchPostResponses(this.props.match.params)
+    this.props.actions.fetchPost(params)
+    this.props.actions.fetchPostResponses(params)
     if (!this.props.account) {
       this.props.actions.fetchAccount()
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.match.params.permlink !== this.state.permlink) {
+      this.state = Object.assign({}, nextProps.match.params, { page: 1 });
+      this.fetchPost(nextProps.match.params);
     }
   }
 
@@ -101,6 +117,10 @@ class Thread extends React.Component {
     }
   }
 
+  handleResponse = () => {
+    this.setState({ submitted: new Date() })
+  }
+
   render() {
     let page = (this.state) ? this.state.page : 1,
         perPage = this.props.preferences.threadPostsPerPage,
@@ -128,6 +148,12 @@ class Thread extends React.Component {
         </Grid.Row>
       </Grid>
     )
+    let postFormHeader = (
+      <PostFormHeader
+        title='Reply to Thread'
+        subtitle=''
+        />
+    )
     return (
       <div>
         <Post
@@ -146,6 +172,27 @@ class Thread extends React.Component {
           { ...this.props } />
         <Divider horizontal id='comments-new'>Page {page}</Divider>
         { comments_nav }
+        <Divider />
+        <Grid>
+          <Grid.Row>
+            <Grid.Column only='tablet computer' width={4}>
+
+            </Grid.Column>
+            <Grid.Column mobile={16} tablet={12} computer={12}>
+              <PostForm
+                key={this.state.submitted}
+                action='create'
+                actions={this.props.actions}
+                formHeader={postFormHeader}
+                elements={['body']}
+                parent={this.props.post.content}
+                onCancel={this.handleResponse}
+                onComplete={this.handleResponse}
+                { ... this.props } />
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+        <Divider />
       </div>
     )
   }
@@ -153,6 +200,7 @@ class Thread extends React.Component {
 
 function mapStateToProps(state, ownProps) {
   return {
+    account: state.account,
     post: state.post,
     preferences: state.preferences,
     status: state.status
