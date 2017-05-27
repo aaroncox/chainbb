@@ -32,7 +32,7 @@ const Login = (props) => {
         <h4>Greetings Steemian!</h4>
       </Segment>
       <Segment attached>
-        <p>If you have an account on the Steem blockchain, hit the login button below.</p>
+        <p>If you have an account on the Steem blockchain, hit the sign-in button below.</p>
         <LoginButton {... props} />
         {/*
         <Button fluid disabled>Currently Disabled</Button>
