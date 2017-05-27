@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Divider, Dropdown, Header, Icon, Menu, Segment } from 'semantic-ui-react'
+import AccountAvatar from '../account/avatar'
 import AccountLink from '../account/link'
 import TimeAgo from 'react-timeago'
 
@@ -13,9 +14,17 @@ export default class PostSidebar extends React.Component {
         <div>
           <Divider horizontal style={{margin: '0.5em 0 1em'}}>Original Poster</Divider>
           <Segment basic className="thread-author center aligned">
-            <img alt='' src={`https://img.steemconnect.com/@${post.author}?size=150`} className="ui centered spaced rounded bordered image" />
+            <AccountAvatar
+              className="ui centered spaced rounded image"
+              noPopup={true}
+              size={150}
+              username={post.author}
+            />
             <Header size='large'>
-              <AccountLink username={post.author} />
+              <AccountLink
+                noPopup={true}
+                username={post.author}
+              />
             </Header>
           </Segment>
           <Divider horizontal>Post Info</Divider>
