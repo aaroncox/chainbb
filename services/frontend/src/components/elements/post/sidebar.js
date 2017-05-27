@@ -13,7 +13,7 @@ export default class PostSidebar extends React.Component {
       display = (
         <div>
           <Divider horizontal style={{margin: '0.5em 0 1em'}}>Original Poster</Divider>
-          <Segment basic className="thread-author center aligned">
+          <Segment basic textAlign="center" className="thread-author">
             <AccountAvatar
               className="ui centered spaced rounded image"
               noPopup={true}

@@ -124,7 +124,7 @@ class Forum extends React.Component {
             trigger={
               <Button floated='left' size='tiny'>
                 <i className='pencil icon'></i>
-                Create new post
+                New Post
               </Button>
             }
             position='bottom center'
@@ -142,7 +142,7 @@ class Forum extends React.Component {
       newPostButton = (
         <Button floated='left' color='green' size='tiny' onClick={this.showNewPost}>
           <i className='pencil icon'></i>
-          Create new post
+          New Post
         </Button>
       )
     }
@@ -156,10 +156,10 @@ class Forum extends React.Component {
         let rows = topics.map((topic, idx) => <ForumPost topic={topic} key={idx} />)
         const controls = (
           <Grid.Row>
-            <Grid.Column width={8} verticalAlign="middle">
+            <Grid.Column width={6} verticalAlign="middle">
               {newPostButton}
             </Grid.Column>
-            <Grid.Column width={8} verticalAlign="middle">
+            <Grid.Column width={10} verticalAlign="middle">
               <Paginator
                 page={page}
                 perPage={perPage}

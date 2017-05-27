@@ -12,7 +12,7 @@ export default class ForumPost extends React.Component {
     let {topic} = this.props,
         paginator = false,
         last_reply = (
-          <Grid.Column tablet={4} computer={4} mobile={8} textAlign="center">
+          <Grid.Column mobile={6} tablet={6} computer={5} largeScreen={4} textAlign="center">
             No Replies
           </Grid.Column>
         )
@@ -27,7 +27,7 @@ export default class ForumPost extends React.Component {
     }
     if(topic.last_reply) {
       last_reply = (
-        <Grid.Column tablet={4} computer={4} mobile={8}>
+        <Grid.Column mobile={6} tablet={6} computer={5} largeScreen={4}>
           <AccountAvatar
             username={topic.last_reply_by}
             style={{minHeight: '35px', minWidth: '35px', marginBottom: 0}}
@@ -42,20 +42,20 @@ export default class ForumPost extends React.Component {
       <Segment attached key={topic._id}>
         <Grid>
           <Grid.Row verticalAlign='middle'>
-            <Grid.Column tablet={10} computer={10} mobile={8}>
+            <Grid.Column width={1} only='large screen' className="center aligned">
+              {(topic.cbb && topic.cbb.sticky)
+                ? <Icon size='large' name='pin' />
+                : (topic.children > 50)
+                ? <Icon color='blue' size='large' name='chevron right' />
+                : (topic.children > 20)
+                ? <Icon color='blue' size='large' name='angle double right' />
+                : (topic.children > 0)
+                ? <Icon color='blue' size='large' name='angle right' />
+                : <Icon />
+              }
+            </Grid.Column>
+            <Grid.Column mobile={10} tablet={10} computer={9} largeScreen={9}>
               <Header size='small'>
-                {(topic.cbb && topic.cbb.sticky)
-                  ? (
-                    <Icon name='pin' />
-                  )
-                  : (topic.children > 50)
-                  ? <Icon color='blue' name='chevron right' />
-                  : (topic.children > 20)
-                  ? <Icon color='blue' name='angle double right' />
-                  : (topic.children > 0)
-                  ? <Icon color='blue' name='angle right' />
-                  : <Icon />
-                }
                 <Header.Content>
                   <Link to={`${topic.url}`}>
                     {topic.title}
@@ -70,7 +70,7 @@ export default class ForumPost extends React.Component {
                 </Header.Content>
               </Header>
             </Grid.Column>
-            <Grid.Column width={2} only='large screen' className="center aligned">
+            <Grid.Column width={2} className="center aligned tablet or lower hidden">
               <Header size='small'>
                 {topic.children}
               </Header>

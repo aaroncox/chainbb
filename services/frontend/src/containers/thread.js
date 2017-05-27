@@ -129,7 +129,7 @@ class Thread extends React.Component {
     let comments_nav = (
       <Grid id={(page ? `comments-page-${page}` : '')}>
         <Grid.Row verticalAlign='middle'>
-          <Grid.Column only='tablet computer' width={4}>
+          <Grid.Column className='mobile hidden' width={4}>
             <Header textAlign='center' size='huge' style={{padding: '0.9em 0'}}>
               Comments ({responses.length})
               <Header.Subheader>
@@ -175,7 +175,7 @@ class Thread extends React.Component {
         <Divider />
         <Grid>
           <Grid.Row>
-            <Grid.Column only='tablet computer' width={4}>
+            <Grid.Column className='mobile hidden' width={4}>
 
             </Grid.Column>
             <Grid.Column mobile={16} tablet={12} computer={12}>

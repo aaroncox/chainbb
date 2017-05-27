@@ -88,7 +88,7 @@ class Response extends React.Component {
                       )
                     }
                     return <Grid.Row key={index} id={post._id}>
-                            <Grid.Column only='tablet computer' width={4}>
+                            <Grid.Column className='mobile hidden' width={4}>
                               {account}
                             </Grid.Column>
                             <Grid.Column mobile={16} tablet={12} computer={12}>
@@ -105,7 +105,7 @@ class Response extends React.Component {
       }
 
     }
-    return <Grid stackable divided='vertically'>
+    return <Grid>
              {display}
            </Grid>
   }

@@ -25,7 +25,7 @@ class Post extends React.Component {
         sidebar = null
     if(this.props.post.content) {
       sidebar = (
-        <Grid.Column only='tablet computer' width={4}>
+        <Grid.Column className='mobile hidden' width={4}>
           <PostSidebar
             op={true}
             { ...this.props } />

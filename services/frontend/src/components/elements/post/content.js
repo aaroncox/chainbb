@@ -76,6 +76,8 @@ export default class PostContent extends React.Component {
   render() {
     let post = this.props.content,
         postContent = false,
+        postControls = false,
+        postFooter = false,
         quote = this.props.quote,
         title = false,
         postFormHeader = (
@@ -186,74 +188,67 @@ export default class PostContent extends React.Component {
         </span>)
       }
       title = (
-        <Grid.Row>
-          <Grid.Column width={16}>
-            <Segment color='blue' secondary stacked={(this.props.op && this.props.page !== 1)}>
-              <div className='ui huge header'>
-                <h1 style={{margin: 0}}>
-                  {post.title}
-                </h1>
-                <Header.Subheader>
-                {'↳ '}
-                tagged
-                {' '}
-                {tags}
-                </Header.Subheader>
-              </div>
-            </Segment>
-          </Grid.Column>
-        </Grid.Row>
+        <Segment color='blue' secondary stacked={(this.props.op && this.props.page !== 1)}>
+          <Header size='huge'>
+            <h1 style={{margin: 0}}>
+              {post.title}
+            </h1>
+            <Header.Subheader>
+            {'↳ '}
+            tagged
+            {' '}
+            {tags}
+            </Header.Subheader>
+          </Header>
+        </Segment>
       )
     }
     if(!this.props.op || (this.props.op && this.props.page === 1)) {
       postContent = (
-        <div>
-          <Segment attached='top' className='thread-post'>
-            {quote}
-            <MarkdownViewer formId={'viewer'} text={post.body} jsonMetadata={{}} large highQualityPost={true}  />
-            <Divider hidden></Divider>
-          </Segment>
-          <PostControls
-            target={post}
-            { ...this.props }
-            />
-          <Segment basic clearing secondary attached='bottom'>
-            {postButton}
-            {editButton}
-            <Link to={`#${post._id}`}>
-              Posted <TimeAgo date={`${post.created}Z`} />
-            </Link>
-            <br/>
-            <small>
-              via
-              {' '}
-              <PlatformLink platform={post.json_metadata.app} />
-            </small>
-          </Segment>
-        </div>
+        <Segment attached className='thread-post'>
+          <Header size='small' className='mobile only'>
+            <UserAvatar username={post.author} />
+            <Header.Subheader>
+              posted by
+            </Header.Subheader>
+            <AccountLink username={post.author} />
+            <Divider></Divider>
+          </Header>
+          {quote}
+          <MarkdownViewer formId={'viewer'} text={post.body} jsonMetadata={{}} large highQualityPost={true}  />
+          <Divider hidden></Divider>
+        </Segment>
+      )
+      postControls = (
+        <PostControls
+          target={post}
+          { ...this.props }
+          />
+      )
+      postFooter = (
+        <Segment basic clearing secondary attached='bottom'>
+          {postButton}
+          {editButton}
+          <Link to={`#${post._id}`}>
+            Posted <TimeAgo date={`${post.created}Z`} />
+          </Link>
+          <br/>
+          <small>
+            via
+            {' '}
+            <PlatformLink platform={post.json_metadata.app} />
+          </small>
+        </Segment>
       )
     }
     return (
-      <Grid>
+      <Segment.Group color='blue'>
         {title}
-        <Grid.Row only='mobile'>
-          <Grid.Column width={16}>
-            <Header size='small'>
-              <UserAvatar username={post.author} />
-              <Header.Subheader>
-                posted by
-              </Header.Subheader>
-              <AccountLink username={post.author} />
-            </Header>
-          </Grid.Column>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Column width={16}>
-            {editForm || postContent}
-            {postForm}
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+        {editForm || postContent}
+        {postControls}
+        {postFooter}
+        {postForm}
+      </Segment.Group>
     )
   }
 }

@@ -11,7 +11,7 @@ export default class IndexLayout extends React.Component {
     return(
       <Grid divided stackable>
         <Grid.Row>
-          <Grid.Column width={4} only='tablet computer'>
+          <Grid.Column width={4} className='mobile hidden' >
             <Sidebar forums={params} />
           </Grid.Column>
           <Grid.Column mobile={16} tablet={12} computer={12}>
