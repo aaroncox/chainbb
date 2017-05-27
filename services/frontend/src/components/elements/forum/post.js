@@ -54,7 +54,7 @@ export default class ForumPost extends React.Component {
                   ? <Icon color='blue' name='angle double right' />
                   : (topic.children > 0)
                   ? <Icon color='blue' name='angle right' />
-                  : <Icon color='blue' name='' />
+                  : <Icon />
                 }
                 <Header.Content>
                   <Link to={`${topic.url}`}>
