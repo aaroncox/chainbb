@@ -4,10 +4,12 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { goToTop } from 'react-scrollable-anchor'
 import NumericLabel from '../utils/NumericLabel'
+import TimeAgo from 'react-timeago'
 
 import { Button, Dimmer, Divider, Loader, Grid, Header, Segment  } from 'semantic-ui-react'
 
 import * as GLOBAL from '../global';
+import * as accountActions from '../actions/accountActions'
 import * as breadcrumbActions from '../actions/breadcrumbActions'
 import * as postActions from '../actions/postActions'
 import * as statusActions from '../actions/statusActions'
@@ -16,7 +18,7 @@ import * as preferenceActions from '../actions/preferenceActions'
 import ForumLink from '../utils/forumlink'
 import AccountLink from '../components/elements/account/link'
 import UserAvatar from '../components/elements/account/avatar'
-import TimeAgo from 'react-timeago'
+import Login from '../components/elements/login'
 
 class Forums extends React.Component {
 
@@ -240,6 +242,13 @@ class Forums extends React.Component {
       }
       return(
         <div>
+          <Grid style={{ marginBottom: '10px' }}>
+            <Grid.Row>
+              <Grid.Column only="mobile">
+                <Login {... this.props}/>
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
           {display}
           <Divider />
           {activeusers}
@@ -250,6 +259,7 @@ class Forums extends React.Component {
 
 function mapStateToProps(state, ownProps) {
   return {
+    account: state.account,
     preferences: state.preferences,
     status: state.status
   }
@@ -257,6 +267,7 @@ function mapStateToProps(state, ownProps) {
 
 function mapDispatchToProps(dispatch) {
   return {actions: bindActionCreators({
+    ...accountActions,
     ...breadcrumbActions,
     ...postActions,
     ...statusActions,
