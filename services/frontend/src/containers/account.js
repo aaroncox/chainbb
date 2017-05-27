@@ -40,7 +40,7 @@ class Account extends React.Component {
     return (
       <Grid>
         <Grid.Row>
-          <Grid.Column only='tablet computer' width={4}>
+          <Grid.Column className='mobile hidden' width={4}>
             <AccountSidebar {...this.props} />
           </Grid.Column>
           <Grid.Column mobile={16} tablet={12} computer={12}>
