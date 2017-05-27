@@ -3,6 +3,7 @@ import { BrowserRouter, browserHistory, Route } from 'react-router-dom';
 
 import { Container } from 'semantic-ui-react'
 
+import Account from '../containers/account'
 import IndexLayout from '../components/layouts/index'
 import ForumLayout from '../components/layouts/forum'
 import Thread from '../containers/thread'
@@ -24,6 +25,7 @@ const App = () => (
       <GlobalNotice />
       <Container>
         <Route exact path="/" component={IndexLayout} />
+        <Route path="/@:username" component={Account} />
         <Route path="/forums/:group" component={IndexLayout} />
         <Route path="/forum/:id" component={ForumLayout} />
         <Route path="/topic/:category" component={TopicLayout} />

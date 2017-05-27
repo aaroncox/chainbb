@@ -2,10 +2,12 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 
-import { Button, Card, Image, Popup } from 'semantic-ui-react'
+import { Card, Popup } from 'semantic-ui-react'
 
 import * as accountActions from '../../actions/accountActions'
 import * as statusActions from '../../actions/statusActions'
+
+import AccountAvatar from '../../components/elements/account/avatar'
 import AccountLink from '../../components/elements/account/link'
 
 class AccountCard extends React.Component {
@@ -17,13 +19,13 @@ class AccountCard extends React.Component {
         basic
         trigger={trigger}
         content={
-          <Card>
-            <Image
-              src={`https://img.steemconnect.com/@${username}?size=290`}
-              style={{
-                minHeight: '290px',
-                minWidth: '290px'
-              }}
+          <Card
+            raised={true}
+          >
+            <AccountAvatar
+              noPopup={true}
+              size={290}
+              username={username}
             />
             <Card.Content>
               <Card.Header>

@@ -96,6 +96,69 @@ def index():
       }
     })
 
+@app.route("/@<username>")
+def account(username):
+    query = {
+      'author': username
+    }
+    fields = {
+      'author': 1,
+      'category': 1,
+      'created': 1,
+      'children': 1,
+      'json_metadata': 1,
+      'last_reply': 1,
+      'last_reply_by': 1,
+      'permlink': 1,
+      'title': 1,
+      'url': 1
+    }
+    sort = [("created",-1)]
+    page = int(request.args.get('page', 1))
+    perPage = 20
+    skip = (page - 1) * perPage
+    limit = perPage
+    total = db.posts.count(query)
+    posts = db.posts.find(query, fields).sort(sort).skip(skip).limit(limit)
+    return response({
+      'posts': list(posts),
+      'total': total,
+      'page': page
+    })
+
+@app.route("/@<username>/responses")
+def accountResponses(username):
+    query = {
+      'author': username
+    }
+    fields = {
+      'author': 1,
+      'category': 1,
+      'created': 1,
+      'children': 1,
+      'json_metadata': 1,
+      'last_reply': 1,
+      'last_reply_by': 1,
+      'parent_author': 1,
+      'parent_permlink': 1,
+      'permlink': 1,
+      'root_post': 1,
+      'root_title': 1,
+      'url': 1
+    }
+    sort = [("created",-1)]
+    page = int(request.args.get('page', 1))
+    perPage = 20
+    skip = (page - 1) * perPage
+    limit = perPage
+    total = db.replies.count(query)
+    responses = db.replies.find(query, fields).sort(sort).skip(skip).limit(limit)
+    return response({
+      'responses': list(responses),
+      'total': total,
+      'page': page
+    })
+
 @app.route("/crypto")
 def crypto():
     query = {

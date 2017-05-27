@@ -1,4 +1,5 @@
 import * as types from '../actions/actionTypes';
+import update from 'immutability-helper';
 
 const initialState = {
   trail: [{
@@ -10,8 +11,9 @@ const initialState = {
 export default function breadcrumb(state = initialState, action) {
   switch(action.type) {
     case types.SET_BREADCRUMB:
-      let payload = action.payload,
-          trail = initialState.trail.concat(payload)
+      const payload = action.payload,
+            baseTrail = initialState.trail,
+            trail = update(baseTrail, {$push: payload})
       return Object.assign({}, state, {
         trail: trail
       })

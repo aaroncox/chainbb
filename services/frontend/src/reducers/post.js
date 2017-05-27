@@ -3,6 +3,7 @@ import * as types from '../actions/actionTypes';
 const initialState = {
   forum: false,
   content: false,
+  authors: {},
   responses: [],
   processing: {
     errors: {},
@@ -11,9 +12,18 @@ const initialState = {
 }
 
 export default function post(state = initialState, action) {
+  let authors = state.authors;
   switch(action.type) {
     case types.POST_LOAD_RESOLVED:
       return Object.assign({}, state, action.payload)
+    case types.POST_LOAD_BY_AUTHOR_RESOLVED:
+      let { posts, totalPosts } = action.payload;
+      authors[action.payload.account] = { posts, totalPosts };
+      return Object.assign({}, state, { authors });
+    case types.POST_LOAD_RESPONSES_BY_AUTHOR_RESOLVED:
+      let { responses, totalResponses } = action.payload;
+      authors[action.payload.account] = { responses, totalResponses };
+      return Object.assign({}, state, { authors });
     case types.POST_LOAD_RESPONSES_RESOLVED:
       return Object.assign({}, state, {responses: action.payload})
     case types.POST_RESET_STATE:
