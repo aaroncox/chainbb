@@ -74,6 +74,13 @@
   text-align: justify;
 }
 
+.thread-post .Markdown {
+  font-size: 18px;
+}
+.thread-post img {
+  max-width: 100%;
+}
+
 .thread-post h1,
 .thread-post h1:first-child,
 .thread-post h2,
