@@ -328,10 +328,14 @@ def rebuild_forums_cache():
     forums = db.forums.find()
     forums_cache.clear()
     for forum in forums:
-        if 'tags' in forum and len(forum['tags']) > 0:
-            forums_cache.update({str(forum['_id']): {'tags': forum['tags']}})
+        cache = {}
         if 'accounts' in forum and len(forum['accounts']) > 0:
-            forums_cache.update({str(forum['_id']): {'accounts': forum['accounts']}})
+            cache.update({'accounts': forum['accounts']})
+        if 'parent' in forum:
+            cache.update({'parent': forum['parent']})
+        if 'tags' in forum and len(forum['tags']) > 0:
+            cache.update({'tags': forum['tags']})
+        forums_cache.update({str(forum['_id']): cache})
 
 if __name__ == '__main__':
     print("[FORUM][INDEXER] - Starting service")
