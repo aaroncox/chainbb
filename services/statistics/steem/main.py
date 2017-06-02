@@ -18,12 +18,13 @@ def update_statistics():
   forums = db.forums.find()
   for forum in forums:
     l(forum['_id'])
-    stats = {
-      'posts': get_post_count(forum['tags']),
-      'replies': get_reply_count(forum['tags'])
-    }
-    l(stats)
-    db.forums.update({'_id': forum['_id']}, {'$set': {'stats': stats}})
+    if ('tags' in forum):
+      stats = {
+        'posts': get_post_count(forum['tags']),
+        'replies': get_reply_count(forum['tags'])
+      }
+      l(stats)
+      db.forums.update({'_id': forum['_id']}, {'$set': {'stats': stats}})
 
 def get_post_count(tags = []):
   return db.posts.count({'category': {'$in': tags}})
