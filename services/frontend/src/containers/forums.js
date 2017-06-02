@@ -1,10 +1,8 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 import { goToTop } from 'react-scrollable-anchor'
-import NumericLabel from '../utils/NumericLabel'
-import TimeAgo from 'react-timeago'
+
 
 import { Button, Dimmer, Divider, Loader, Grid, Header, Segment  } from 'semantic-ui-react'
 
@@ -15,9 +13,8 @@ import * as postActions from '../actions/postActions'
 import * as statusActions from '../actions/statusActions'
 import * as preferenceActions from '../actions/preferenceActions'
 
-import ForumLink from '../utils/forumlink'
 import AccountLink from '../components/elements/account/link'
-import UserAvatar from '../components/elements/account/avatar'
+import ForumIndex from '../components/elements/forum/index'
 import Login from '../components/elements/login'
 
 class Forums extends React.Component {
@@ -128,77 +125,7 @@ class Forums extends React.Component {
           let groupings = forums.filter(function(forum) {
             return forum['group'] === group
           }).map((forum, index) => {
-            let lastPost = (forum.last_post) ? (new Date(forum.last_post['created']).getTime()) : 0,
-                lastReply = (forum.last_reply) ? (new Date(forum.last_reply['created']).getTime()) : 0,
-                newest = (lastPost > lastReply) ? 'last_post' : 'last_reply',
-                { author, url, created, title } = (typeof forum[newest] === 'object') ? forum[newest] : {},
-                latest_post = null,
-                numberFormat = {
-                  shortFormat: true,
-                  shortFormatMinValue: 1000
-                }
-            if(title && title.length > 100) {
-              title = title.substring(0, 100) + " ..."
-            }
-            if(author) {
-              latest_post = <Header size='tiny'>
-                              <UserAvatar username={author} />
-                              <Link
-                                to={`${url.split("#")[0]}`}
-                                style={{
-                                  display: 'block',
-                                  maxHeight: '35px',
-                                  overflow: 'hidden'
-                                }}>
-                                {title}
-                              </Link>
-                              <Header.Subheader>
-                                {'↳ '}
-                                <Link to={`${url}`}>
-                                  <TimeAgo date={`${created}Z`} />
-                                </Link>
-                              </Header.Subheader>
-                            </Header>
-            }
-            // (this.state.forums[index-1]) && this.state.forums[index-1].group != forum.group
-            return (
-              <Segment
-                attached key={forum._id}
-                style={{ display: isMinimized ? "none" : "" }}
-                >
-                <Grid>
-                  <Grid.Row
-                    verticalAlign='middle'
-                    >
-                    <Grid.Column computer={7} tablet={7} mobile={8}>
-                      <Header size='medium'>
-                        <ForumLink forum={forum}/>
-                        <Header.Subheader style={{marginTop: '0.1rem'}}>
-                          {
-                            (forum.description)
-                              ? <p>{'↳ '}{forum.description}</p>
-                              : ''
-                          }
-                        </Header.Subheader>
-                      </Header>
-                    </Grid.Column>
-                    <Grid.Column width={2} only='large screen' textAlign='center'>
-                      <Header size='medium'>
-                        <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.posts : '?'}</NumericLabel>
-                      </Header>
-                    </Grid.Column>
-                    <Grid.Column width={2} only='large screen' textAlign='center'>
-                      <Header size='medium'>
-                        <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.replies : '?'}</NumericLabel>
-                      </Header>
-                    </Grid.Column>
-                    <Grid.Column computer={5} tablet={5} mobile={8}>
-                      {latest_post}
-                    </Grid.Column>
-                  </Grid.Row>
-                </Grid>
-              </Segment>
-            )
+            return <ForumIndex forum={forum} isMinimized={isMinimized} />
           })
           return  <div key={group} style={{marginBottom: "10px"}}>
                     <Segment secondary attached>

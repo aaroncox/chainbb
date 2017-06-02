@@ -6,7 +6,7 @@ import { goToTop } from 'react-scrollable-anchor'
 import ReactDOMServer from 'react-dom/server';
 import Noty from 'noty';
 
-import { Button, Dimmer, Grid, Header, Label, Loader, Popup } from 'semantic-ui-react'
+import { Button, Dimmer, Divider, Grid, Header, Label, Loader, Popup, Segment } from 'semantic-ui-react'
 
 import * as GLOBAL from '../global';
 import * as breadcrumbActions from '../actions/breadcrumbActions'
@@ -14,6 +14,7 @@ import * as postActions from '../actions/postActions'
 import * as statusActions from '../actions/statusActions'
 
 import Paginator from '../components/global/paginator'
+import ForumIndex from '../components/elements/forum/index'
 import ForumHeader from '../components/elements/forum/header'
 import ForumTitle from '../components/elements/forum/title'
 import Forum404 from '../components/elements/forum/404'
@@ -73,6 +74,12 @@ class Forum extends React.Component {
     })
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if(prevProps.forumid !== this.props.forumid) {
+      this.getForum(1);
+    }
+  }
+
   componentWillMount() {
     this.props.actions.resetPostState()
   }
@@ -94,15 +101,23 @@ class Forum extends React.Component {
         const result = await response.json()
         this.setState({
           forum: result.forum,
+          children: result.children,
           topics: result.data
         });
         this.props.actions.setStatus({'network': result.network});
-        this.props.actions.setBreadcrumb([
+        const trail = [
           {
             name: result.forum.name,
             link: `/forum/${result.forum._id}`
           }
-        ])
+        ];
+        if(result.forum && result.forum.parent) {
+          trail.unshift({
+            name: result.forum.parent_name,
+            link: `/forum/${result.forum.parent}`
+          });
+        }
+        this.props.actions.setBreadcrumb(trail)
       } else {
         console.error(response.status);
       }
@@ -113,6 +128,7 @@ class Forum extends React.Component {
 
   render() {
     let forum = this.state.forum,
+        children = this.state.children,
         page = this.state.page,
         isUser = this.props.account.isUser,
         perPage = 20,
@@ -151,7 +167,22 @@ class Forum extends React.Component {
       newPostButton = false
     }
     if(loaded) {
+      let subforums = false
       posts = (forum.stats) ? forum.stats.posts : 0
+      if(children.length > 0) {
+        subforums = (
+          <Grid.Row>
+            <Grid.Column width={16}>
+              <Divider horizontal>Sub-forums</Divider>
+              <Segment secondary>
+                {children.map((forum, index) => {
+                  return <ForumIndex forum={forum} key={index} />
+                })}
+              </Segment>
+            </Grid.Column>
+          </Grid.Row>
+        )
+      }
       if(topics.length > 0) {
         let rows = topics.map((topic, idx) => <ForumPost topic={topic} key={idx} />)
         const controls = (
@@ -171,6 +202,8 @@ class Forum extends React.Component {
         )
         display = (
           <Grid>
+            {subforums}
+            <Divider horizontal>Forum Threads</Divider>
             {controls}
             <Grid.Row>
               <Grid.Column width={16}>

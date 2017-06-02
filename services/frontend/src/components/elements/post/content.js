@@ -3,7 +3,7 @@ import ReactDOMServer from 'react-dom/server';
 import Noty from 'noty';
 
 import { Link } from 'react-router-dom'
-import { Button, Divider, Grid, Header, Popup, Segment } from 'semantic-ui-react'
+import { Button, Divider, Header, Popup, Segment } from 'semantic-ui-react'
 
 import MarkdownViewer from '../../../utils/MarkdownViewer';
 import PostControls from './controls'

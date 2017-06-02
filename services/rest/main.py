@@ -11,7 +11,7 @@ CORS(app)
 mongo = MongoClient("mongodb://mongo")
 db = mongo.forums
 
-def response(json, forum=False):
+def response(json, forum=False, children=False):
     # Load height
     # NYI - should be cached at for 3 seconds
     statuses = db.status.find()
@@ -28,6 +28,10 @@ def response(json, forum=False):
     if forum:
         response.update({
             'forum': forum
+        })
+    if children:
+        response.update({
+            'children': list(children)
         })
     return jsonify(response)
 
@@ -78,7 +82,6 @@ def index():
         "localtesting", # localtesting never exists on live, only in dev
         "projects",
         "crypto",
-        "steem",
         "community"
       ]}
     }
@@ -221,6 +224,11 @@ def forum(slug):
         '_id': slug
     }
     forum = db.forums.find_one(query)
+    # Load children forums
+    query = {
+      'parent': str(forum['_id'])
+    }
+    children = db.forums.find(query)
     # Load the posts
     query = {}
     if 'tags' in forum and len(forum['tags']) > 0:
@@ -254,7 +262,7 @@ def forum(slug):
     skip = (page - 1) * perPage
     limit = perPage
     results = db.posts.find(query, fields).sort(sort).skip(skip).limit(limit)
-    return response(list(results), forum=forum)
+    return response(list(results), forum=forum, children=children)
 
 @app.route('/topics/<category>')
 def topics(category):

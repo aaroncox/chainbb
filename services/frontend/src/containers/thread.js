@@ -20,7 +20,6 @@ class Thread extends React.Component {
 
   constructor(props) {
     super(props);
-    const { author, permlink } = props.match.params;
     this.state = Object.assign({}, props.match.params, { page: 1 })
   }
 

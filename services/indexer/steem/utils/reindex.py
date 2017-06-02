@@ -19,6 +19,11 @@ db = mongo.forums
 data = json.loads(sys.argv[1])
 
 def update_forum(data):
+    if 'parent' in data:
+        parent = db.forums.find_one({'_id': data['parent']})
+        data.update({
+          'parent_name': parent['name']
+        })
     query = {
         '_id': data['_id']
     }
@@ -76,8 +81,22 @@ def update_replies(data):
         pprint("[FORUM][REINDEXER] - Updating latest reply to [" + str(comment['_id']) + "]...")
         db.forums.update(query, {'$set': updates}, upsert=True)
 
+def update_parent(data):
+    db.forums.update({
+        '_id': data['parent']
+    }, {
+        '$addToSet': {
+            'children': {
+                '_id': data['_id'],
+                'name': data['name']
+            }
+        }
+    })
+
 if __name__ == '__main__':
     pprint("[FORUM][REINDEXER] - Starting script...")
     update_forum(data)
     update_posts(data)
     update_replies(data)
+    if 'parent' in data:
+        update_parent(data)
