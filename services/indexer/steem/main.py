@@ -45,8 +45,7 @@ quick_value = 500
 # where you want some data but don't want to sync the entire blockchain.
 # ------------
 
-# last_block = 3575407
-# last_block = 11359530
+# last_block = 12473794
 
 def l(msg):
     caller = inspect.stack()[1][3]
@@ -186,6 +185,44 @@ def update_topics(comment):
         })
     db.topics.update(query, {'$set': updates, }, upsert=True)
 
+def update_forums_last_post(index, comment):
+    query = {
+        '_id': index,
+    }
+    updates = {
+        '_id': index,
+        'updated': comment['created'],
+        'last_post': {
+            'created': comment['created'],
+            'author': comment['author'],
+            'title': comment['title'],
+            'url': comment['url']
+        }
+    }
+    increments = {
+        'stats.posts': 1
+    }
+    db.forums.update(query, {'$set': updates, '$inc': increments}, upsert=True)
+
+def update_forums_last_reply(index, comment):
+    query = {
+        '_id': index,
+    }
+    updates = {
+        '_id': index,
+        'updated': comment['created'],
+        'last_reply': {
+            'created': comment['created'],
+            'author': comment['author'],
+            'title': comment['root_title'],
+            'url': comment['url']
+        }
+    }
+    increments = {
+      'stats.replies': 1
+    }
+    db.forums.update(query, {'$set': updates, '$inc': increments}, upsert=True)
+
 def update_forums(comment):
     for index in forums_cache:
         if ((
@@ -197,35 +234,11 @@ def update_forums(comment):
               and
               comment['author'] in forums_cache[index]['accounts']
           )):
-            query = {
-                '_id': index,
-            }
-            updates = {
-                '_id': index,
-                'updated': comment['created']
-            }
-            increments = {}
             if comment['parent_author'] == '':
-                increments['stats.posts'] = 1
-                updates.update({
-                    'last_post': {
-                        'created': comment['created'],
-                        'author': comment['author'],
-                        'title': comment['title'],
-                        'url': comment['url']
-                    }
-                })
+                update_forums_last_post(index, comment)
             else:
-                increments['stats.replies'] = 1
-                updates.update({
-                    'last_reply': {
-                        'created': comment['created'],
-                        'author': comment['author'],
-                        'title': comment['root_title'],
-                        'url': comment['url']
-                    }
-                })
-            db.forums.update(query, {'$set': updates, '$inc': increments}, upsert=True)
+                update_forums_last_reply(index, comment)
+
 
 def process_vote(_id, author, permlink):
     # Grab the parsed data of the post
@@ -277,7 +290,7 @@ def process_post(op, block, blockid):
       }, {
         '$set': {
           '_id': comment['author'],
-          'ts': ts
+          'ts': datetime.strptime(block['timestamp'], "%Y-%m-%dT%H:%M:%S")
         },
         '$addToSet': {'app': app},
       }, upsert=True)
