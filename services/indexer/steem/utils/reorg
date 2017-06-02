@@ -1,10 +1,16 @@
+#############################################################################
+# ---------------------------------------------------------------------------
+# Community Group
+# ---------------------------------------------------------------------------
+#############################################################################
+
 python3 reindex.py '{
     "_id": "general-discussion",
     "name": "General Discussion",
     "group": "community",
     "group_order": 1,
     "forum_order": 0,
-    "description": "",
+    "description": "Any topics welcome!",
     "tags": [
       "chainbb-general"
     ]
@@ -15,7 +21,7 @@ python3 reindex.py '{
     "group": "community",
     "group_order": 1,
     "forum_order": 1,
-    "description": "",
+    "description": "Mmmm... beer",
     "tags": [
       "beer","beers"
     ]
@@ -26,7 +32,7 @@ python3 reindex.py '{
   "group": "community",
   "group_order": 1,
   "forum_order": 2,
-  "description": "",
+  "description": "For the ents",
   "tags": [
     "cannabis","marijuana","hemp","pot","weed"
   ]
@@ -37,7 +43,7 @@ python3 reindex.py '{
   "group": "community",
   "group_order": 1,
   "forum_order": 3,
-  "description": "",
+  "description": "Discuss and show off your flying pet",
   "tags": [
     "drone","drones","quadcopter"
   ]
@@ -48,25 +54,25 @@ python3 reindex.py '{
   "group": "community",
   "group_order": 1,
   "forum_order": 4,
-  "description": "",
+  "description": "Gaming of all kinds",
   "tags": [
     "games","game","gaming","roleplaying"
   ]
 }'
 
-
-
-
-
-
+#############################################################################
+# ---------------------------------------------------------------------------
+# Crypto Group
+# ---------------------------------------------------------------------------
+#############################################################################
 
 python3 reindex.py '{
   "_id": "crypto",
   "name": "Crypto Discussion",
   "group": "crypto",
-  "group_order": 3,
+  "group_order": 2,
   "forum_order": 1,
-  "description": "",
+  "description": "Discussion of any crypto and blockchain topics",
   "tags": [ "cryptocurrency", "crypto", "crypto-news", "altcoin", "blockchain", "mining" ]
 }'
 
@@ -74,58 +80,103 @@ python3 reindex.py '{
   "_id": "eos",
   "name": "EOS",
   "group": "crypto",
-  "group_order": 3,
+  "group_order": 2,
   "forum_order": 2,
-  "description": "",
+  "description": "EOS discussions and news",
   "tags": [ "eos" ]
 }'
 
-
-
-
-
-
+# ---------------------------------------------------------------------------
+# Peerplays + children
+# ---------------------------------------------------------------------------
 
 python3 reindex.py '{
-  "_id": "chainbb",
-  "name": "chainBB.com Discussion",
-  "group": "projects",
-  "group_order": 3,
+  "_id": "peerplays",
+  "name": "Peerplays",
+  "group": "crypto",
+  "group_order": 2,
+  "forum_order": 3,
+  "description": "General discussions about Peerplays",
+  "tags": ["peerplays", "ppy"]
+}'
+python3 reindex.py '{
+  "_id": "peerplays-announcements",
+  "name": "Announcements",
+  "parent": "peerplays",
+  "group": null,
+  "group_order": null,
   "forum_order": 1,
-  "description": "Discussions, suggestions, and bug reports",
+  "description": "Announcements from the official Peerplays team",
+  "tags": [],
+  "accounts": ["peerplays"]
+}'
+python3 reindex.py '{
+  "_id": "peerplays-projects",
+  "name": "Community Projects",
+  "parent": "peerplays",
+  "group": null,
+  "group_order": null,
+  "forum_order": 2,
+  "description": "Updates for community projects and efforts",
+  "tags": ["peerplays-project", "peerplaysdb"]
+}'
+python3 reindex.py '{
+  "_id": "peerplays-help",
+  "name": "Support",
+  "parent": "peerplays",
+  "group": null,
+  "group_order": null,
+  "forum_order": 4,
+  "description": "Help others and get help regarding Peerplays",
+  "tags": ["peerplays-help", "peerplays-support"]
+}'
+python3 reindex.py '{
+  "_id": "peerplays-dev",
+  "name": "Developers",
+  "parent": "peerplays",
+  "group": null,
+  "group_order": null,
+  "forum_order": 5,
+  "description": "Developer chat, guides and project chatter.",
   "tags": [
-    "chainbb",
-    "chainbb-support",
-    "chainbb-feedback"
+    "peerplays-dev",
+    "peerplaysdev"
   ]
 }'
 python3 reindex.py '{
-  "_id": "zappl",
-  "name": "zappl.io Discussion",
-  "group": "projects",
-  "group_order": 3,
-  "forum_order": 2,
-  "description": "Discussions, suggestions, and bug reports",
+  "_id": "peerplays-witnesses",
+  "name": "Witnesses",
+  "parent": "peerplays",
+  "group": null,
+  "group_order": null,
+  "forum_order": 6,
+  "description": "Peerplays witness updates",
   "tags": [
-    "zappl",
-    "zappl-support",
-    "zappl-feedback"
+    "peerplays-witness-update",
+    "peerplays-witness",
+    "peerplays-witness-category"
   ]
 }'
 
+# ---------------------------------------------------------------------------
+# Steem + children
+# ---------------------------------------------------------------------------
 
-
-
-
-
-
-
-
+python3 reindex.py '{
+  "_id": "steem",
+  "name": "Steem",
+  "group": "crypto",
+  "group_order": 2,
+  "forum_order": 4,
+  "description": "General discussions about Steem",
+  "tags": ["steemit", "steem"]
+}'
 python3 reindex.py '{
   "_id": "steem-announcements",
-  "name": "Official Announcements",
-  "group": "steem",
-  "group_order": 4,
+  "name": "Announcements",
+  "parent": "steem",
+  "group": null,
+  "group_order": null,
   "forum_order": 1,
   "description": "Announcements from the official Steem team",
   "tags": [],
@@ -133,36 +184,30 @@ python3 reindex.py '{
 }'
 python3 reindex.py '{
   "_id": "steem-projects",
-  "name": "Community Project Updates",
-  "group": "steem",
-  "group_order": 4,
+  "name": "Community Projects",
+  "parent": "steem",
+  "group": null,
+  "group_order": null,
   "forum_order": 2,
   "description": "Updates for community projects and efforts",
-  "tags": ["steem-project", "chainbb", "esteem", "busy"]
-}'
-python3 reindex.py '{
-  "_id": "steem-general",
-  "name": "Steem Discussion",
-  "group": "steem",
-  "group_order": 4,
-  "forum_order": 3,
-  "description": "General discussions about Steem",
-  "tags": ["steemit", "steem"]
+  "tags": ["steem-project", "chainbb", "esteem", "busy", "steemcenterwiki", "steemdata"]
 }'
 python3 reindex.py '{
   "_id": "steem-help",
-  "name": "Steem Support",
-  "group": "steem",
-  "group_order": 4,
+  "name": "Support",
+  "parent": "steem",
+  "group": null,
+  "group_order": null,
   "forum_order": 4,
   "description": "Help others and get help regarding Steem",
   "tags": ["steemit-help", "steem-help", "steemit-support", "steem-support"]
 }'
 python3 reindex.py '{
   "_id": "steem-dev",
-  "name": "Steem Developers",
-  "group": "steem",
-  "group_order": 4,
+  "name": "Developers",
+  "parent": "steem",
+  "group": null,
+  "group_order": null,
   "forum_order": 5,
   "description": "Developer chat, guides and project chatter.",
   "tags": [
@@ -173,12 +218,58 @@ python3 reindex.py '{
 python3 reindex.py '{
   "_id": "steem-witnesses",
   "name": "Witnesses",
-  "group": "steem",
-  "group_order": 4,
+  "parent": "steem",
+  "group": null,
+  "group_order": null,
   "forum_order": 6,
   "description": "Steem witness updates",
   "tags": [
     "witness-category",
     "witness-update"
+  ]
+}'
+
+#############################################################################
+# ---------------------------------------------------------------------------
+# Projects Group
+# ---------------------------------------------------------------------------
+#############################################################################
+
+python3 reindex.py '{
+  "_id": "chainbb",
+  "name": "chainBB",
+  "group": "projects",
+  "group_order": 3,
+  "forum_order": 1,
+  "description": "Platform discussions, suggestions, and bug reports",
+  "tags": [
+    "chainbb",
+    "chainbb-support",
+    "chainbb-feedback"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "steemgigs",
+  "name": "Steem Gigs",
+  "group": "projects",
+  "group_order": 3,
+  "forum_order": 2,
+  "description": "",
+  "tags": [
+    "steemgigs",
+    "steemgig"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "zappl",
+  "name": "zappl.io",
+  "group": "projects",
+  "group_order": 3,
+  "forum_order": 3,
+  "description": "",
+  "tags": [
+    "zappl",
+    "zappl-support",
+    "zappl-feedback"
   ]
 }'

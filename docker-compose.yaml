@@ -1,4 +1,7 @@
 version: '2.1'
+# volumes:
+#   redis-data:
+#     driver: local
 services:
   # avatars:
   #   build: ./services/avatars/steem
