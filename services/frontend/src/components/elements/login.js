@@ -2,15 +2,7 @@ import React from 'react'
 import { Button, Divider, Icon, Segment } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import AccountLink from './account/link'
-import LoginModal from './login/modal'
-
-class LoginButton extends React.Component {
-  render() {
-    return (
-      <LoginModal {... this.props} />
-    )
-  }
-}
+import LoginButton from './login/button'
 
 class LogoutButton extends React.Component {
   logout = (e) => {

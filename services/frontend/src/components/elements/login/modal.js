@@ -85,7 +85,7 @@ export default class LoginModal extends React.Component {
   render() {
     let modal = (
       <Modal
-        trigger={<Button color='blue' fluid onClick={this.handleOpen}>Sign-in</Button>}
+        trigger={<Button fluid onClick={this.handleOpen}>Sign-in</Button>}
         open={this.state.warningOpen}
         onOpen={this.open}
         onClose={this.close}

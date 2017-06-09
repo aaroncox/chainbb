@@ -4,14 +4,8 @@ import { connect } from 'react-redux'
 import { Divider, Header, Segment } from 'semantic-ui-react'
 import * as accountActions from '../actions/accountActions'
 import { Link } from 'react-router-dom'
-import Login from '../components/elements/login'
 
 class Sidebar extends React.Component {
-  componentDidMount() {
-    if (!this.props.account) {
-      this.props.actions.fetchAccount()
-    }
-  }
   render() {
     // const forums = this.props.forums;
     let requestForum = (
@@ -49,7 +43,6 @@ class Sidebar extends React.Component {
 
     return (
       <div>
-        <Login {... this.props}/>
         <Divider hidden />
         {requestForum}
       </div>

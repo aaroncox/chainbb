@@ -74,9 +74,10 @@ export default class VoteButton extends React.Component {
     if(this.props.account.isUser) {
       // If it isn't an active vote, add the adjuster
       if(!active) {
+        const { voting_power } = this.props.account.data || 10000
         adjuster = (
           <VoteButtonOptions
-            effectiveness={`${this.props.account.data.voting_power / 100}%`}
+            effectiveness={`${voting_power / 100}%`}
             onWeightChange={this.props.onWeightChange}
             weight={weight}/>
         )

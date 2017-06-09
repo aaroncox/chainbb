@@ -26,7 +26,7 @@ export default function account(state = false, action) {
         data: action.payload.data
       })
     case types.ACCOUNT_FETCH:
-      return action.payload
+      return Object.assign({}, state, action.payload);
     default:
       return state
   }

@@ -9,13 +9,17 @@ export function fetchAccount() {
       name: store.get('account'),
       key: store.get('key'),
     }
+    dispatch({
+      type: types.ACCOUNT_FETCH,
+      payload: payload
+    })
     if(payload.isUser) {
-      steem.api.getAccounts([payload.name], function(err, data) {
-        payload['data'] = data[0]
-        dispatch(fetchAccountResolved(payload))
-      })
-    } else {
-      dispatch(fetchAccountResolved(payload))
+      setTimeout(function() {
+        steem.api.getAccounts([payload.name], function(err, data) {
+          payload['data'] = data[0]
+          dispatch(fetchAccountResolved(payload))
+        })
+      }, 500)
     }
   }
 }
