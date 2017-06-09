@@ -77,12 +77,12 @@ export default class ForumTitle extends React.Component {
                 }
               </Header>
             </Grid.Column>
-            <Grid.Column width={2} only='large screen' textAlign='center'>
+            <Grid.Column width={2} only='large screen widescreen' textAlign='center'>
               <Header size='medium'>
                 <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.posts : '?'}</NumericLabel>
               </Header>
             </Grid.Column>
-            <Grid.Column width={2} only='large screen' textAlign='center'>
+            <Grid.Column width={2} only='large screen widescreen' textAlign='center'>
               <Header size='medium'>
                 <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.replies : '?'}</NumericLabel>
               </Header>

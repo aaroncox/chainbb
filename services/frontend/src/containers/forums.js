@@ -145,12 +145,12 @@ class Forums extends React.Component {
                               {group}
                             </Header>
                           </Grid.Column>
-                          <Grid.Column width={2} only='large screen' textAlign='center'>
+                          <Grid.Column width={2} only='large screen widescreen' textAlign='center'>
                             <Header size='tiny' style={{ display: isMinimized ? "none" : "" }}>
                               Posts
                             </Header>
                           </Grid.Column>
-                          <Grid.Column width={2} only='large screen'>
+                          <Grid.Column width={2} only='large screen widescreen'>
                             <Header size='tiny' textAlign='center' style={{ display: isMinimized ? "none" : "" }}>
                               Replies
                             </Header>
