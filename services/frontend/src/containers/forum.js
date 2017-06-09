@@ -215,7 +215,17 @@ class Forum extends React.Component {
           </Grid>
         )
       } else {
-        display = <Forum404 forum={forum} isUser={isUser} showNewPost={this.showNewPost} />
+        display = (
+          <Grid>
+            {subforums}
+            <Divider horizontal>Forum Threads</Divider>
+            <Grid.Row>
+              <Grid.Column width={16}>
+                <Forum404 forum={forum} isUser={isUser} showNewPost={this.showNewPost} />
+              </Grid.Column>
+            </Grid.Row>
+          </Grid>
+        )
       }
     }
     if(forum._id && this.state.showNewPost) {
