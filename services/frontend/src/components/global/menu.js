@@ -10,7 +10,6 @@ import LoginButton from '../elements/login/button'
 import LogoutItem from '../elements/login/logout'
 
 import AccountAvatar from '../elements/account/avatar'
-import AccountLink from '../elements/account/link'
 import * as statusActions from '../../actions/statusActions'
 
 class HeaderMenu extends Component {
@@ -59,11 +58,10 @@ class HeaderMenu extends Component {
           username={name}
         />
       )
-      const link = <AccountLink noPopup={true} username={name} />
       userItem = (
         <Dropdown style={{padding: '0 1.1em'}} item trigger={avatar} pointing='top right' icon={null} className='icon'>
           <Dropdown.Menu>
-            <Dropdown.Item icon="user" content={link} />
+            <Dropdown.Item as="a" href={`/@${name}`} icon="user" content={name} />
             <LogoutItem {...this.props} />
           </Dropdown.Menu>
         </Dropdown>
