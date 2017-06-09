@@ -4,6 +4,10 @@
 # ---------------------------------------------------------------------------
 #############################################################################
 
+# ---------------------------------------------------------------------------
+# General + children
+# ---------------------------------------------------------------------------
+
 python3 reindex.py '{
     "_id": "general-discussion",
     "name": "General Discussion",
@@ -11,53 +15,349 @@ python3 reindex.py '{
     "group_order": 1,
     "forum_order": 0,
     "description": "Any topics welcome!",
-    "tags": [
-      "chainbb-general"
-    ]
+    "tags": ["chainbb-general"]
 }'
+
 python3 reindex.py '{
-    "_id": "beer",
-    "name": "Beer Lovers",
-    "group": "community",
-    "group_order": 1,
-    "forum_order": 1,
-    "description": "Mmmm... beer",
-    "tags": [
-      "beer","beers"
-    ]
+  "_id": "blogs",
+  "name": "Blogs",
+  "parent": "general-discussion",
+  "group": null,
+  "group_order": null,
+  "forum_order": 1,
+  "description": "",
+  "tags": ["blogs","blog","life","blogging"]
+}'
+
+python3 reindex.py '{
+  "_id": "travel",
+  "name": "Travel",
+  "parent": "general-discussion",
+  "group": null,
+  "group_order": null,
+  "forum_order": 2,
+  "description": "",
+  "tags": ["travel","adventure"]
+}'
+
+
+# ---------------------------------------------------------------------------
+# Creative + children
+# ---------------------------------------------------------------------------
+
+python3 reindex.py '{
+  "_id": "creative",
+  "name": "Creative Arts",
+  "group": "community",
+  "group_order": 1,
+  "forum_order": 2,
+  "description": "Sharing of arts and creative works",
+  "tags": ["creative", "arts"]
+}'
+
+python3 reindex.py '{
+  "_id": "artwork",
+  "name": "Artwork",
+  "parent": "creative",
+  "group": null,
+  "group_order": null,
+  "forum_order": 1,
+  "description": "",
+  "tags": ["painting","drawing","doodle","drawingboards"]
+}'
+
+python3 reindex.py '{
+  "_id": "photography",
+  "name": "Photography",
+  "parent": "creative",
+  "group": null,
+  "group_order": null,
+  "forum_order": 1,
+  "description": "",
+  "tags": ["photography","photo"]
+}'
+
+
+# ---------------------------------------------------------------------------
+# Education + children
+# ---------------------------------------------------------------------------
+
+python3 reindex.py '{
+  "_id": "education",
+  "name": "Education",
+  "group": "community",
+  "group_order": 1,
+  "forum_order": 3,
+  "description": "Sharing knowledge via the Blockchain",
+  "tags": ["education", "academia"]
+}'
+
+python3 reindex.py '{
+  "_id": "biology",
+  "name": "Biology",
+  "parent": "education",
+  "group": null,
+  "group_order": null,
+  "forum_order": 1,
+  "description": "",
+  "tags": ["biology","nature","anatomy"]
+}'
+
+python3 reindex.py '{
+  "_id": "math",
+  "name": "Mathematics",
+  "parent": "education",
+  "group": null,
+  "group_order": null,
+  "forum_order": 2,
+  "description": "",
+  "tags": ["mathematics","maths","math","mathematics-help","runthemath"]
+}'
+
+python3 reindex.py '{
+  "_id": "philosophy",
+  "name": "Philosophy",
+  "parent": "education",
+  "group": null,
+  "group_order": null,
+  "forum_order": 3,
+  "description": "",
+  "tags": ["philosophy"]
+}'
+
+python3 reindex.py '{
+  "_id": "physics",
+  "name": "Physics",
+  "parent": "education",
+  "group": null,
+  "group_order": null,
+  "forum_order": 4,
+  "description": "",
+  "tags": ["physics"]
+}'
+
+# ---------------------------------------------------------------------------
+# Entertainment + children
+# ---------------------------------------------------------------------------
+
+python3 reindex.py '{
+  "_id": "entertainment",
+  "name": "Entertainment",
+  "group": "community",
+  "group_order": 1,
+  "forum_order": 4,
+  "description": "Enjoyment and amusement",
+  "tags": ["entertainment"]
+}'
+
+python3 reindex.py '{
+  "_id": "books",
+  "name": "Books",
+  "parent": "entertainment",
+  "group": null,
+  "group_order": null,
+  "forum_order": 1,
+  "description": "",
+  "tags": ["book","books","literature"]
+}'
+
+python3 reindex.py '{
+  "_id": "games",
+  "name": "Games",
+  "parent": "entertainment",
+  "group": null,
+  "group_order": null,
+  "forum_order": 2,
+  "description": "",
+  "tags": ["games","game","gaming","roleplaying","console","xbox","playstation","nintendo", "videogames"]
+}'
+
+python3 reindex.py '{
+  "_id": "media",
+  "name": "Media",
+  "parent": "entertainment",
+  "group": null,
+  "group_order": null,
+  "forum_order": 3,
+  "description": "",
+  "tags": ["tv","television","film","movies","movie","cinema"]
+}'
+
+# ---------------------------------------------------------------------------
+# Electronics + children
+# ---------------------------------------------------------------------------
+
+python3 reindex.py '{
+  "_id": "electronics",
+  "name": "Electronics",
+  "group": "community",
+  "group_order": 1,
+  "forum_order": 5,
+  "description": "Technologies and Toys",
+  "tags": ["electronics","gadgets"]
+}'
+
+python3 reindex.py '{
+  "_id": "drones",
+  "name": "Drones",
+  "parent": "electronics",
+  "group": null,
+  "group_order": null,
+  "forum_order": 1,
+  "description": "Discuss and show off your flying pet",
+  "tags": ["drone","drones","quadcopter"]
+}'
+
+
+# ---------------------------------------------------------------------------
+# Finances + children
+# ---------------------------------------------------------------------------
+
+python3 reindex.py '{
+  "_id": "finances",
+  "name": "Finances",
+  "group": "community",
+  "group_order": 1,
+  "forum_order": 6,
+  "description": "",
+  "tags": ["finances","money"]
+}'
+
+python3 reindex.py '{
+  "_id": "funding",
+  "name": "Funding",
+  "parent": "finances",
+  "group": null,
+  "group_order": null,
+  "forum_order": 1,
+  "description": "",
+  "tags": ["financing","funding","crowdfund","crowdfunding","kickstarter"]
+}'
+
+python3 reindex.py '{
+  "_id": "economics",
+  "name": "Economics",
+  "parent": "finances",
+  "group": null,
+  "group_order": null,
+  "forum_order": 1,
+  "description": "",
+  "tags": ["economics","economy"]
+}'
+
+python3 reindex.py '{
+  "_id": "investments",
+  "name": "Investments",
+  "parent": "finances",
+  "group": null,
+  "group_order": null,
+  "forum_order": 1,
+  "description": "",
+  "tags": ["investments","investing","markets"]
+}'
+
+# ---------------------------------------------------------------------------
+# Sports + children
+# ---------------------------------------------------------------------------
+
+python3 reindex.py '{
+  "_id": "sports",
+  "name": "Sports",
+  "group": "community",
+  "group_order": 1,
+  "forum_order": 7,
+  "description": "",
+  "tags": ["sport","sports"]
+}'
+
+python3 reindex.py '{
+  "_id": "baseball",
+  "name": "Baseball",
+  "parent": "sports",
+  "group": null,
+  "group_order": null,
+  "forum_order": 1,
+  "description": "",
+  "tags": ["baseball", "mlb"]
+}'
+
+python3 reindex.py '{
+  "_id": "basketball",
+  "name": "Basketball",
+  "parent": "sports",
+  "group": null,
+  "group_order": null,
+  "forum_order": 2,
+  "description": "",
+  "tags": ["basketball", "nba"]
+}'
+
+python3 reindex.py '{
+  "_id": "cricket",
+  "name": "Cricket",
+  "parent": "sports",
+  "group": null,
+  "group_order": null,
+  "forum_order": 3,
+  "description": "",
+  "tags": ["cricket"]
+}'
+
+python3 reindex.py '{
+  "_id": "football",
+  "name": "Football",
+  "parent": "sports",
+  "group": null,
+  "group_order": null,
+  "forum_order": 4,
+  "description": "",
+  "tags": ["football", "nfl"]
+}'
+
+python3 reindex.py '{
+  "_id": "golf",
+  "name": "Golf",
+  "parent": "sports",
+  "group": null,
+  "group_order": null,
+  "forum_order": 5,
+  "description": "",
+  "tags": ["golf", "pga"]
+}'
+
+# ---------------------------------------------------------------------------
+# Uncategorized + children
+# ---------------------------------------------------------------------------
+
+python3 reindex.py '{
+  "_id": "uncategorized",
+  "name": "Uncategorized",
+  "group": "community",
+  "group_order": 1,
+  "forum_order": 8,
+  "description": "Random forums that need a home still",
+  "tags": ["chainbb-uncategorized"]
+}'
+
+python3 reindex.py '{
+  "_id": "beer",
+  "name": "Beer Lovers",
+  "parent": "uncategorized",
+  "group": null,
+  "group_order": null,
+  "forum_order": 1,
+  "description": "Mmmm... beer",
+  "tags": ["beer","beers"]
 }'
 python3 reindex.py '{
   "_id": "cannasteem",
   "name": "Cannasteem",
-  "group": "community",
-  "group_order": 1,
+  "parent": "uncategorized",
+  "group": null,
+  "group_order": null,
   "forum_order": 2,
   "description": "For the ents",
-  "tags": [
-    "cannabis","marijuana","hemp","pot","weed"
-  ]
-}'
-python3 reindex.py '{
-  "_id": "drones",
-  "name": "Drones",
-  "group": "community",
-  "group_order": 1,
-  "forum_order": 3,
-  "description": "Discuss and show off your flying pet",
-  "tags": [
-    "drone","drones","quadcopter"
-  ]
-}'
-python3 reindex.py '{
-  "_id": "games",
-  "name": "Games",
-  "group": "community",
-  "group_order": 1,
-  "forum_order": 4,
-  "description": "Gaming of all kinds",
-  "tags": [
-    "games","game","gaming","roleplaying"
-  ]
+  "tags": ["cannabis","marijuana","hemp","pot","weed"]
 }'
 
 #############################################################################
@@ -65,6 +365,10 @@ python3 reindex.py '{
 # Crypto Group
 # ---------------------------------------------------------------------------
 #############################################################################
+
+# ---------------------------------------------------------------------------
+# Crypto + children
+# ---------------------------------------------------------------------------
 
 python3 reindex.py '{
   "_id": "crypto",
@@ -76,12 +380,30 @@ python3 reindex.py '{
   "tags": [ "cryptocurrency", "crypto", "crypto-news", "altcoin", "blockchain", "mining" ]
 }'
 
+# ---------------------------------------------------------------------------
+# BitShares + children
+# ---------------------------------------------------------------------------
+
+python3 reindex.py '{
+  "_id": "bitshares",
+  "name": "Bitshares",
+  "group": "crypto",
+  "group_order": 2,
+  "forum_order": 2,
+  "description": "General discussions about Bitshares",
+  "tags": ["bitshares", "bts"]
+}'
+
+# ---------------------------------------------------------------------------
+# EOS + children
+# ---------------------------------------------------------------------------
+
 python3 reindex.py '{
   "_id": "eos",
   "name": "EOS",
   "group": "crypto",
   "group_order": 2,
-  "forum_order": 2,
+  "forum_order": 3,
   "description": "EOS discussions and news",
   "tags": [ "eos" ]
 }'
@@ -95,7 +417,7 @@ python3 reindex.py '{
   "name": "Peerplays",
   "group": "crypto",
   "group_order": 2,
-  "forum_order": 3,
+  "forum_order": 4,
   "description": "General discussions about Peerplays",
   "tags": ["peerplays", "ppy"]
 }'
@@ -167,7 +489,7 @@ python3 reindex.py '{
   "name": "Steem",
   "group": "crypto",
   "group_order": 2,
-  "forum_order": 4,
+  "forum_order": 5,
   "description": "General discussions about Steem",
   "tags": ["steemit", "steem"]
 }'
@@ -235,19 +557,72 @@ python3 reindex.py '{
 # ---------------------------------------------------------------------------
 #############################################################################
 
+# ---------------------------------------------------------------------------
+# chainBB + children
+# ---------------------------------------------------------------------------
+
+
 python3 reindex.py '{
   "_id": "chainbb",
   "name": "chainBB",
   "group": "projects",
   "group_order": 3,
   "forum_order": 1,
-  "description": "Platform discussions, suggestions, and bug reports",
+  "description": "Steem blockchain powered discussion forum.",
   "tags": [
     "chainbb",
-    "chainbb-support",
+    "chainbb.com",
+    "chainbb-forum"
+  ]
+}'
+
+python3 reindex.py '{
+  "_id": "chainbb-bugs",
+  "name": "Bugs",
+  "parent": "chainbb",
+  "group": null,
+  "group_order": null,
+  "forum_order": 1,
+  "description": "",
+  "tags": [
+    "chainbb-bug",
+    "chainbb-bugs"
+  ]
+}'
+
+python3 reindex.py '{
+  "_id": "chainbb-suggestions",
+  "name": "Suggestions",
+  "parent": "chainbb",
+  "group": null,
+  "group_order": null,
+  "forum_order": 2,
+  "description": "",
+  "tags": [
+    "chainbb-suggestions",
     "chainbb-feedback"
   ]
 }'
+
+python3 reindex.py '{
+  "_id": "chainbb-support",
+  "name": "Support",
+  "parent": "chainbb",
+  "group": null,
+  "group_order": null,
+  "forum_order": 3,
+  "description": "",
+  "tags": [
+    "chainbb-support",
+    "chainbb-help"
+  ]
+}'
+
+
+
+
+
+
 python3 reindex.py '{
   "_id": "steemgigs",
   "name": "Steem Gigs",
