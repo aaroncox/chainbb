@@ -58,6 +58,11 @@
   }
 }
 
+.ui.inverted.menu .dropdown .item,
+.ui.inverted.menu .dropdown .item>a:not(.ui) {
+  color: #000000;
+}
+
 .pull-left {
   float: left;
   padding: 0 1rem 1rem 0;
@@ -126,13 +131,11 @@
 }
 
 .thread-post code {
-  padding: 0;
-  padding-top: 0.2em;
-  padding-bottom: 0.2em;
-  margin: 0;
+  padding: 0.2em;
+  margin: 0.2em;
   font-size: 85%;
-  background-color: rgba(27,31,35,0.05);
-  border-radius: 3px;
+  background-color: rgba(27,31,35,0.1);
+  border-radius: 0px;
 }
 
 .thread-post code::before,
@@ -183,8 +186,8 @@
   overflow: auto;
   font-size: 85%;
   line-height: 1.45;
-  background-color: #f6f8fa;
-  border-radius: 3px;
+  background-color: rgba(27,31,35,0.10);
+  border-radius: 0px;
 }
 
 .thread-post pre code {
