@@ -120,7 +120,7 @@ export default class PostContent extends React.Component {
         post.json_metadata.tags = updatedPost.json_metadata.tags;
       }
     }
-    if(this.props.account.isUser) {
+    if(this.props.account && this.props.account.isUser) {
       postButton = (
         <Button
           onClick={this.handleResponding}
@@ -204,7 +204,7 @@ export default class PostContent extends React.Component {
         </Segment>
       )
     }
-    if(!this.props.op || (this.props.op && this.props.page === 1)) {
+    if(!this.props.op || (this.props.op && this.props.page === 1) || this.props.preview) {
       postContent = (
         <Segment attached className='thread-post'>
           <Header size='small' className='mobile only'>
@@ -220,27 +220,29 @@ export default class PostContent extends React.Component {
           <Divider hidden></Divider>
         </Segment>
       )
-      postControls = (
-        <PostControls
-          target={post}
-          { ...this.props }
-          />
-      )
-      postFooter = (
-        <Segment basic clearing secondary attached='bottom'>
-          {postButton}
-          {editButton}
-          <Link to={`#${post._id}`}>
-            Posted <TimeAgo date={`${post.created}Z`} />
-          </Link>
-          <br/>
-          <small>
-            via
-            {' '}
-            <PlatformLink platform={post.json_metadata.app} />
-          </small>
-        </Segment>
-      )
+      if (!this.props.preview) {
+        postControls = (
+          <PostControls
+            target={post}
+            { ...this.props }
+            />
+        )
+        postFooter = (
+          <Segment basic clearing secondary attached='bottom'>
+            {postButton}
+            {editButton}
+            <Link to={`#${post._id}`}>
+              Posted <TimeAgo date={`${post.created}Z`} />
+            </Link>
+            <br/>
+            <small>
+              via
+              {' '}
+              <PlatformLink platform={post.json_metadata.app} />
+            </small>
+          </Segment>
+        )
+      }
     }
     return (
       <Segment.Group color='blue'>

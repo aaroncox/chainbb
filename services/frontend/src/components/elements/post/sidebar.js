@@ -8,25 +8,11 @@ import TimeAgo from 'react-timeago'
 export default class PostSidebar extends React.Component {
   render() {
     let display = null,
-        post = this.props.post.content
-    if(!this.props.op || (this.props.op && this.props.page === 1)) {
-      display = (
+        post = this.props.post.content,
+        info = false
+    if(!this.props.preview) {
+      info = (
         <div>
-          <Divider horizontal style={{margin: '0.5em 0 1em'}}>Original Poster</Divider>
-          <Segment basic textAlign="center" className="thread-author">
-            <AccountAvatar
-              className="ui centered spaced rounded image"
-              noPopup={true}
-              size={150}
-              username={post.author}
-            />
-            <Header size='large'>
-              <AccountLink
-                noPopup={true}
-                username={post.author}
-              />
-            </Header>
-          </Segment>
           <Divider horizontal>Post Info</Divider>
           <Menu color='blue' inverted fluid vertical>
             <Dropdown color='blue' text='View this post on...' size='small' pointing='left' className='link item'>
@@ -50,6 +36,28 @@ export default class PostSidebar extends React.Component {
               </Dropdown.Menu>
             </Dropdown>
           </Menu>
+        </div>
+      )
+    }
+    if(!this.props.op || (this.props.op && this.props.page === 1) || this.props.preview) {
+      display = (
+        <div>
+          <Divider horizontal style={{margin: '0.5em 0 1em'}}>Original Poster</Divider>
+          <Segment basic textAlign="center" className="thread-author">
+            <AccountAvatar
+              className="ui centered spaced rounded image"
+              noPopup={true}
+              size={150}
+              username={post.author}
+            />
+            <Header size='large'>
+              <AccountLink
+                noPopup={true}
+                username={post.author}
+              />
+            </Header>
+          </Segment>
+          {info}
         </div>
       )
     } else {

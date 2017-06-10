@@ -6,6 +6,8 @@ import slug from 'slug'
 import steem from 'steem'
 import { Link } from 'react-router-dom'
 
+import PostPreview from './form/preview'
+
 export default class PostForm extends React.Component {
 
   state = {}
@@ -25,6 +27,7 @@ export default class PostForm extends React.Component {
       recommended: (props.forum && props.forum.tags) ? props.forum.tags : [],
       submitting: false,
       waitingforblock: false,
+      preview: {},
       tags: tags
     };
   }
@@ -37,6 +40,14 @@ export default class PostForm extends React.Component {
 
   handleChange = (e, { name, value }) => {
     this.setState({ [name]: value })
+  }
+
+  updatePreview = (data) => {
+    const { preview } = this.state
+    let newPreview = Object.assign({}, preview, data)
+    this.setState({
+      preview: newPreview
+    })
   }
 
   addTag = (e) => {
@@ -277,6 +288,7 @@ export default class PostForm extends React.Component {
         </Modal>
         <Form
           ref={ ref => this.form = ref }
+          onChange={ this.updatePreview }
           onValidSubmit={ this.onValidSubmit }
         >
           {formHeader}
@@ -304,8 +316,9 @@ export default class PostForm extends React.Component {
               </div>
             }
           />
-          <Button primary>Submit Post</Button>
-          <Button color='orange' onClick={this.handleCancel}>Cancel</Button>
+          <Button primary>Post</Button>
+          <PostPreview preview={this.state.preview} author={this.props.account.name} />
+          <Button floated='right' color='orange' onClick={this.handleCancel}>Cancel</Button>
         </Form>
       </Segment>
     )
