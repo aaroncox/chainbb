@@ -53,7 +53,7 @@ export default class ForumTitle extends React.Component {
           <Grid.Row
             verticalAlign='middle'
             >
-            <Grid.Column computer={7} tablet={7} mobile={8}>
+            <Grid.Column computer={7} tablet={9} mobile={8}>
               <Header size='medium'>
                 <ForumLink forum={forum}/>
                 <Header.Subheader style={{marginTop: '0.1rem'}}>
@@ -77,17 +77,17 @@ export default class ForumTitle extends React.Component {
                 }
               </Header>
             </Grid.Column>
-            <Grid.Column width={2} only='large screen widescreen' textAlign='center'>
+            <Grid.Column width={2} className='tablet or lower hidden' textAlign='center'>
               <Header size='medium'>
                 <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.posts : '?'}</NumericLabel>
               </Header>
             </Grid.Column>
-            <Grid.Column width={2} only='large screen widescreen' textAlign='center'>
+            <Grid.Column width={2} className='tablet or lower hidden' textAlign='center'>
               <Header size='medium'>
                 <NumericLabel params={numberFormat}>{(forum.stats) ? forum.stats.replies : '?'}</NumericLabel>
               </Header>
             </Grid.Column>
-            <Grid.Column computer={5} tablet={5} mobile={8}>
+            <Grid.Column computer={5} tablet={6} mobile={8}>
               {latest_post}
             </Grid.Column>
           </Grid.Row>

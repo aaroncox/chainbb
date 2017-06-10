@@ -131,7 +131,7 @@ class Forums extends React.Component {
                     <Segment secondary attached>
                       <Grid>
                         <Grid.Row verticalAlign="middle">
-                          <Grid.Column computer={1} tablet={1} mobile={3}>
+                          <Grid.Column computer={1} tablet={2} mobile={2}>
                             <Button
                               basic
                               onClick={this.toggleVisibility}
@@ -140,22 +140,22 @@ class Forums extends React.Component {
                               size="small"
                             />
                           </Grid.Column>
-                          <Grid.Column computer={6} tablet={6} mobile={13}>
+                          <Grid.Column computer={6} tablet={8} mobile={8}>
                             <Header>
                               {group}
                             </Header>
                           </Grid.Column>
-                          <Grid.Column width={2} only='large screen widescreen' textAlign='center'>
+                          <Grid.Column width={2} className='tablet or lower hidden' textAlign='center'>
                             <Header size='tiny' style={{ display: isMinimized ? "none" : "" }}>
                               Posts
                             </Header>
                           </Grid.Column>
-                          <Grid.Column width={2} only='large screen widescreen'>
+                          <Grid.Column width={2} className='tablet or lower hidden'>
                             <Header size='tiny' textAlign='center' style={{ display: isMinimized ? "none" : "" }}>
                               Replies
                             </Header>
                           </Grid.Column>
-                          <Grid.Column width={5}  only='large screen' style={{ display: isMinimized ? "none" : "" }}>
+                          <Grid.Column computer={5} tablet={6} mobile={6} style={{ display: isMinimized ? "none" : "" }}>
                             <Header size='tiny'>
                               Recently Active
                             </Header>
