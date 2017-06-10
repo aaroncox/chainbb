@@ -1,6 +1,39 @@
 import * as types from './actionTypes';
 import steem from 'steem'
 import store from 'store'
+import Noty from 'noty'
+
+export function claimRewards(params) {
+  return (dispatch: () => void) => {
+    const { account, reward_steem, reward_sbd, reward_vests } = params;
+    const { name, key } = account;
+    const ops = [
+      ['claim_reward_balance', {
+        account: name,
+        reward_steem,
+        reward_sbd,
+        reward_vests
+      }]
+    ];
+    steem.broadcast.send({
+      operations: ops,
+      extensions: []
+    }, {
+      posting: key
+    }, (err, result) => {
+      dispatch(fetchAccount());
+      new Noty({
+        closeWith: ['click', 'button'],
+        layout: 'topRight',
+        progressBar: true,
+        theme: 'semanticui',
+        text: 'Rewards successfully claimed!',
+        type: 'success',
+        timeout: 8000
+      }).show();
+    });
+  };
+}
 
 export function fetchAccount() {
   return dispatch => {

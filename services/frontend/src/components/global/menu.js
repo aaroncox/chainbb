@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
-import { Container, Dropdown, Icon, Menu, Popup } from 'semantic-ui-react'
+import { Button, Container, Dropdown, Header, Icon, Menu, Popup, Segment, Table } from 'semantic-ui-react'
 
 import * as accountActions from '../../actions/accountActions'
 import LoginButton from '../elements/login/button'
@@ -13,21 +13,54 @@ import AccountAvatar from '../elements/account/avatar'
 import * as statusActions from '../../actions/statusActions'
 
 class HeaderMenu extends Component {
+  state = {
+    isClaiming: false,
+    hasBalance: false
+  }
   componentDidMount() {
     if (!this.props.account) {
       this.props.actions.fetchAccount()
     }
+    this.interval = setInterval(() => this.props.actions.fetchAccount(), 60000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.account && nextProps.account.data) {
+      const { data } = nextProps.account
+      const fields = [
+        'reward_sbd_balance',
+        'reward_steem_balance',
+        'reward_vesting_balance'
+      ];
+      const hasBalance = fields.filter((field) => {
+        return (parseFloat(data[field].split(" ")[0]) > 0)
+      })
+      this.setState({hasBalance, isClaiming: false});
+    }
+  }
+  handleClaim = () => {
+    const account = this.props.account
+    const data = account.data
+    const reward_sbd = data.reward_sbd_balance;
+    const reward_steem = data.reward_steem_balance;
+    const reward_vests = data.reward_vesting_balance;
+    this.setState({isClaiming: true})
+    this.props.actions.claimRewards({ account, reward_sbd, reward_steem, reward_vests });
   }
   render() {
-    const { name, data } = this.props.account
+    const { data, loading, name } = this.props.account
     const { height } = this.props.status.network
+    const { isClaiming, hasBalance } = this.state
     let avatar = false
+    let pendingBalance = false
     let userItem = (
       <Menu.Item>
         <LoginButton {... this.props}/>
       </Menu.Item>
     )
-    const indicator = (data) ? (
+    const indicator = (!loading) ? (
       <Popup
         trigger={
           <Icon name='checkmark' />
@@ -66,6 +99,50 @@ class HeaderMenu extends Component {
           </Dropdown.Menu>
         </Dropdown>
       )
+      if(data) {
+        if(hasBalance.length > 0) {
+          pendingBalance = (
+            <Popup
+              trigger={
+                <Menu.Item style={{padding: '0 1.1em'}}>
+                  <Icon name='gift' size='big' style={{margin: 0}} />
+                </Menu.Item>
+              }
+              flowing
+              hoverable
+            >
+              <Segment basic>
+                <Header>
+                  Rewards
+                  <Header.Subheader>
+                    You have pending rewards!
+                  </Header.Subheader>
+                </Header>
+                <Table definition>
+                  <Table.Body>
+                    {hasBalance.map((field) => {
+                      const symbol = field.split("_")[1]
+                      return (
+                        <Table.Row>
+                          <Table.Cell>
+                            {symbol}
+                          </Table.Cell>
+                          <Table.Cell>
+                            {data[field]}
+                          </Table.Cell>
+                        </Table.Row>
+                      )
+                    })}
+                  </Table.Body>
+                </Table>
+                <Button color='purple' fluid size='small' onClick={this.handleClaim} loading={isClaiming}>
+                  Claim Rewards
+                </Button>
+              </Segment>
+            </Popup>
+          )
+        }
+      }
     }
     return (
       <Menu color='blue' size='large' inverted style={{borderBottom: '3px solid #767676'}}>
@@ -79,6 +156,7 @@ class HeaderMenu extends Component {
           <Link to='/forums/crypto' className='title item'>Crypto</Link>
           */}
           <Menu.Menu position='right'>
+            {pendingBalance}
             {userItem}
             <Menu.Item>
               {indicator}
