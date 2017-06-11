@@ -183,6 +183,17 @@ python3 reindex.py '{
   "tags": ["tv","television","film","movies","movie","cinema"]
 }'
 
+python3 reindex.py '{
+  "_id": "podcast",
+  "name": "Podcasts",
+  "parent": "entertainment",
+  "group": null,
+  "group_order": null,
+  "forum_order": 4,
+  "description": "",
+  "tags": ["podcast","podcasts","hangouts","audiobook"]
+}'
+
 # ---------------------------------------------------------------------------
 # Electronics + children
 # ---------------------------------------------------------------------------
