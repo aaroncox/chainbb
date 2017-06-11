@@ -1,6 +1,6 @@
 module.exports = {
   // REST_API: 'http://localhost:5000',
-  REST_API: 'http://data.chainbb.com',
+  REST_API: 'https://data.chainbb.com',
   STM_Config: {
     img_proxy_prefix: "https://steemitimages.com/",
     ipfs_prefix: false,
