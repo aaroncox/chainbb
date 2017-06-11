@@ -1,0 +1,9 @@
+[Unit]
+Description=uWSGI instance to serve api.chainbb.com
+
+[Service]
+ExecStartPre=/bin/bash -c 'mkdir -p /run/uwsgi/; chown www-data:www-data /run/uwsgi'
+ExecStart=/bin/bash -c 'cd /var/www/forums/services/rest; source chainbbenv/bin/activate; uwsgi --ini main.ini --chdir /var/www/forums/services/rest'
+
+[Install]
+WantedBy=multi-user.target

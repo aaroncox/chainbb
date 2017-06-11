@@ -8,7 +8,7 @@ from mongodb_jsonencoder import MongoJsonEncoder
 app = Flask(__name__)
 app.json_encoder = MongoJsonEncoder
 CORS(app)
-mongo = MongoClient("mongodb://mongo")
+mongo = MongoClient("mongodb://mongo", connect=False)
 db = mongo.forums
 
 def response(json, forum=False, children=False):
@@ -339,4 +339,4 @@ def config():
 
 
 if __name__ == "__main__":
-    app.run(host= '0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', debug=True)
