@@ -158,33 +158,28 @@ export default class PostForm extends React.Component {
           errorMsg: err.message
         })
       } else {
-        setTimeout(function() {
-          t.setState({
-            submitting: false,
-            waitingforblock: true,
-            hasError: false
-          })
-          setTimeout(function() {
-            t.setState({
-              waitingforblock: false
+        t.setState({
+          submitting: false,
+          waitingforblock: false,
+          hasError: false
+        })
+        // If we have a parent, reload all of the children
+        if(parent) {
+          let parent_author = (parent.root_author) ? parent.root_author : parent.author,
+              parent_category = (parent.category) ? parent.category : 'tag',
+              parent_permlink = (parent.root_permlink) ? parent.root_permlink : parent.permlink
+          if(parent.root_post) {
+            [ parent_author, parent_permlink ] = parent.root_post.split('/')
+          }
+          setTimeout(() => {
+            t.props.actions.fetchPostResponses({
+              author: parent_author,
+              category: parent_category,
+              permlink: parent_permlink
             })
-            // If we have a parent, reload all of the children
-            if(parent) {
-              let parent_author = (parent.root_author) ? parent.root_author : parent.author,
-                  parent_category = (parent.category) ? parent.category : 'tag',
-                  parent_permlink = (parent.root_permlink) ? parent.root_permlink : parent.permlink
-              if(parent.root_post) {
-                [ parent_author, parent_permlink ] = parent.root_post.split('/')
-              }
-              t.props.actions.fetchPostResponses({
-                author: parent_author,
-                category: parent_category,
-                permlink: parent_permlink
-              })
-            }
-            t.props.onComplete(data)
           }, 5000)
-        }, 5000)
+        }
+        t.props.onComplete(data)
       }
     });
   }
