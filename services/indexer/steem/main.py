@@ -11,7 +11,7 @@ import os
 
 # Connections
 nodes = [
-    'https://steemd.steemit.com'
+    'http://localhost:5090'
 ]
 s = Steem(nodes)
 mongo = MongoClient("mongodb://mongo")
@@ -45,7 +45,7 @@ quick_value = 500
 # where you want some data but don't want to sync the entire blockchain.
 # ------------
 
-# last_block = 12473794
+# last_block = 12654018
 
 def l(msg):
     caller = inspect.stack()[1][3]
@@ -58,7 +58,7 @@ def process_op(opObj, block, blockid, quick=False):
     if opType == "vote" and quick == False:
         queue_parent_update(opData, block, blockid)
     if opType == "comment":
-        process_post(opData, block, blockid)
+        process_post(opData, block, blockid, quick=False)
 
 def queue_parent_update(op, block, blockid):
     global vote_queue
@@ -272,7 +272,7 @@ def collapse_votes(votes):
         ])
     return collapsed
 
-def process_post(op, block, blockid):
+def process_post(op, block, blockid, quick=False):
     # Derive the timestamp
     ts = float(datetime.strptime(block['timestamp'], "%Y-%m-%dT%H:%M:%S").strftime("%s"))
     # Create the author/permlink identifier
@@ -283,7 +283,7 @@ def process_post(op, block, blockid):
     l(_id)
     comment = parse_post(_id, author, permlink)
     # Determine where it's posted from, and record for active users
-    if 'app' in comment['json_metadata']:
+    if isinstance(comment['json_metadata'], dict) and 'app' in comment['json_metadata'] and not quick:
       app = comment['json_metadata']['app'].split("/")[0]
       db.activeusers.update({
         '_id': comment['author']
@@ -360,7 +360,7 @@ if __name__ == '__main__':
         # Process new blocks
         while (block_number - last_block) > 0:
             last_block += 1
-            # If behind by more than 1000 (for initial indexes), set quick to true to prevent unneeded past operations
+            # If behind by more than X (for initial indexes), set quick to true to prevent unneeded past operations
             if (block_number - last_block) > quick_value:
                 quick = True
             # Process block
