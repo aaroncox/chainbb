@@ -42,8 +42,9 @@ export default class PostForm extends React.Component {
     this.setState({ [name]: value })
   }
 
-  updatePreview = (data) => {
+  handleOnChange = (data) => {
     const { preview } = this.state
+    // Update the preview
     let newPreview = Object.assign({}, preview, data)
     this.setState({
       preview: newPreview
@@ -152,10 +153,31 @@ export default class PostForm extends React.Component {
     })
     steem.broadcast.send({ operations: ops, extensions: [] }, { posting: account.key }, function(err, result) {
       if(err) {
+        let error = ''
+        let trace = err.message
+
+        try {
+          const stack = err.payload.error.data.stack[0];
+          const values = Object.keys(stack.data);
+          let message = stack.format;
+          if (values.length) {
+            values.map((key) => {
+              const value = stack.data[key];
+              message = message.split('${' + key + '}').join(value);
+            });
+          }
+          error = message;
+        } catch (e) {
+          console.log(e);
+          console.log(err, result);
+          error = 'Unknown Error, check View -> Devtools for more information.';
+        }
         t.setState({
           submitting: false,
           hasError: true,
-          errorMsg: err.message
+          err: err,
+          trace: trace,
+          errorMsg: error
         })
       } else {
         t.setState({
@@ -268,7 +290,9 @@ export default class PostForm extends React.Component {
           <Header icon='alarm outline' content='Error Submitting to the Blockchain' />
           <Modal.Content>
             <h3>An error has occured.</h3>
-            <p>If you need assistance, please notify @jesta here on the forums, on steemit.com, or via steemit.chat. Please include the error message shown below.</p>
+            <h2>{this.state.errorMsg}</h2>
+            <textarea>{this.state.trace}</textarea>
+            <p>If you need assistance, please notify @jesta here on the forums, on steemit.com, or via steemit.chat. Please include the error messages shown above and a description of what you were attempting to do.</p>
             <code>
             <pre>
               {this.state.errorMsg}
@@ -283,7 +307,7 @@ export default class PostForm extends React.Component {
         </Modal>
         <Form
           ref={ ref => this.form = ref }
-          onChange={ this.updatePreview }
+          onChange={ this.handleOnChange }
           onValidSubmit={ this.onValidSubmit }
         >
           {formHeader}
