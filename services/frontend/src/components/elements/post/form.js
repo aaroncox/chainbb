@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Button, Dimmer, Divider, Grid, Header, Icon, Label, Loader, Message, Modal, Segment } from 'semantic-ui-react'
-import { Form, Input } from 'formsy-semantic-ui-react'
+import { Form, Input, TextArea } from 'formsy-semantic-ui-react'
 import slug from 'slug'
 import steem from 'steem'
 import { Link } from 'react-router-dom'
@@ -289,15 +289,15 @@ export default class PostForm extends React.Component {
           >
           <Header icon='alarm outline' content='Error Submitting to the Blockchain' />
           <Modal.Content>
-            <h3>An error has occured.</h3>
             <h2>{this.state.errorMsg}</h2>
-            <textarea>{this.state.trace}</textarea>
-            <p>If you need assistance, please notify @jesta here on the forums, on steemit.com, or via steemit.chat. Please include the error messages shown above and a description of what you were attempting to do.</p>
-            <code>
-            <pre>
-              {this.state.errorMsg}
-            </pre>
-            </code>
+            <Form>
+             <Form.Field
+               control={TextArea}
+               defaultValue={this.state.trace}
+               name='error'
+             />
+             <p>If you need assistance, please notify @jesta here on the forums, on steemit.com, or via steemit.chat. Please include the error messages shown above and a description of what you were attempting to do.</p>
+           </Form>
           </Modal.Content>
           <Modal.Actions>
             <Button color='green' onClick={this.dismissError} inverted>
