@@ -1,6 +1,7 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta
 from steem import Steem
+from steem.blockchain import Blockchain
 from pymongo import MongoClient
 from pprint import pprint
 import collections
@@ -12,18 +13,21 @@ import os
 
 # Connections
 nodes = [
-    'http://localhost:5090'
+    'http://localhost:5090',
 ]
+
 s = Steem(nodes)
+b = Blockchain(steemd_instance=s, mode='head')
+
 mongo = MongoClient("mongodb://mongo")
 db = mongo.forums
 
 # Determine which block was last processed
 init = db.status.find_one({'_id': 'height'})
 if(init):
-  last_block = init['value']
+  last_block_processed = init['value']
 else:
-  last_block = 1
+  last_block_processed = 1
 
 forums_cache = {}
 vote_queue = []
@@ -33,9 +37,9 @@ vote_queue = []
 #
 #     - stop updating posts based on votes processed
 #
-# This is useful for when you need the index to catch up to current day
+# This is useful for when you need the index to catch up to the latest block
 # ------------
-quick_value = 500
+quick_value = 100
 
 # ------------
 # For development:
@@ -46,62 +50,39 @@ quick_value = 500
 # where you want some data but don't want to sync the entire blockchain.
 # ------------
 
-# last_block = 12654018
+# last_block_processed = 12880609
 
 def l(msg):
     caller = inspect.stack()[1][3]
     print("[FORUM][INDEXER][{}] {}".format(str(caller), str(msg)))
+    sys.stdout.flush()
 
-def process_op(opObj, block, blockid, quick=False):
+def process_op(op, quick=False):
     # Split the array into type and data
-    opType = opObj[0]
-    opData = opObj[1]
+    opType = op['op'][0]
+    opData = op['op'][1]
     if opType == "vote" and quick == False:
-        queue_parent_update(opData, block, blockid)
+        queue_parent_update(opData)
     if opType == "comment":
-        process_post(opData, block, blockid, quick=False)
+        process_post(opData, op, quick=False)
 
-def queue_parent_update(op, block, blockid):
+def queue_parent_update(opData):
     global vote_queue
     # Determine ID
-    _id = op['author'] + '/' + op['permlink']
+    _id = opData['author'] + '/' + opData['permlink']
     # Append to Queue
     vote_queue.append(_id)
     # Make the list of queue items unique (to prevent updating the same post more than once per block)
     keys = {}
     for e in vote_queue:
-        keys[e] = 1
+        keys[e] = True
     # Set the list to the unique values
     vote_queue = list(keys.keys())
-
-def process_block(blockid, quick):
-    global vote_queue
-    # Get full block
-    block = s.get_block(blockid)
-    dt = datetime.strptime(block['timestamp'], "%Y-%m-%dT%H:%M:%S")
-    print("\n[FORUM][INDEXER][process_block] - #" + str(last_block) + " " + str(dt) + " (" + str(block_number - last_block)+ " remaining, quick: " + str(quick) + ")")
-    # Process all base ops
-    for tx in block['transactions']:
-        for opObj in tx['operations']:
-            process_op(opObj, block, blockid, quick=quick)
-
-    # ---------------------
-    # Processing of virtual ops - disabled until needed
-    # ---------------------
-    # # Get all ops
-    # ops = s.get_ops_in_block(blockid, False)
-    # # Process all ops
-    # for opObj in ops:
-    #     pprint(opObj['op'])
-    #     process_op(opObj['op'], block, blockid, quick=quick)
-
-    # Process all queued votes from block
-    for _id in vote_queue:
-        # Split the ID into parameters for loading the post
-        author, permlink = _id.split('/')
-        # Process the votes
-        process_vote(_id, author, permlink)
-    vote_queue = []
+    # pprint("-----------------------------")
+    # pprint("Vote Queue")
+    # pprint(opData)
+    # pprint(vote_queue)
+    # pprint("-----------------------------")
 
 def parse_post(_id, author, permlink):
     # Fetch from the rpc
@@ -187,6 +168,7 @@ def update_topics(comment):
     db.topics.update(query, {'$set': updates, }, upsert=True)
 
 def update_forums_last_post(index, comment):
+    l("updating /forum/{} with post {}/{})".format(index, comment['author'], comment['permlink']))
     query = {
         '_id': index,
     }
@@ -206,6 +188,7 @@ def update_forums_last_post(index, comment):
     db.forums.update(query, {'$set': updates, '$inc': increments}, upsert=True)
 
 def update_forums_last_reply(index, comment):
+    l("updating /forum/{} with post {}/{})".format(index, comment['author'], comment['permlink']))
     query = {
         '_id': index,
     }
@@ -240,7 +223,6 @@ def update_forums(comment):
             else:
                 update_forums_last_reply(index, comment)
 
-
 def process_vote(_id, author, permlink):
     # Grab the parsed data of the post
     l(_id)
@@ -273,12 +255,12 @@ def collapse_votes(votes):
         ])
     return collapsed
 
-def process_post(op, block, blockid, quick=False):
+def process_post(opData, op, quick=False):
     # Derive the timestamp
-    ts = float(datetime.strptime(block['timestamp'], "%Y-%m-%dT%H:%M:%S").strftime("%s"))
+    ts = float(datetime.strptime(op['timestamp'], "%Y-%m-%dT%H:%M:%S").strftime("%s"))
     # Create the author/permlink identifier
-    author = op['author']
-    permlink = op['permlink']
+    author = opData['author']
+    permlink = opData['permlink']
     _id = author + '/' + permlink
     # Grab the parsed data of the post
     l(_id)
@@ -291,7 +273,7 @@ def process_post(op, block, blockid, quick=False):
       }, {
         '$set': {
           '_id': comment['author'],
-          'ts': datetime.strptime(block['timestamp'], "%Y-%m-%dT%H:%M:%S")
+          'ts': datetime.strptime(op['timestamp'], "%Y-%m-%dT%H:%M:%S")
         },
         '$addToSet': {'app': app},
       }, upsert=True)
@@ -305,7 +287,7 @@ def process_post(op, block, blockid, quick=False):
         # Ensure we a post was returned
         if comment['author'] != '':
             # If this is a top level post, save into the `posts` collection
-            if op['parent_author'] == '':
+            if comment['parent_author'] == '':
                 db.posts.update({'_id': _id}, {'$set': comment}, upsert=True)
             # Otherwise save it into the `replies` collection and update the parent
             else:
@@ -326,6 +308,7 @@ def process_post(op, block, blockid, quick=False):
 
 
 def rebuild_forums_cache():
+    # l("rebuilding forums cache ({} forums)".format(len(list(forums))))
     forums = db.forums.find()
     forums_cache.clear()
     for forum in forums:
@@ -339,41 +322,30 @@ def rebuild_forums_cache():
         forums_cache.update({str(forum['_id']): cache})
 
 if __name__ == '__main__':
-    print("[FORUM][INDEXER] - Starting service")
+    l("Starting services @ block #{}".format(last_block_processed))
 
-    # Determine block generation rate
-    config = s.get_config()
-    block_interval = config["STEEMIT_BLOCK_INTERVAL"]
+    rebuild_forums_cache()
 
-    # Initial quick flag
+
     quick = False
-
-    # Loop indefinitely - Process New Blocks
-    while True:
-        # Get global props for block height
-        props = s.get_dynamic_global_properties()
-        # Work off head as opposed to irreverisable since data will be overwritten anyways
-        block_number = props['head_block_number']
-        # Store the head_block_number so the website can show how far behind it is
-        db.status.update({'_id': 'head_block_number'}, {"$set": {'value': block_number}}, upsert=True)
-        # Update our indexes cache
-        rebuild_forums_cache();
-        # Process new blocks
-        while (block_number - last_block) > 0:
-            last_block += 1
+    for block in b.stream_from(start_block=last_block_processed, batch_operations=True):
+        if(len(block) > 0):
+            block_num = block[0]['block']
+            timestamp = block[0]['timestamp']
             # If behind by more than X (for initial indexes), set quick to true to prevent unneeded past operations
-            if (block_number - last_block) > quick_value:
+            remaining_blocks = props['last_irreversible_block_num'] - block_num
+            if remaining_blocks > quick_value:
                 quick = True
-            # Process block
-            process_block(last_block, quick)
-            # Update our block height
-            db.status.update({'_id': 'height'}, {"$set" : {'value': last_block}}, upsert=True)
-            # if last_block % 100 == 0:
-            sys.stdout.flush()
+            dt = datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S")
+            l("----------------------------------")
+            l("#{} - {} - {} ops ({} remaining|quick:{})".format(block_num, dt, len(block), remaining_blocks, quick))
+            for op in block:
+                # pprint("-----------------------------")
+                # pprint(op)
+                # pprint(last_block_processed)
+                # pprint("-----------------------------")
+                # Process op
+                process_op(op, quick=quick)
 
-        # Reset quick flag
-        quick = False
-        sys.stdout.flush()
-
-        # Sleep for one block
-        time.sleep(block_interval)
+            # Update our saved block height
+            db.status.update({'_id': 'height'}, {"$set" : {'value': block_num}}, upsert=True)
