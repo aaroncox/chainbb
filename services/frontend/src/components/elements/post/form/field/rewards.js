@@ -43,14 +43,15 @@ export default class PostFormFieldRewards extends React.Component {
     ]
     // Inject any additional accounts that are added to the beneficiaries
     Object.keys(beneficiaries).forEach((account) => {
-      const weight = beneficiaries[account]
-      rows.push(this.generateRow('Beneficiary', account.trim(), true))
+      const cleaned = account.replace("@","").trim()
+      const weight = beneficiaries[cleaned]
+      rows.push(this.generateRow('Beneficiary', cleaned, true))
     })
     return rows
   }
   getAuthorPercentage = () => {
     const { beneficiaries } = this.state
-    return 100 - _.sum(_.values(beneficiaries));
+    return Math.floor((100 - _.sum(_.values(beneficiaries)))*100)/100;
   }
   generateRow(type, account, isUser = false) {
     const { beneficiaries } = this.state
@@ -61,18 +62,20 @@ export default class PostFormFieldRewards extends React.Component {
     if(account === 'author') {
       const weight = this.getAuthorPercentage()
       accountName = <AccountLink username={this.props.author} />
-      weightDisplay = <Table.Cell><Header size='small'>{weight}% <small>({weight/100*authorPercent}%*)</small></Header></Table.Cell>
+      const accountWeight = Math.floor((weight/100*authorPercent)*100)/100
+      weightDisplay = <Table.Cell><Header size='small'>{weight}% <small>({accountWeight}%*)</small></Header></Table.Cell>
     }
     if(account === 'curators') {
       accountName = ''
     }
     if(beneficiaries.hasOwnProperty(account)) {
+      const weight = Math.floor((beneficiaries[account]/100*authorPercent)*100)/100
       weightDisplay = (
         <Table.Cell>
           <Header size='small'>
             {beneficiaries[account]}%
             {' '}
-            <small>({beneficiaries[account]/100*authorPercent}%*)</small>
+            <small>({weight}%*)</small>
           </Header>
         </Table.Cell>
       )
