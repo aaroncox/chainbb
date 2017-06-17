@@ -9,7 +9,7 @@ export default class ForumLayout extends React.Component {
   render() {
     const { id } = this.props.match.params;
     return(
-      <Grid divided>
+      <Grid>
         <Grid.Row>
           <Grid.Column width={4} className='mobile hidden'>
             <Sidebar />

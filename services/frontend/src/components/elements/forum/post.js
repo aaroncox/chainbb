@@ -27,7 +27,7 @@ export default class ForumPost extends React.Component {
     }
     if(topic.last_reply) {
       last_reply = (
-        <Grid.Column mobile={6} tablet={6} computer={5} largeScreen={4}>
+        <Grid.Column mobile={6} tablet={6} computer={4} largeScreen={4} widescreen={4}>
           <AccountAvatar
             username={topic.last_reply_by}
             style={{minHeight: '35px', minWidth: '35px', marginBottom: 0}}
@@ -42,7 +42,7 @@ export default class ForumPost extends React.Component {
       <Segment attached key={topic._id}>
         <Grid>
           <Grid.Row verticalAlign='middle'>
-            <Grid.Column width={1} only='large screen' className="center aligned">
+            <Grid.Column width={1} className="center aligned tablet or lower hidden">
               {(topic.cbb && topic.cbb.sticky)
                 ? <Icon size='large' name='pin' />
                 : (topic.children > 50)

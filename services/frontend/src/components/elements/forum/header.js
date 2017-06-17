@@ -5,7 +5,7 @@ import { Grid, Header, Segment } from 'semantic-ui-react'
 export default class ForumHeader extends React.Component {
   render() {
     return (
-      <Segment attached='top'>
+      <Segment attached='top' secondary>
         <Grid>
           <Grid.Row>
             <Grid.Column width={10}>
