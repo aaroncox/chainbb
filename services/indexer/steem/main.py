@@ -336,6 +336,17 @@ def rebuild_forums_cache():
             cache.update({'tags': forum['tags']})
         forums_cache.update({str(forum['_id']): cache})
 
+def process_vote_queue():
+    global vote_queue
+    l("Updating {} posts that were voted upon.".format(len(vote_queue)))
+    # Process all queued votes from block
+    for _id in vote_queue:
+        # Split the ID into parameters for loading the post
+        author, permlink = _id.split('/')
+        # Process the votes
+        process_vote(_id, author, permlink)
+    vote_queue = []
+
 def process_global_props():
     global props
     props = b.info()
@@ -348,6 +359,7 @@ if __name__ == '__main__':
     rebuild_forums_cache()
 
     scheduler = BackgroundScheduler()
+    scheduler.add_job(process_vote_queue, 'interval', minutes=5, id='process_vote_queue')
     scheduler.add_job(process_global_props, 'interval', seconds=9, id='process_global_props')
     scheduler.start()
 
