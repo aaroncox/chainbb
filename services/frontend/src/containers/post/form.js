@@ -198,7 +198,6 @@ class PostForm extends React.Component {
     this.setState({
       submitting: true
     })
-    e.preventDefault()
     return false
   }
 
