@@ -281,6 +281,8 @@ def topics(category):
         'json_metadata': 1,
         'last_reply': 1,
         'last_reply_by': 1,
+        'max_accepted_payout': 1,
+        'percent_steem_dollars': 1,
         'permlink': 1,
         'title': 1,
         'url': 1
