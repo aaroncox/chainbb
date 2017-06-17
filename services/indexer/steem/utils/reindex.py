@@ -83,7 +83,8 @@ def update_replies(data):
 
 def update_parent(data):
     db.forums.update({
-        '_id': data['parent']
+        '_id': data['parent'],
+        'children._id': {'$ne': data['_id']}
     }, {
         '$addToSet': {
             'children': {
