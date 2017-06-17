@@ -9,7 +9,7 @@ export default class IndexLayout extends React.Component {
   render() {
     const params = this.props.match.params;
     return(
-      <Grid divided stackable>
+      <Grid stackable>
         <Grid.Row>
           <Grid.Column width={4} className='mobile hidden'>
             <Sidebar forums={params} />
