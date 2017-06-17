@@ -230,7 +230,7 @@ export function submit(account, data, parent, action = 'post') {
     const author = account.name
     const body = data.body
     const title = (data.title) ? data.title : ''
-    const permlink = (data.post) ? data.post.permlink : generatePermlink(title, parent) // Prevent editing
+    const permlink = (data.existingPost) ? data.existingPost.permlink : generatePermlink(title, parent) // Prevent editing
     const parent_author = (parent) ? parent.author : ''
     const parent_permlink = (parent) ? parent.permlink : data.category
     // JSON to append to the post
