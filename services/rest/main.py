@@ -4,12 +4,18 @@ from pymongo import MongoClient
 from bson.json_util import dumps
 from flask_cors import CORS, cross_origin
 from mongodb_jsonencoder import MongoJsonEncoder
+from steem import Steem
 
 app = Flask(__name__)
 app.json_encoder = MongoJsonEncoder
 CORS(app)
 mongo = MongoClient("mongodb://mongo", connect=False)
 db = mongo.forums
+
+nodes = [
+    'http://steem.chainbb.com'
+]
+s = Steem(nodes)
 
 def response(json, forum=False, children=False):
     # Load height
@@ -287,12 +293,16 @@ def topics(category):
 def post(category, author, permlink):
     # Load the specified post
     post = load_post(author, permlink)
-    # Load the specified forum
-    query = {
-        'tags': {'$in': [post['category']]}
-    }
-    forum = db.forums.find_one(query)
-    return response(post, forum=forum)
+    if post:
+      # Load the specified forum
+      query = {
+          'tags': {'$in': [post['category']]}
+      }
+      forum = db.forums.find_one(query)
+      return response(post, forum=forum)
+    else:
+      post = s.get_content(author, permlink).copy()
+      return response(post)
 
 @app.route('/<category>/@<author>/<permlink>/responses')
 def responses(category, author, permlink):
