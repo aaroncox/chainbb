@@ -66,6 +66,20 @@ def process_op(op, quick=False):
         queue_parent_update(opData)
     if opType == "comment":
         process_post(opData, op, quick=False)
+    if opType == "delete_comment":
+        remove_post(opData)
+
+def remove_post(opData):
+    author = opData['author']
+    permlink = opData['permlink']
+
+    # Generate ID
+    _id = author + '/' + permlink
+    l("remove post {}".format(_id))
+
+    # Remove any matches
+    db.posts.remove({'_id': _id})
+    db.replies.remove({'_id': _id})
 
 def queue_parent_update(opData):
     global vote_queue
