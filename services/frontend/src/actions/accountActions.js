@@ -44,13 +44,16 @@ export function fetchAccount() {
     }
     dispatch({
       type: types.ACCOUNT_FETCH,
-      payload: payload
+      payload: payload,
+      loading: true
     })
     if(payload.isUser) {
       setTimeout(function() {
         steem.api.getAccounts([payload.name], function(err, data) {
-          payload['data'] = data[0]
-          dispatch(fetchAccountResolved(payload))
+          dispatch(fetchAccountResolved(Object.assign({}, payload, {
+            data: data[0],
+            loading: false
+          })))
         })
       }, 500)
     }
