@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import TimeAgo from 'react-timeago'
 
-import { Dimmer, Divider, Grid, Header, Icon, Label, Loader, Segment } from 'semantic-ui-react'
+import { Button, Dimmer, Divider, Grid, Header, Icon, Label, Loader, Segment } from 'semantic-ui-react'
 
 import * as accountActions from '../../actions/accountActions'
 import * as breadcrumbActions from '../../actions/breadcrumbActions'
@@ -17,6 +17,10 @@ import Response404 from './response/404'
 
 class Response extends React.Component {
 
+  state = {
+    revealed: []
+  }
+
   getParent(post) {
     let collection = this.props.post.responses,
         parent_id = post.parent_author + '/' + post.parent_permlink
@@ -26,6 +30,17 @@ class Response extends React.Component {
       }
     }
     return -1;
+  }
+
+  handleReveal = (e, data) => {
+    console.log(e, data)
+    const revealed = this.state.revealed
+    if(revealed.indexOf(data.value) === -1) {
+      revealed.push(data.value)
+    }
+    this.setState({revealed})
+    e.preventDefault()
+    return false
   }
 
   render() {
@@ -93,6 +108,20 @@ class Response extends React.Component {
                 <Divider hidden></Divider>
                 <Divider hidden></Divider>
               </div>
+            )
+          }
+          if(hidden && this.state.revealed.indexOf(post._id) === -1) {
+            return (
+              <Grid.Row key={index} id={post._id}>
+                <Grid.Column className='mobile hidden' width={4}></Grid.Column>
+                <Grid.Column mobile={16} tablet={12} computer={12}>
+                  <Divider horizontal>
+                    <Button basic size='tiny' onClick={this.handleReveal} value={post._id}>
+                      Post by @{post.author} hidden (low ratings) - click to show
+                    </Button>
+                  </Divider>
+                </Grid.Column>
+              </Grid.Row>
             )
           }
           return <Grid.Row key={index} id={post._id}>
