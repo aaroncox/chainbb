@@ -359,6 +359,7 @@ if __name__ == '__main__':
     rebuild_forums_cache()
 
     scheduler = BackgroundScheduler()
+    scheduler.add_job(rebuild_forums_cache, 'interval', minutes=1, id='rebuild_forums_cache')
     scheduler.add_job(process_vote_queue, 'interval', minutes=5, id='process_vote_queue')
     scheduler.add_job(process_global_props, 'interval', seconds=9, id='process_global_props')
     scheduler.start()
