@@ -29,6 +29,7 @@ if(init):
 else:
   last_block_processed = 1
 
+props = {}
 forums_cache = {}
 vote_queue = []
 
@@ -321,11 +322,20 @@ def rebuild_forums_cache():
             cache.update({'tags': forum['tags']})
         forums_cache.update({str(forum['_id']): cache})
 
+def process_global_props():
+    global props
+    props = b.info()
+    l("Props updated to #{}".format(props['last_irreversible_block_num']))
+
 if __name__ == '__main__':
     l("Starting services @ block #{}".format(last_block_processed))
 
+    process_global_props()
     rebuild_forums_cache()
 
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(process_global_props, 'interval', seconds=9, id='process_global_props')
+    scheduler.start()
 
     quick = False
     for block in b.stream_from(start_block=last_block_processed, batch_operations=True):
