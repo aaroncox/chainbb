@@ -125,12 +125,12 @@ export default class LoginModal extends React.Component {
               error={(this.state.error) ? true : false}
               loading={this.state.loading}>
               <Form.Input placeholder='Account Name' name='account' value={this.state.account} onChange={this.handleChange} />
-              <Form.Input placeholder='Posting Key' type='password' name='key' value={this.state.key} onChange={this.handleChange} />
+              <Form.Input placeholder='Posting (Private Key)' type='password' name='key' value={this.state.key} onChange={this.handleChange} />
               <p>
-                Need help finding your Posting Key?
+                Need help finding your <strong>Posting (Private Key)</strong>?
                 {' '}
                 <a rel='nofollow' target='_blank' href='https://steemit.com/steemit-guides/@rgeddes/getting-your-posting-key---made-easy'>
-                  Read this post by @rgeddes on steemit.com
+                  Read this post by @rgeddes on steemit.com.
                 </a>
               </p>
               <Message
