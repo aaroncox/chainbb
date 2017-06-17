@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import { Link } from 'react-router-dom'
 import { List } from 'semantic-ui-react'
 
 export default class Paginator extends Component {
@@ -12,32 +12,32 @@ export default class Paginator extends Component {
     if(pages > 1) {
       elements.push((
         <List.Item key={1}>
-          <a href={`${url}#comments-page-1`}>1</a>
+          <Link to={`${url}#comments-page-1`}>1</Link>
         </List.Item>
       ))
       elements.push((
         <List.Item key={2}>
-          <a href={`${url}#comments-page-2`}>2</a>
+          <Link to={`${url}#comments-page-2`}>2</Link>
         </List.Item>
       ))
     }
     if(pages > 2 && pages < 6) {
       elements.push((
         <List.Item key={3}>
-          <a href={`${url}#comments-page-3`}>3</a>
+          <Link to={`${url}#comments-page-3`}>3</Link>
         </List.Item>
       ))
       if(pages > 3) {
         elements.push((
           <List.Item key={4}>
-            <a href={`${url}#comments-page-4`}>4</a>
+            <Link to={`${url}#comments-page-4`}>4</Link>
           </List.Item>
         ))
       }
       if(pages > 4) {
         elements.push((
           <List.Item key={5}>
-            <a href={`${url}#comments-page-5`}>5</a>
+            <Link to={`${url}#comments-page-5`}>5</Link>
           </List.Item>
         ))
       }
@@ -50,12 +50,12 @@ export default class Paginator extends Component {
       ))
       elements.push((
         <List.Item key={'2nd-last'}>
-          <a href={`${url}#comments-page-${pages-1}`}>{pages-1}</a>
+          <Link to={`${url}#comments-page-${pages-1}`}>{pages-1}</Link>
         </List.Item>
       ))
       elements.push((
         <List.Item key={'last'}>
-          <a href={`${url}#comments-page-${pages}`}>{pages}</a>
+          <Link to={`${url}#comments-page-${pages}`}>{pages}</Link>
         </List.Item>
       ))
     }
