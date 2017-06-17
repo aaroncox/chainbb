@@ -19,13 +19,15 @@ import ForumHeader from '../components/elements/forum/header'
 import ForumTitle from '../components/elements/forum/title'
 import Forum404 from '../components/elements/forum/404'
 import ForumPost from '../components/elements/forum/post'
-import PostForm from '../components/elements/post/form'
+import PostForm from './post/form'
+import PostFormHeader from '../components/elements/post/form/header'
 
 class Forum extends React.Component {
   constructor(props, state) {
     goToTop()
     super(props, state);
     this.state = {
+      children: [],
       page: 1,
       topics: false,
       showNewPost: false,
@@ -65,7 +67,14 @@ class Forum extends React.Component {
       type: 'success',
       timeout: 8000
     }).show();
-    this.getForum(1);
+    this.setState({
+      topics: false,
+      showNewPost: false,
+      loadingPosts: true
+    })
+    setTimeout(() => {
+      this.getForum(1);
+    }, 4000)
   }
 
   hideNewPost = (e) => {
@@ -91,7 +100,8 @@ class Forum extends React.Component {
   async getForum(page = 1) {
     this.setState({
       topics: false,
-      showNewPost: false
+      showNewPost: false,
+      loadingPosts: true
     })
     if (!page) page = 1;
     try {
@@ -129,11 +139,14 @@ class Forum extends React.Component {
   render() {
     let forum = this.state.forum,
         children = this.state.children,
+        display = false,
+        rows = false,
+        controls = false,
+        subforums = false,
         page = this.state.page,
         isUser = this.props.account.isUser,
         perPage = 20,
         posts = 0,
-        loaded = (typeof this.state.topics === 'object'),
         topics = this.state.topics,
         newPostButton = (
           <Popup
@@ -148,12 +161,8 @@ class Forum extends React.Component {
             content='You must be logged in to post.'
             basic
           />
-        ),
-        display = (
-          <Dimmer inverted active style={{minHeight: '100px', display: 'block'}}>
-            <Loader size='large' content='Loading'/>
-          </Dimmer>
         )
+
     if(isUser) {
       newPostButton = (
         <Button floated='left' color='green' size='tiny' onClick={this.showNewPost}>
@@ -166,102 +175,133 @@ class Forum extends React.Component {
     if(forum.accounts && forum.accounts.length > 0) {
       newPostButton = false
     }
-    if(loaded) {
-      let subforums = false
-      posts = (forum.stats) ? forum.stats.posts : 0
-      if(children.length > 0) {
-        subforums = (
-          <Grid.Row>
-            <Grid.Column width={16}>
-              <Divider horizontal>Sub-forums</Divider>
-              <Segment secondary>
-                {children.map((forum, index) => {
-                  return <ForumIndex forum={forum} key={index} />
-                })}
-              </Segment>
-            </Grid.Column>
-          </Grid.Row>
-        )
-      }
-      if(topics.length > 0) {
-        let rows = topics.map((topic, idx) => <ForumPost topic={topic} key={idx} />)
-        const controls = (
-          <Grid.Row>
-            <Grid.Column width={6} verticalAlign="middle">
-              {newPostButton}
-            </Grid.Column>
-            <Grid.Column width={10} verticalAlign="middle">
-              <Paginator
-                page={page}
-                perPage={perPage}
-                total={posts}
-                callback={this.changePage}
-                />
-            </Grid.Column>
-          </Grid.Row>
-        )
+    if(children.length > 0) {
+      subforums = (
+        <Segment secondary attached='bottom'>
+          <Header
+            icon='fork'
+            content='Sub-forums'
+          />
+          {children.map((forum, index) => {
+            return <ForumIndex forum={forum} key={index} />
+          })}
+        </Segment>
+      )
+    }
+    if(forum._id) {
+      if(this.state.showNewPost) {
+        subforums = false
         display = (
-          <Grid>
-            {subforums}
-            <Divider horizontal>Forum Threads</Divider>
-            {controls}
-            <Grid.Row>
-              <Grid.Column width={16}>
-                <ForumHeader />
-                {rows}
-              </Grid.Column>
-            </Grid.Row>
-            {controls}
-          </Grid>
+          <PostForm
+            formHeader={(
+              <PostFormHeader
+                title='Create a new Post'
+                color='green'
+                subtitle={
+                  <span>
+                    This post will automatically be tagged with
+                    <Label horizontal>
+                      #{forum.tags[0]}
+                    </Label>
+                    as the first tag to post in the
+                    {' '}
+                    <Link to={`/forum/${forum._id}`}>
+                      {forum.name}
+                    </Link>
+                    {' '}
+                    forum.
+                  </span>
+                }
+                />
+            )}
+            forum={forum}
+            elements={['body', 'rewards', 'title', 'tags']}
+            onCancel={this.hideNewPost}
+            onComplete={this.handleNewPost}
+            { ... this.props } />
         )
       } else {
-        display = (
-          <Grid>
-            {subforums}
-            <Divider horizontal>Forum Threads</Divider>
-            <Grid.Row>
-              <Grid.Column width={16}>
-                <Forum404 forum={forum} isUser={isUser} showNewPost={this.showNewPost} />
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
-        )
+        if(topics.length > 0) {
+          posts = (forum.stats) ? forum.stats.posts : 0
+          if(topics.length > 0) {
+            rows = topics.map((topic, idx) => <ForumPost topic={topic} key={idx} />)
+            controls = (
+              <Grid.Row>
+                <Grid.Column width={6} verticalAlign="middle">
+                  {newPostButton}
+                </Grid.Column>
+                <Grid.Column width={10} verticalAlign="middle">
+                  <Paginator
+                    page={page}
+                    perPage={perPage}
+                    total={posts}
+                    callback={this.changePage}
+                    />
+                </Grid.Column>
+              </Grid.Row>
+            )
+          }
+          display = (
+            <Grid>
+              <Grid.Row>
+                <Grid.Column width={16}>
+                  <Divider horizontal>Forum Threads</Divider>
+                </Grid.Column>
+              </Grid.Row>
+              {controls}
+              <Grid.Row>
+                <Grid.Column width={16}>
+                  <ForumHeader />
+                  {rows}
+                </Grid.Column>
+              </Grid.Row>
+              {controls}
+            </Grid>
+          )
+        } else if(this.state.loadingPosts) {
+          display = (
+            <Grid>
+              <Grid.Row>
+                <Grid.Column width={16}>
+                  <Divider horizontal>Forum Threads</Divider>
+                </Grid.Column>
+              </Grid.Row>
+              <Grid.Row>
+                <Grid.Column width={16} style={{minHeight: '200px'}}>
+                  <Dimmer inverted active style={{minHeight: '100px', display: 'block'}}>
+                    <Loader size='large' content='Loading Post...'/>
+                  </Dimmer>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          )
+        } else {
+          display = (
+            <Grid>
+              <Grid.Row>
+                <Grid.Column width={16}>
+                  <Divider section>Forum Threads</Divider>
+                  <Forum404 forum={forum} isUser={isUser} showNewPost={this.showNewPost} />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          )
+        }
       }
-    }
-    if(forum._id && this.state.showNewPost) {
-      let formHeader = (
-        <Header size='large'>
-          Create a new Post
-          <Header.Subheader>
-            This post will automatically be tagged with
-            <Label horizontal>
-              #{forum.tags[0]}
-            </Label>
-            as the first tag to post in the
-            {' '}
-            <Link to={`/forum/${forum._id}`}>
-              {forum.name}
-            </Link>
-            {' '}
-            forum.
-          </Header.Subheader>
-        </Header>
-      )
-      display = (
-        <PostForm
-          formHeader={formHeader}
-          forum={forum}
-          elements={['body', 'title', 'tags']}
-          onCancel={this.hideNewPost}
-          onComplete={this.handleNewPost}
-          { ... this.props } />
-      )
+    } else {
+      display = <Segment>
+        <Dimmer inverted active style={{minHeight: '100px', display: 'block'}}>
+          <Loader size='large' content='Loading Posts'/>
+        </Dimmer>
+      </Segment>
     }
     return(
       <div>
         <ForumTitle
           forum={forum}
+          attached={(subforums) ? 'top' : false}
           { ... this.props } />
+        {subforums}
         {display}
       </div>
     );
@@ -270,7 +310,8 @@ class Forum extends React.Component {
 
 function mapStateToProps(state, ownProps) {
   return {
-    account: state.account
+    account: state.account,
+    post: state.post
   }
 }
 

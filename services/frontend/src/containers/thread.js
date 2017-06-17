@@ -2,8 +2,10 @@ import React from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { goToTop, goToAnchor } from 'react-scrollable-anchor'
+import ReactDOMServer from 'react-dom/server';
+import Noty from 'noty';
 
-import { Divider, Grid, Header } from 'semantic-ui-react'
+import { Divider, Grid, Header, Segment } from 'semantic-ui-react'
 
 import * as accountActions from '../actions/accountActions'
 import * as postActions from '../actions/postActions'
@@ -11,7 +13,7 @@ import * as preferenceActions from '../actions/preferenceActions'
 import * as statusActions from '../actions/statusActions'
 
 import Post from '../components/elements/post'
-import PostForm from '../components/elements/post/form'
+import PostForm from './post/form'
 import PostFormHeader from '../components/elements/post/form/header'
 import Response from '../components/elements/response'
 import Paginator from '../components/global/paginator'
@@ -111,6 +113,22 @@ class Thread extends React.Component {
   }
 
   handleResponse = () => {
+    new Noty({
+      closeWith: ['click', 'button'],
+      layout: 'topRight',
+      progressBar: true,
+      theme: 'semanticui',
+      text: ReactDOMServer.renderToString(
+        <Header>
+          Your post has been submitted!
+          <Header.Subheader>
+            It may take a few moments to appear on chainBB.com, and will appear at the end of this thread.
+          </Header.Subheader>
+        </Header>
+      ),
+      type: 'success',
+      timeout: 8000
+    }).show();
     this.setState({ submitted: new Date() })
   }
 
@@ -118,7 +136,8 @@ class Thread extends React.Component {
     let page = (this.state) ? this.state.page : 1,
         perPage = this.props.preferences.threadPostsPerPage,
         responses = (this.props.post) ? this.props.post.responses : 0,
-        pages = Math.ceil(responses.length / perPage)
+        pages = Math.ceil(responses.length / perPage),
+        postForm = false
     let comments_nav = (
       <Grid id={(page ? `comments-page-${page}` : '')}>
         <Grid.Row verticalAlign='middle'>
@@ -144,9 +163,25 @@ class Thread extends React.Component {
     let postFormHeader = (
       <PostFormHeader
         title='Reply to Thread'
-        subtitle=''
+        subtitle='Replying to the thread will reply leave a response at the end of the thread responding to the original post.'
         />
     )
+    if(this.props.post && this.props.post.content && this.props.account && this.props.account.isUser) {
+      postForm = (
+        <Segment secondary>
+          <PostForm
+            key={this.state.submitted}
+            action='threadReply'
+            actions={this.props.actions}
+            formHeader={postFormHeader}
+            elements={['body']}
+            parent={this.props.post.content}
+            onCancel={this.handleResponse}
+            onComplete={this.handleResponse}
+            { ... this.props } />
+          </Segment>
+      )
+    }
     return (
       <div>
         <Post
@@ -172,16 +207,7 @@ class Thread extends React.Component {
 
             </Grid.Column>
             <Grid.Column mobile={16} tablet={12} computer={12}>
-              <PostForm
-                key={this.state.submitted}
-                action='create'
-                actions={this.props.actions}
-                formHeader={postFormHeader}
-                elements={['body']}
-                parent={this.props.post.content}
-                onCancel={this.handleResponse}
-                onComplete={this.handleResponse}
-                { ... this.props } />
+              {postForm}
             </Grid.Column>
           </Grid.Row>
         </Grid>

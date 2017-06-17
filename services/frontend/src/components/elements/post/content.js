@@ -7,7 +7,7 @@ import { Button, Divider, Header, Popup, Segment } from 'semantic-ui-react'
 
 import MarkdownViewer from '../../../utils/MarkdownViewer';
 import PostControls from './controls'
-import PostForm from './form'
+import PostForm from '../../../containers/post/form'
 import PostFormHeader from './form/header'
 import PlatformLink from '../../../utils/link/platform'
 import TimeAgo from 'react-timeago'
@@ -32,7 +32,7 @@ export default class PostContent extends React.Component {
         <Header>
           Your post has been submitted!
           <Header.Subheader>
-            It may take a few moments to appear on chainBB.com.
+            It may take a few moments to appear on chainBB.com, and will appear at the end of this thread.
           </Header.Subheader>
         </Header>
       ),
@@ -70,7 +70,7 @@ export default class PostContent extends React.Component {
     }).show();
     this.setState({
       editing: false,
-      updatedPost: data
+      updatedPost: data.post
     })
   }
 
@@ -90,6 +90,7 @@ export default class PostContent extends React.Component {
         editFormHeader = (
           <PostFormHeader
             title='Edit your Post'
+            color='green'
             subtitle=''
             />
         ),
@@ -152,30 +153,34 @@ export default class PostContent extends React.Component {
     }
     if(responding) {
       postForm = (
-        <PostForm
-          action='create'
-          actions={this.props.actions}
-          formHeader={postFormHeader}
-          elements={['body']}
-          parent={post}
-          onCancel={this.handleResponding}
-          onComplete={this.handleRespondingComplete}
-          { ... this.props } />
+        <Segment secondary attached color='green'>
+          <PostForm
+            action='create'
+            actions={this.props.actions}
+            formHeader={postFormHeader}
+            elements={['body']}
+            parent={post}
+            onCancel={this.handleResponding}
+            onComplete={this.handleRespondingComplete}
+            { ... this.props }
+          />
+        </Segment>
       )
     }
     if(editing) {
       editForm = (
-        <PostForm
-          action='edit'
-          actions={this.props.actions}
-          formHeader={editFormHeader}
-          elements={(post.depth === 0) ? ['title', 'body', 'tags'] : ['body']}
-          parent={post}
-          post={post}
-          account={this.props.account}
-          onCancel={this.handleEditing}
-          onComplete={this.handleEditingComplete}
-        />
+        <Segment basic>
+          <PostForm
+            action='edit'
+            actions={this.props.actions}
+            formHeader={editFormHeader}
+            elements={(post.depth === 0) ? ['title', 'body', 'tags'] : ['body']}
+            existingPost={post}
+            account={this.props.account}
+            onCancel={this.handleEditing}
+            onComplete={this.handleEditingComplete}
+          />
+        </Segment>
       )
     }
     if(post.depth === 0) {
@@ -189,7 +194,7 @@ export default class PostContent extends React.Component {
         </span>)
       }
       title = (
-        <Segment color='blue' secondary stacked={(this.props.op && this.props.page !== 1)}>
+        <Segment style={{ borderTop: '2px solid #2185D0' }} secondary attached stacked={(this.props.op && this.props.page !== 1)}>
           <Header size='huge'>
             <h1 style={{margin: 0}}>
               {post.title}
@@ -245,7 +250,7 @@ export default class PostContent extends React.Component {
       }
     }
     return (
-      <Segment.Group color='blue'>
+      <div>
         {title}
         {(editForm)
           ? (editForm)
@@ -258,7 +263,7 @@ export default class PostContent extends React.Component {
           )
         }
         {postForm}
-      </Segment.Group>
+      </div>
     )
   }
 }

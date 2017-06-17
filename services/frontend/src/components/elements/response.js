@@ -30,15 +30,22 @@ class Response extends React.Component {
 
   render() {
     let display = (
-          <Dimmer inverted active style={{minHeight: '100px', display: 'block'}}>
-            <Loader size='large' content='Loading Post...'/>
-          </Dimmer>
+            <Grid.Row>
+              <Grid.Column width={16}>
+                <Segment clearing basic style={{minHeight: '150px'}}>
+                  <Dimmer inverted active style={{minHeight: '150px', display: 'block'}}>
+                    <Loader size='large' content='Loading Replies...'/>
+                  </Dimmer>
+                </Segment>
+              </Grid.Column>
+            </Grid.Row>
         ),
-        count = (this.props.post && this.props.post.responses) ? this.props.post.responses.length : false
-    if(count === 0) {
+        post = this.props.post,
+        count = (post && post.responses) ? post.responses.length : false
+    if(post.content && post.content.children === 0) {
       display = <Response404 {...this.props} />
     }
-    if(count && count > 0) {
+    if(count && count > 0 && post.content.children > 0) {
       let start = (this.props.page - 1) * this.props.perPage,
           end = start + this.props.perPage,
           responses = this.props.post.responses.slice(start, end)
@@ -47,63 +54,62 @@ class Response extends React.Component {
       let formId = 0
       if(count > 0) {
         display = responses.map((post, index) => {
-                    let account = (
-                          <Segment basic className="thread-author center aligned">
-                            <img alt={post.author} src={`https://img.steemconnect.com/@${post.author}?size=80`} className="ui centered spaced rounded bordered image" />
-                            <Header>
-                              <AccountLink username={post.author} />
-                            </Header>
-                          </Segment>
-                        ),
-                        parent_post = this.getParent(post),
-                        quote = ''
-                    if(parent_post['_id']) {
-                      quote = (
-                        <div>
-                          <Segment padded>
-                            <Header size='small'>
-                              <AccountLink username={parent_post.author} />
-                              {' '}
-                              said
-                              {' '}
-                              <a onClick={this.props.scrollToPost.bind(this, parent_post._id)}>
-                                <TimeAgo date={`${parent_post.created}Z`} />
-                              </a>
-                              {' '}
-                              ...
-                            </Header>
-                            <Label
-                              attached='top right'
-                              style={{cursor: 'pointer'}}
-                              onClick={this.props.scrollToPost.bind(this, parent_post._id)}>
-                                <Icon name='toggle up' />
-                                Jump to Original
-                            </Label>
+          let account = (
+                <Segment basic className="thread-author center aligned">
+                  <img alt={post.author} src={`https://img.steemconnect.com/@${post.author}?size=80`} className="ui centered spaced rounded bordered image" />
+                  <Header>
+                    <AccountLink username={post.author} />
+                  </Header>
+                </Segment>
+              ),
+              hidden = (post.net_votes < 0),
+              parent_post = this.getParent(post),
+              quote = ''
+          if(parent_post['_id']) {
+            quote = (
+              <div>
+                <Segment padded>
+                  <Header size='small'>
+                    <AccountLink username={parent_post.author} />
+                    {' '}
+                    said
+                    {' '}
+                    <a onClick={this.props.scrollToPost.bind(this, parent_post._id)}>
+                      <TimeAgo date={`${parent_post.created}Z`} />
+                    </a>
+                    {' '}
+                    ...
+                  </Header>
+                  <Label
+                    attached='top right'
+                    style={{cursor: 'pointer'}}
+                    onClick={this.props.scrollToPost.bind(this, parent_post._id)}>
+                      <Icon name='toggle up' />
+                      Jump to Original
+                  </Label>
 
-                            <MarkdownViewer formId={formId + '-viewer'} text={parent_post.body} jsonMetadata={jsonMetadata} large highQualityPost={high_quality_post}  />
-                          </Segment>
-                          <Divider hidden></Divider>
-                          <Divider hidden></Divider>
-                        </div>
-                      )
-                    }
-                    return <Grid.Row key={index} id={post._id}>
-                            <Grid.Column className='mobile hidden' width={4}>
-                              {account}
-                            </Grid.Column>
-                            <Grid.Column mobile={16} tablet={12} computer={12}>
-                              <PostContent
-                                content={post}
-                                op={false}
-                                quote={quote}
-                                scrollToLatestPost={this.scrollToLatestPost}
-                                { ...this.props } />
-                            </Grid.Column>
-                          </Grid.Row>
-
+                  <MarkdownViewer formId={formId + '-viewer'} text={parent_post.body} jsonMetadata={jsonMetadata} large highQualityPost={high_quality_post}  />
+                </Segment>
+                <Divider hidden></Divider>
+                <Divider hidden></Divider>
+              </div>
+            )
+          }
+          return <Grid.Row key={index} id={post._id}>
+                  <Grid.Column className='mobile hidden' width={4}>
+                    {account}
+                  </Grid.Column>
+                  <Grid.Column mobile={16} tablet={12} computer={12}>
+                    <PostContent
+                      content={post}
+                      op={false}
+                      quote={quote}
+                      scrollToLatestPost={this.scrollToLatestPost}
+                      { ...this.props } />
+                  </Grid.Column>
+                </Grid.Row>
         })
       }
-
     }
     return <Grid>
              {display}

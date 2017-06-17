@@ -1,4 +1,5 @@
 import steem from 'steem'
+import slug from 'slug'
 
 import * as types from './actionTypes';
 import * as BreadcrumbActions from './breadcrumbActions';
@@ -175,5 +176,145 @@ export function fetchPostResponses(params) {
 export function resetPostState() {
   return {
     type: types.POST_RESET_STATE
+  }
+}
+
+export function generatePermlink(title, parent = null) {
+  var permlink = '',
+      date = new Date(),
+      time = date.getFullYear().toString()+(date.getMonth()+1).toString()+date.getDate().toString()+"t"+date.getHours().toString()+date.getMinutes().toString()+date.getSeconds().toString()+date.getMilliseconds().toString()+"z"
+  if(title && title.trim() !== '') {
+    permlink = slug(title).toString()
+  }
+  if(parent) {
+    permlink = "re-" + parent.author + "-" + parent.permlink + "-" + time;
+  }
+  if(permlink.length > 255) {
+    permlink = permlink.substring(permlink.length - 255, permlink.length)
+  }
+  permlink = permlink.toLowerCase().replace(/[^a-z0-9-]+/g, '')
+  return permlink;
+}
+
+export function processError(err) {
+  let stack
+  let values
+  let message
+  try {
+    stack = err.payload.error.data.stack[0] || 'No stack available.';
+    values = Object.keys(stack.data);
+    message = stack.format;
+    if (values.length) {
+      values.map((key) => {
+        const value = stack.data[key];
+        message = message.split('${' + key + '}').join(value);
+        return true
+      });
+    }
+  } catch (e) {
+    console.log(e);
+    console.log(err);
+    message = 'Unknown Error, check View -> Devtools for more information.';
+  }
+  return {
+    err,
+    stack,
+    message
+  }
+}
+
+export function submit(account, data, parent, action = 'post') {
+  return async dispatch => {
+    const ops = []
+    // Set our post data
+    const author = account.name
+    const body = data.body
+    const title = (data.title) ? data.title : ''
+    const permlink = (data.post) ? data.post.permlink : generatePermlink(title, parent) // Prevent editing
+    const parent_author = (parent) ? parent.author : ''
+    const parent_permlink = (parent) ? parent.permlink : data.category
+    // JSON to append to the post
+    const json_metadata = JSON.stringify({
+      app: 'chainbb/0.2',
+      format: 'markdown+html',
+      tags: data.tags
+    })
+    // Predefined beneficiaries for the platform
+    const beneficiaries = [
+      { "account":"chainbb", "weight": 1500 }
+    ]
+    // The percentage overall (after platform splits) that the user receives - should be dynamic in the future
+    const authorPercent = 85
+    // Add additional beneficiaries as requested by the user
+    Object.keys(data.beneficiaries).forEach((account) => {
+      const requested = parseFloat(data.beneficiaries[account])
+      if(requested > 0) {
+        const weight = (requested / 100) * authorPercent * 100
+        beneficiaries.push({account, weight})
+      }
+    })
+    // Build the comment operation
+    ops.push(['comment', { author, body, json_metadata, parent_author, parent_permlink, permlink, title }])
+    // If this is not an edit, add the comment options
+    if(action !== 'edit') {
+      const allow_curation_rewards = true
+      const allow_votes = true
+      const extensions = [[0, {
+        "beneficiaries": beneficiaries
+      }]]
+      let max_accepted_payout = "1000000.000 SBD"
+      let percent_steem_dollars = 10000
+      // Modify payout parameters based on reward option choosen
+      switch(data.rewards) {
+        case "sp":
+          percent_steem_dollars = 0
+          break
+        case "decline":
+          max_accepted_payout = "0.000 SBD"
+          break
+        default:
+          break
+      }
+      ops.push(['comment_options', { allow_curation_rewards, allow_votes, author, extensions, max_accepted_payout, percent_steem_dollars, permlink }]);
+    }
+    // Uncomment below to debug posts without submitting
+    // console.log('data')
+    // console.log(data)
+    // console.log('ops')
+    // console.table(ops)
+    // setTimeout(function() {
+    //   dispatch({
+    //     type: types.POST_SUBMIT_RESOLVED,
+    //     payload: {
+    //       formId: data.formId,
+    //       hasError: false,
+    //       post: { author, title, body, json_metadata, permlink, parent_author, parent_permlink },
+    //       ts: +new Date()
+    //     }
+    //   })
+    // }, 60000)
+    steem.broadcast.send({ operations: ops, extensions: [] }, { posting: account.key }, function(err, result) {
+      if(err) {
+        dispatch({
+          type: types.POST_SUBMIT_ERROR,
+          payload: {
+            formId: data.formId,
+            error: processError(err),
+            hasError: true,
+            ts: +new Date()
+          }
+        })
+      } else {
+        dispatch({
+          type: types.POST_SUBMIT_RESOLVED,
+          payload: {
+            formId: data.formId,
+            hasError: false,
+            post: { author, title, body, json_metadata, permlink, parent_author, parent_permlink },
+            ts: +new Date()
+          }
+        })
+      }
+    });
   }
 }

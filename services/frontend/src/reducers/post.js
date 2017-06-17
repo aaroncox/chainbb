@@ -56,6 +56,14 @@ export default function post(state = initialState, action) {
       })
     case types.POST_RESET_STATE:
       return initialState
+    case types.POST_SUBMIT_ERROR:
+      return Object.assign({}, state, {
+        submitted: action.payload
+      })
+    case types.POST_SUBMIT_RESOLVED:
+      return Object.assign({}, state, {
+        submitted: action.payload
+      })
     case types.POST_VOTE_PROCESSING:
       return Object.assign({}, state, {
         processing: {
