@@ -44,7 +44,7 @@ export default class PostFormFieldRewards extends React.Component {
     // Inject any additional accounts that are added to the beneficiaries
     Object.keys(beneficiaries).forEach((account) => {
       const weight = beneficiaries[account]
-      rows.push(this.generateRow('Beneficiary', account, true))
+      rows.push(this.generateRow('Beneficiary', account.trim(), true))
     })
     return rows
   }
@@ -155,7 +155,7 @@ export default class PostFormFieldRewards extends React.Component {
               required
               errorLabel={ errorLabel }
               validationErrors={{
-                isDefaultRequiredValue: 'You need to select a product',
+                isDefaultRequiredValue: 'You need to select a rewards method',
               }}
               options={options}
               defaultValue={(draft && draft.rewards) ? draft.rewards : 'default'}
@@ -186,7 +186,7 @@ export default class PostFormFieldRewards extends React.Component {
                         focus
                         autoFocus
                         defaultValue={value}
-                        placeholder='Search for an account...'
+                        placeholder='Enter the account name...'
                         validationErrors={{
                           isDefaultRequiredValue: 'An account name is required'
                         }}
@@ -199,6 +199,9 @@ export default class PostFormFieldRewards extends React.Component {
                         validations={{
                           validAmount: function (values, value) {
                             const parsed = parseFloat(value)
+                            if(isNaN(parsed)) {
+                              return false
+                            }
                             if(parsed > authorPercent) {
                               return false
                             }
@@ -211,7 +214,7 @@ export default class PostFormFieldRewards extends React.Component {
                         defaultValue={value}
                         placeholder='Enter a percentage'
                         validationErrors={{
-                          isDefaultRequiredValue: 'An percentage is required',
+                          isDefaultRequiredValue: 'A percentage is required',
                           validAmount: 'Invalid Amount'
                         }}
                         errorLabel={ errorLabel }
