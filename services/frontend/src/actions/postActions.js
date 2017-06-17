@@ -231,8 +231,8 @@ export function submit(account, data, parent, action = 'post') {
     const body = data.body
     const title = (data.title) ? data.title : ''
     const permlink = (data.existingPost) ? data.existingPost.permlink : generatePermlink(title, parent) // Prevent editing
-    const parent_author = (parent) ? parent.author : ''
-    const parent_permlink = (parent) ? parent.permlink : data.category
+    const parent_author = (data.existingPost) ? data.existingPost.parent_author : (parent) ? parent.author : ''
+    const parent_permlink = (data.existingPost) ? data.existingPost.parent_permlink : (parent) ? parent.permlink : data.category
     // JSON to append to the post
     const json_metadata = JSON.stringify({
       app: 'chainbb/0.2',
