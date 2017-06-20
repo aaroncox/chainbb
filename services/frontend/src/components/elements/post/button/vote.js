@@ -37,8 +37,8 @@ export default class VoteButton extends React.Component {
         active = (post && typeof post.votes === 'object') ? (post.votes.hasOwnProperty(account.name) && post.votes[account.name] !== 0) : false,
         // -----------------------------
         // Button Properties
-        text = 'Vote ',
-        icon = (this.props.error ? "warning sign icon" : "thumbs " + (!active ? 'outline' : '') + " up icon"),
+        text = 'Vote',
+        icon = (this.props.error ? "warning sign icon" : "thumbs up " + (!active ? 'outline' : '') + " up"),
         color = (!active ? (this.props.error ? 'red' : 'blue') : 'purple'), // Blue if able to vote, Purple if voted, Red if error
         tooltip = `Click to cast your vote with ${weight}% of your voting power.`,
         adjuster = false,
@@ -59,7 +59,7 @@ export default class VoteButton extends React.Component {
         )
     // If we have an active vote, changed text/tooltip and remove adjuster
     if(active) {
-      text = `${post.votes[account.name]/100}% Vote Applied`
+      text = `${post.votes[account.name]/100}% Vote Cast`
       tooltip = `Click again to remove your vote.`
       adjuster = false
     }
@@ -85,14 +85,20 @@ export default class VoteButton extends React.Component {
       // Set the display
       display =
       (
-        <Button.Group floated='left' color={color} >
+        <span>
           <Popup
             trigger={
-              <Button onClick={this.castVote} loading={this.props.loading} disabled={this.props.loading} active={active}>
-                <i className={icon}></i>
-                {text}
-                {(!active && !this.props.error ? ` (${weight}%)` : '')}
-              </Button>
+              <Button
+                onClick={this.castVote}
+                loading={this.props.loading}
+                disabled={this.props.loading}
+                active={active}
+                icon={icon}
+                color={color}
+                floated='left'
+                labelPosition='left'
+                content={text}
+              />
             }
             position='bottom center'
             inverted
@@ -100,7 +106,7 @@ export default class VoteButton extends React.Component {
             basic
           />
           {adjuster}
-        </Button.Group>
+        </span>
       )
     }
     return display
