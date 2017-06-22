@@ -28,6 +28,9 @@ export default class VoteButton extends React.Component {
       })
     }
   }
+  clearError = (e) => {
+    this.props.clearVoteError()
+  }
   render() {
     let // The loaded data
         account = this.props.account,
@@ -65,23 +68,21 @@ export default class VoteButton extends React.Component {
     }
     // If an error has occured, change text/tooltip, remove adjuster and set active
     if(this.props.error) {
-      tooltip = this.props.error
+      tooltip = this.props.error + ' - Click to dismiss this error and try again.'
       text = 'Error Voting'
-      adjuster = false
       active = true
     }
     // If an account exists, setup the actual button
     if(this.props.account.isUser) {
-      // If it isn't an active vote, add the adjuster
-      if(!active) {
-        const { voting_power } = this.props.account.data || 10000
-        adjuster = (
-          <VoteButtonOptions
-            effectiveness={`${voting_power / 100}%`}
-            onWeightChange={this.props.onWeightChange}
-            weight={weight}/>
-        )
-      }
+      const { voting_power } = this.props.account.data || 10000
+      adjuster = (
+        <VoteButtonOptions
+          account={this.props.account}
+          status={this.props.status}
+          effectiveness={`${voting_power / 100}%`}
+          onWeightChange={this.props.onWeightChange}
+          weight={weight}/>
+      )
       // Set the display
       display =
       (
@@ -89,7 +90,7 @@ export default class VoteButton extends React.Component {
           <Popup
             trigger={
               <Button
-                onClick={this.castVote}
+                onClick={onClick}
                 loading={this.props.loading}
                 disabled={this.props.loading}
                 active={active}

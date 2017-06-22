@@ -29,6 +29,13 @@ export function castVote(payload) {
   }
 }
 
+export function clearVoteError(response) {
+  return {
+    type: types.POST_VOTE_RESOLVED_ERROR_CLEAR,
+    response: response
+  }
+}
+
 export function castVoteResolved(payload) {
   return {
     type: types.POST_VOTE_RESOLVED,

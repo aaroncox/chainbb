@@ -93,6 +93,13 @@ export default function post(state = initialState, action) {
           votes: completeProcessing(state, action.response.payload)
         }
       })
+    case types.POST_VOTE_RESOLVED_ERROR_CLEAR:
+      return Object.assign({}, state, {
+        processing: {
+          errors: false,
+          votes: state.processing.votes
+        }
+      })
     default:
       return state
   }
