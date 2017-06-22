@@ -49,10 +49,11 @@ export default ({large = true, highQualityPost = true, noImage = false, sanitize
 
         // class attribute is strictly whitelisted (below)
         div: ['class'],
-
+        table: ['class'],
+        h1: ['class'], h2: ['class'], h3: ['class'], h4: ['class'], h5: ['class'], h6: ['class'],
         // style is subject to attack, filtering more below
         td: ['style'],
-        img: ['src', 'alt'],
+        img: ['src', 'alt', 'class'],
         a: ['href', 'rel'],
     },
     transformTags: {

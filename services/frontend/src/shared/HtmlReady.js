@@ -90,9 +90,12 @@ function traverse(node, state, depth = 0) {
     Array(...node.childNodes).forEach(child => {
         const tag = child.tagName ? child.tagName.toLowerCase() : null
         if(tag) state.htmltags.add(tag)
-
         if(tag === 'img')
             img(state, child)
+        else if(tag === 'table')
+            table(state, child)
+        else if(['h1','h2','h3','h4','h5','h6'].indexOf(tag) !== -1)
+            header(tag, state, child)
         else if(tag === 'iframe')
             iframe(state, child)
         else if(tag === 'a')
@@ -134,6 +137,7 @@ function img(state, child) {
         state.images.add(url)
         if(state.mutate) {
             let url2 = ipfsPrefix(url)
+            child.setAttribute('class', child.getAttribute('class') + ' ui image')
             if(/^\/\//.test(url2)) {
                 // Change relative protocol imgs to https
                 url2 = "https:" + url2
@@ -143,6 +147,42 @@ function img(state, child) {
             }
         }
     }
+}
+
+function table(state, child) {
+  if(state.mutate) {
+    child.setAttribute('class', 'ui striped celled small table')
+  }
+}
+
+function header(tag, state, child) {
+  if(state.mutate) {
+    let className = ''
+    switch(tag[1]) {
+      case '1':
+        className = 'huge'
+        break;
+      case '2':
+        className = 'large'
+        break;
+      case '3':
+        className = ''
+        break;
+      case '4':
+        className = 'medium'
+        break;
+      case '5':
+        className = 'small'
+        break;
+      case '6':
+        className = 'tiny'
+        break;
+      default:
+        className = ''
+        break;
+    }
+    child.setAttribute('class', 'ui ' + className + ' header')
+  }
 }
 
 // For all img elements with non-local URLs, prepend the proxy URL (e.g. `https://img0.steemit.com/0x0/`)
