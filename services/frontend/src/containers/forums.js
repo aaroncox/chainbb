@@ -169,13 +169,21 @@ class Forums extends React.Component {
       }
       return(
         <div>
-          <Grid style={{ marginBottom: '10px' }}>
-            <Grid.Row>
-              <Grid.Column only="mobile">
-                <Login {... this.props}/>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
+          <Segment stacked color="blue">
+            <Grid>
+              <Grid.Row>
+                <Grid.Column width={12}>
+                  <Header
+                    icon='users'
+                    color='blue'
+                    size='huge'
+                    content='Forum Index'
+                    subheader='A curated list of forum categories to get you started'
+                  />
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+          </Segment>
           {display}
           <Divider />
           {activeusers}
