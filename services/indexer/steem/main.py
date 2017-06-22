@@ -2,6 +2,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta
 from steem import Steem
 from steem.blockchain import Blockchain
+from steem.converter import Converter
 from pymongo import MongoClient
 from pprint import pprint
 import collections
@@ -18,6 +19,7 @@ nodes = [
 
 s = Steem(nodes)
 b = Blockchain(steemd_instance=s, mode='head')
+c = Converter(steemd_instance=s)
 
 mongo = MongoClient("mongodb://mongo")
 db = mongo.forums
@@ -350,18 +352,34 @@ def process_vote_queue():
 def process_global_props():
     global props
     props = b.info()
+    # Save height
+    l(props)
+    db.status.update({'_id': 'height'}, {"$set" : {'value': props['last_irreversible_block_num']}}, upsert=True)
+    # Save steem_per_mvests
+    db.status.update({'_id': 'sbd_median_price'}, {"$set" : {'value': c.sbd_median_price()}}, upsert=True)
+    db.status.update({'_id': 'steem_per_mvests'}, {"$set" : {'value': c.steem_per_mvests()}}, upsert=True)
     l("Props updated to #{}".format(props['last_irreversible_block_num']))
+
+def process_rewards_pools():
+    # Save reward pool info
+    fund = s.get_reward_fund('post')
+    reward_balance = float(fund["reward_balance"].split(" ")[0])
+    db.status.update({'_id': 'reward_balance'}, {"$set" : {'value': reward_balance}}, upsert=True)
+    recent_claims = int(fund["recent_claims"].split(" ")[0])
+    db.status.update({'_id': 'recent_claims'}, {"$set" : {'value': recent_claims}}, upsert=True)
 
 if __name__ == '__main__':
     l("Starting services @ block #{}".format(last_block_processed))
 
     process_global_props()
+    process_rewards_pools()
     rebuild_forums_cache()
 
     scheduler = BackgroundScheduler()
+    scheduler.add_job(process_global_props, 'interval', seconds=9, id='process_global_props')
     scheduler.add_job(rebuild_forums_cache, 'interval', minutes=1, id='rebuild_forums_cache')
     scheduler.add_job(process_vote_queue, 'interval', minutes=5, id='process_vote_queue')
-    scheduler.add_job(process_global_props, 'interval', seconds=9, id='process_global_props')
+    scheduler.add_job(process_rewards_pools, 'interval', minutes=10, id='process_rewards_pools')
     scheduler.start()
 
     quick = False
