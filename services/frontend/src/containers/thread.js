@@ -112,6 +112,8 @@ class Thread extends React.Component {
     }
   }
 
+  handleCancel = () => {}
+
   handleResponse = () => {
     new Noty({
       closeWith: ['click', 'button'],
@@ -176,7 +178,7 @@ class Thread extends React.Component {
             formHeader={postFormHeader}
             elements={['body']}
             parent={this.props.post.content}
-            onCancel={this.handleResponse}
+            onCancel={this.handleCancel}
             onComplete={this.handleResponse}
             { ... this.props } />
           </Segment>
