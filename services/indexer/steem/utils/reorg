@@ -710,19 +710,6 @@ python3 reindex.py '{
   ]
 }'
 
-python3 reindex.py '{
-  "_id": "chainbb-support",
-  "name": "Support",
-  "parent": "chainbb",
-  "group": null,
-  "group_order": null,
-  "forum_order": 3,
-  "description": "",
-  "tags": [
-    "chainbb-support",
-    "chainbb-help"
-  ]
-}'
 
 
 
