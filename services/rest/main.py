@@ -24,7 +24,7 @@ def response(json, forum=False, children=False):
     status = {}
     for doc in statuses:
         status.update({
-          str(doc['_id']): int(doc['value'])
+          str(doc['_id']): doc['value']
         })
     response = {
         'status': 'ok',
