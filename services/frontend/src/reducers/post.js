@@ -43,6 +43,10 @@ export default function post(state = initialState, action) {
       let { posts, totalPosts } = action.payload;
       authors[action.payload.account] = { posts, totalPosts };
       return Object.assign({}, state, { authors });
+    case types.POST_LOAD_REPLIES_BY_AUTHOR_RESOLVED:
+      let { replies, totalReplies } = action.payload;
+      authors[action.payload.account] = { replies, totalReplies };
+      return Object.assign({}, state, { authors });
     case types.POST_LOAD_RESPONSES_BY_AUTHOR_RESOLVED:
       let { responses, totalResponses } = action.payload;
       authors[action.payload.account] = { responses, totalResponses };

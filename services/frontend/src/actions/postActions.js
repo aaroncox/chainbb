@@ -125,6 +125,40 @@ export function fetchPostByAuthor(author, page = 1) {
   }
 }
 
+export function fetchPostRepliesByAuthorResolved(payload = {}) {
+  return {
+    type: types.POST_LOAD_REPLIES_BY_AUTHOR_RESOLVED,
+    payload: payload
+  }
+}
+
+export function fetchPostRepliesByAuthor(author, page = 1) {
+  return async dispatch => {
+    let uri = `${ GLOBAL.REST_API }/@${ author }/replies`;
+    if (page > 1) {
+      uri = uri + '?page=' + page;
+    }
+    const response = await fetch(uri);
+    if (response.ok) {
+      const result = await response.json();
+      dispatch({
+        type: types.SET_STATUS,
+        payload: {
+          network: result.network
+        }
+      })
+      dispatch(fetchPostRepliesByAuthorResolved({
+        account: author,
+        replies: result.data.replies,
+        totalReplies: result.data.total
+      }))
+    } else {
+      console.error(response.status);
+      dispatch(fetchPostRepliesByAuthorResolved())
+    }
+  }
+}
+
 export function fetchPostResponsesByAuthorResolved(payload = {}) {
   return {
     type: types.POST_LOAD_RESPONSES_BY_AUTHOR_RESOLVED,

@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Menu } from 'semantic-ui-react'
 import AccountPosts from './tabs/posts'
+import AccountReplies from './tabs/replies'
 import AccountResponses from './tabs/responses'
 
 export default class AccountActivity extends React.Component {
