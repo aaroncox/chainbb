@@ -141,7 +141,8 @@ def update_parent_post(parent_id, reply):
     parent_post.update({
         'active_votes': collapse_votes(parent_post['active_votes']),
         'last_reply': reply['created'],
-        'last_reply_by': reply['author']
+        'last_reply_by': reply['author'],
+        'last_reply_url': reply['url']
     })
     # Set the update parameters
     query = {
