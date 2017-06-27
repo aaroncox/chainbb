@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { Grid, Header, Segment } from 'semantic-ui-react'
 
 import AccountLink from '../account/link'
+import ForumSubscribe from './subscribe'
 
 export default class ForumTitle extends React.Component {
   render() {
@@ -46,9 +47,18 @@ export default class ForumTitle extends React.Component {
               />
             </Grid.Column>
             <Grid.Column width={4} textAlign="right">
-              Managed by
-              <br/>
-              <AccountLink username='chainbb' />
+              <ForumSubscribe
+                forum={forum}
+                subscriptions={this.props.subscriptions.forums}
+                onSubscribe={this.props.actions.forumSubscribe}
+                onUnsubscribe={this.props.actions.forumUnsubscribe}
+              />
+              <p>
+                Managed by
+                {' '}
+                <AccountLink username='chainbb' />
+                {' '}
+              </p>
             </Grid.Column>
           </Grid.Row>
         </Grid>
