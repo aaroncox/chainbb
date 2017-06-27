@@ -25,9 +25,9 @@ mongo = MongoClient("mongodb://mongo")
 db = mongo.forums
 
 # Determine which block was last processed
-init = db.status.find_one({'_id': 'height'})
+init = db.status.find_one({'_id': 'height_processed'})
 if(init):
-  last_block_processed = init['value']
+  last_block_processed = int(init['value'])
 else:
   last_block_processed = 1
 
@@ -403,4 +403,4 @@ if __name__ == '__main__':
                 process_op(op, quick=quick)
 
             # Update our saved block height
-            db.status.update({'_id': 'height'}, {"$set" : {'value': block_num}}, upsert=True)
+            db.status.update({'_id': 'height_processed'}, {"$set" : {'value': block_num}}, upsert=True)
