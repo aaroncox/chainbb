@@ -19,15 +19,23 @@ db = mongo.forums
 data = json.loads(sys.argv[1])
 
 def update_forum(data):
+    removed = {}
     if 'parent' in data:
         parent = db.forums.find_one({'_id': data['parent']})
         data.update({
           'parent_name': parent['name']
         })
+    else:
+        data.pop('parent', None)
+        data.pop('parent_name', None)
+        removed.update({
+          'parent': True,
+          'parent_name': True,
+        })
     query = {
         '_id': data['_id']
     }
-    results = db.forums.update(query, {'$set': data}, upsert=True)
+    results = db.forums.update(query, {'$set': data, '$unset': removed}, upsert=True)
     if results['n'] == 1 and results['updatedExisting'] == False:
         pprint("[FORUM][REINDEXER] - Inserting new forum [" + data['_id'] + "]")
     if results['n'] == 1 and results['updatedExisting'] == True:
