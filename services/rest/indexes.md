@@ -10,6 +10,7 @@ db.posts.createIndex({category: 1, active: 1, cbb: 1})
 db.replies.createIndex({category: 1}, { sparse: true });
 db.replies.createIndex({root_post: 1, created: 1});
 db.replies.createIndex({author: 1, date: 1});
+db.replies.createIndex({parent_author: 1, date: 1});
 
 db.posts.createIndex(
   {
