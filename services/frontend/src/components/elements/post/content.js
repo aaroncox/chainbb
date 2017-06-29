@@ -45,7 +45,9 @@ export default class PostContent extends React.Component {
   }
 
   handleEditing = () => {
-    this.props.scrollToPost(this.props.content._id)
+    if(this.props.scrollToPost) {
+      this.props.scrollToPost(this.props.content._id)
+    }
     this.setState({
       editing: (this.state && this.state.editing) ? !this.state.editing : true,
     })
@@ -210,16 +212,22 @@ export default class PostContent extends React.Component {
       )
     }
     if(!this.props.op || (this.props.op && this.props.page === 1) || this.props.preview) {
+      let postHeader = (
+        <Header size='small' className='mobile only'>
+          <UserAvatar username={post.author} />
+          <Header.Subheader>
+            posted by
+          </Header.Subheader>
+          <AccountLink username={post.author} />
+          <Divider></Divider>
+        </Header>
+      )
+      if(this.props.hideAuthor) {
+        postHeader = false
+      }
       postContent = (
         <Segment attached className='thread-post'>
-          <Header size='small' className='mobile only'>
-            <UserAvatar username={post.author} />
-            <Header.Subheader>
-              posted by
-            </Header.Subheader>
-            <AccountLink username={post.author} />
-            <Divider></Divider>
-          </Header>
+          {postHeader}
           {quote}
           <MarkdownViewer formId={'viewer'} text={post.body} jsonMetadata={{}} large highQualityPost={true}  />
           <Divider hidden></Divider>

@@ -57,7 +57,8 @@ function mapStateToProps(state, ownProps) {
     account: state.account,
     post: state.post,
     preferences: state.preferences,
-    state: state.state
+    state: state.state,
+    status: state.status
   }
 }
 

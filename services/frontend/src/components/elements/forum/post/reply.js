@@ -1,10 +1,11 @@
 import React from 'react';
 
-import { Divider, Grid, Header, Segment } from 'semantic-ui-react'
+import { Button, Divider, Grid, Header, Segment } from 'semantic-ui-react'
 import TimeAgo from 'react-timeago'
 import { Link } from 'react-router-dom'
 import PostContent from '../../post/content'
 import MarkdownViewer from '../../../../utils/MarkdownViewer';
+import AccountAvatar from '../../account/avatar'
 import AccountLink from '../../account/link'
 
 export default class ForumPostReply extends React.Component {
@@ -37,18 +38,25 @@ export default class ForumPostReply extends React.Component {
         <Grid.Row verticalAlign='middle'>
           <Grid.Column tablet={16} computer={16} mobile={16} style={{marginBottom: '2em'}}>
             <Segment style={{ borderTop: '2px solid #2185D0' }} secondary attached stacked={(this.props.op && this.props.page !== 1)}>
-              <Header size='huge'>
-                <Link to={`${reply.category}/${reply.root_post}`}>
-                  {parent.root_title}
-                </Link>
+              <Header size='medium'>
+                <Button
+                  as={Link}
+                  to={reply.url}
+                  floated='right'
+                  icon='external'
+                  content='Thread'
+                  size='small'
+                  basic
+                  color='blue'
+                />
+                <AccountAvatar username={reply.author} />
+                <AccountLink username={reply.author} />
                 <Header.Subheader>
                   {'↳ '}
-                  <AccountLink username={reply.author} />
-                  {' • '}
-                  replied <TimeAgo date={`${parent.created}Z`} />
-                  {' • '}
-                  <Link to={reply.url}>
-                    view post in thread
+                  replied in
+                  {' '}
+                  <Link to={`/${reply.category}/@${reply.root_post}`}>
+                    {parent.root_title}
                   </Link>
                 </Header.Subheader>
               </Header>

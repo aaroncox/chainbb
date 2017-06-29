@@ -15,7 +15,6 @@ import * as preferenceActions from '../actions/preferenceActions'
 
 import AccountLink from '../components/elements/account/link'
 import ForumIndex from '../components/elements/forum/index'
-import Login from '../components/elements/login'
 
 class Forums extends React.Component {
 
@@ -28,6 +27,7 @@ class Forums extends React.Component {
         forums: []
       };
       this.getForums = this.getForums.bind(this);
+      this.getForums()
     }
 
     componentDidMount() {
@@ -36,6 +36,15 @@ class Forums extends React.Component {
 
     componentWillMount() {
       this.props.actions.resetPostState()
+    }
+
+    componentWillReceiveProps(nextProps) {
+      // console.log(nextProps, this.state)
+      // if(nextProps.forums.group !== this.state.group) {
+      //   console.log(nextProps.forums.group, this.state.group)
+      //   this.props.actions.resetPostState()
+      //   this.getForums()
+      // }
     }
 
     toggleVisibility = (e, props) => {
@@ -87,10 +96,6 @@ class Forums extends React.Component {
           display = <Dimmer active inverted style={loader.style}>
                       <Loader size='large' content={loader.content}/>
                     </Dimmer>
-      if(this.props.forums.group !== this.state.group) {
-        this.props.actions.resetPostState()
-        this.getForums()
-      }
       if(loaded) {
         let { forums, users } = this.state,
             // Find the unique forum groupings
@@ -125,7 +130,7 @@ class Forums extends React.Component {
           let groupings = forums.filter(function(forum) {
             return forum['group'] === group
           }).map((forum, index) => {
-            return <ForumIndex forum={forum} isMinimized={isMinimized} />
+            return <ForumIndex key={index} forum={forum} isMinimized={isMinimized} />
           })
           return  <div key={group} style={{marginBottom: "10px"}}>
                     <Segment secondary attached>

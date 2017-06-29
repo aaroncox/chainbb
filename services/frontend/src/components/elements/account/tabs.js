@@ -23,6 +23,10 @@ export default class AccountActivity extends React.Component {
         content = <AccountResponses {...this.props} />
         break;
       }
+      case "replies": {
+        content = <AccountReplies {...this.props} />
+        break;
+      }
       default: {
         content = <AccountPosts {...this.props} />
         break;
@@ -33,6 +37,7 @@ export default class AccountActivity extends React.Component {
         <Menu pointing color="blue" attached="top" size="large" secondary>
           <Menu.Item name='posts' active={tab === 'posts'} onClick={this.changeTab} />
           <Menu.Item name='responses' active={tab === 'responses'} onClick={this.changeTab} />
+          <Menu.Item name='replies' active={tab === 'replies'} onClick={this.changeTab} />
         </Menu>
         {content}
       </div>

@@ -132,6 +132,13 @@ export function fetchPostRepliesByAuthorResolved(payload = {}) {
   }
 }
 
+export function fetchPostRepliesByAuthorStarted(payload = {}) {
+  return {
+    type: types.POST_LOAD_REPLIES_BY_AUTHOR_STARTED,
+    payload: payload
+  }
+}
+
 export function fetchPostRepliesByAuthor(author, page = 1) {
   return async dispatch => {
     let uri = `${ GLOBAL.REST_API }/@${ author }/replies`;
@@ -139,6 +146,9 @@ export function fetchPostRepliesByAuthor(author, page = 1) {
       uri = uri + '?page=' + page;
     }
     const response = await fetch(uri);
+    dispatch(fetchPostRepliesByAuthorStarted({
+      account: author
+    }))
     if (response.ok) {
       const result = await response.json();
       dispatch({

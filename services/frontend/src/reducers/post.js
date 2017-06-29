@@ -43,6 +43,9 @@ export default function post(state = initialState, action) {
       let { posts, totalPosts } = action.payload;
       authors[action.payload.account] = { posts, totalPosts };
       return Object.assign({}, state, { authors });
+    case types.POST_LOAD_REPLIES_BY_AUTHOR_STARTED:
+      if(authors[action.payload.account]) delete authors[action.payload.account]['replies']
+      return Object.assign({}, state, { authors });
     case types.POST_LOAD_REPLIES_BY_AUTHOR_RESOLVED:
       let { replies, totalReplies } = action.payload;
       authors[action.payload.account] = { replies, totalReplies };
@@ -120,7 +123,19 @@ function setResponseVote(state, payload) {
   let id = payload.author + '/' + payload.permlink,
       weight = payload.weight,
       voter = payload.account.name,
-      responses = state.responses
+      { authors, responses } = state
+  // Update any replies
+  Object.keys(authors).forEach(function(author) {
+    if(authors[author].replies) {
+      authors[author].replies.forEach(function(set, key) {
+        const { reply } = set
+        if(reply._id === id) {
+          authors[author].replies[key].reply.votes[voter] = weight
+        }
+      })
+    }
+  })
+  // Update any responses
   responses.forEach(function(item, key) {
     if(item._id === id) {
       responses[key].votes[voter] = weight
