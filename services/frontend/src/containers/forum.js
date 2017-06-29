@@ -10,6 +10,7 @@ import { Button, Dimmer, Divider, Grid, Header, Label, Loader, Popup, Segment } 
 
 import * as GLOBAL from '../global';
 import * as breadcrumbActions from '../actions/breadcrumbActions'
+import * as subscriptionActions from '../actions/subscriptionActions'
 import * as postActions from '../actions/postActions'
 import * as statusActions from '../actions/statusActions'
 
@@ -311,7 +312,8 @@ class Forum extends React.Component {
 function mapStateToProps(state, ownProps) {
   return {
     account: state.account,
-    post: state.post
+    post: state.post,
+    subscriptions: state.subscriptions
   }
 }
 
@@ -319,7 +321,8 @@ function mapDispatchToProps(dispatch) {
   return {actions: bindActionCreators({
     ...breadcrumbActions,
     ...postActions,
-    ...statusActions
+    ...statusActions,
+    ...subscriptionActions,
   }, dispatch)}
 }
 
