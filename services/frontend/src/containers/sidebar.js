@@ -1,13 +1,16 @@
 import React from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { Divider, Header, Segment } from 'semantic-ui-react'
+import { Divider, Header, Icon, Menu, Segment } from 'semantic-ui-react'
 import * as accountActions from '../actions/accountActions'
 import { Link } from 'react-router-dom'
 
 class Sidebar extends React.Component {
   render() {
     // const forums = this.props.forums;
+    const { account, section } = this.props
+    const { isUser } = account
+    let userMenu = false
     let requestForum = (
           <Segment basic textAlign='center'>
             <Header size='small'>
@@ -18,6 +21,7 @@ class Sidebar extends React.Component {
             </p>
           </Segment>
         )
+    let subscribedForums = false
         // ,
         // categories = (
         //   <Menu vertical fluid color='blue' size='small'>
@@ -40,10 +44,84 @@ class Sidebar extends React.Component {
         //     */}
         //   </Menu>
         // )
-
+    if(isUser) {
+      subscribedForums = (
+            <Segment textAlign='center'>
+              <Header size='small'>
+                No subscriptions found
+              </Header>
+              <p>
+                Looks like you haven't subscribed to any forums yet.
+              </p>
+            </Segment>
+          )
+      if(this.props.subscriptions && this.props.subscriptions.forums) {
+        const { forums } = this.props.subscriptions
+        if(Object.keys(forums).length) {
+          subscribedForums = (
+            <Segment basic>
+              <Header size='small' textAlign='center'>
+                Forum Subscriptions
+              </Header>
+              <Menu vertical fluid color='blue' size='small'>
+                {Object.keys(forums).map((index) => {
+                  return (
+                    <Link
+                      key={index}
+                      className='item'
+                      to={`/forum/${forums[index].id}`}
+                    >
+                      <Header size='small'>
+                        {(forums[index].parent)
+                          ? (
+                            <Header.Subheader>
+                              Forums / {forums[index].parent_name}
+                            </Header.Subheader>
+                          )
+                          : (
+                            <Header.Subheader>
+                              Forums
+                            </Header.Subheader>
+                          )
+                        }
+                        {forums[index].name}
+                      </Header>
+                    </Link>
+                  )
+                })}
+              </Menu>
+            </Segment>
+          )
+        }
+      }
+      userMenu = (
+        <Menu vertical fluid color='blue' size='small'>
+          <Link className={`item ${(section && section === 'feed') ? 'active' : ''}`} to='/feed'>
+            <Icon name='users' />
+            Activity Feed
+          </Link>
+          <Link className={`item ${(section && section === 'replies') ? 'active' : ''}`} to={`/replies`}>
+            <Icon name='inbox' />
+            Post Replies
+          </Link>
+        </Menu>
+      )
+    }
     return (
       <div>
-        <Divider hidden />
+        <Menu vertical fluid color='blue' size='small'>
+          <Link className={`item ${(section && section === 'index') ? 'active' : ''}`} to='/'>
+            <Icon name='home' />
+            Forum Index
+          </Link>
+          <Link className={`item ${(section && section === 'forums') ? 'active' : ''}`} to='/forums'>
+            <Icon name='list layout' />
+            All Forums
+          </Link>
+        </Menu>
+        {userMenu}
+        {subscribedForums}
+        <Divider />
         {requestForum}
       </div>
     )
@@ -51,7 +129,10 @@ class Sidebar extends React.Component {
 }
 
 function mapStateToProps(state, ownProps) {
-  return {account: state.account}
+  return {
+    account: state.account,
+    subscriptions: state.subscriptions
+  }
 }
 
 function mapDispatchToProps(dispatch) {
