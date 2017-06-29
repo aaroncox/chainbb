@@ -123,7 +123,7 @@ class HeaderMenu extends Component {
                     {hasBalance.map((field) => {
                       const symbol = field.split("_")[1]
                       return (
-                        <Table.Row>
+                        <Table.Row key={symbol}>
                           <Table.Cell>
                             {symbol}
                           </Table.Cell>
