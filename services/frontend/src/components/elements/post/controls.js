@@ -19,19 +19,19 @@ export default class PostControls extends React.Component {
   }
 
   render() {
-    let data = this.props.post,
-        post = this.props.target,
-        votes = (post) ? post.votes : [],
-        accounts = Object.keys(votes).filter((k) => votes[k] !== 0).sort((a,b) => votes[b]-votes[a]),
-        extra = accounts.length - 10,
-        processing = data.processing,
-        voters = (
+    let data = this.props.post
+    let post = this.props.target
+    let votes = (post && post.votes) ? post.votes : []
+    let accounts = Object.keys(votes).filter((k) => votes[k] !== 0).sort((a,b) => votes[b]-votes[a])
+    let extra = accounts.length - 10
+    let processing = data.processing
+    let voters = (
           <VoterAvatars
             accounts={accounts}
             votes={votes}
           />
-        ),
-        moreVoters = ''
+        )
+    let moreVoters = ''
     if(extra > 0) {
       moreVoters = (
         <VoterList

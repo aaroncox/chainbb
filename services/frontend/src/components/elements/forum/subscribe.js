@@ -10,7 +10,8 @@ export default class ForumSubscribe extends React.Component {
     this.props.onUnsubscribe(data.value)
   }
   render() {
-    const forum = this.props.forum
+    const { isUser, forum } = this.props
+    if(!isUser) return false
     const isSubscribed = (this.props.subscriptions && this.props.subscriptions.hasOwnProperty(forum._id))
     if(isSubscribed) {
       return (

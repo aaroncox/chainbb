@@ -290,7 +290,7 @@ export function submit(account, data, parent, action = 'post') {
     Object.keys(data.beneficiaries).forEach((account) => {
       const requested = parseFloat(data.beneficiaries[account])
       if(requested > 0) {
-        const weight = parseInt((requested / 100) * authorPercent * 100)
+        const weight = parseInt((requested / 100) * authorPercent * 100, 10)
         beneficiaries.push({account, weight})
       }
     })

@@ -1,11 +1,9 @@
 import React from 'react';
 
 import { Grid, Header, Segment } from 'semantic-ui-react'
-import { goToTop, goToAnchor } from 'react-scrollable-anchor'
-// import AccountAvatar from './avatar'
+import { goToTop } from 'react-scrollable-anchor'
 import AccountLink from '../link'
 import ForumPostReply from '../../forum/post/reply'
-import ForumHeader from '../../forum/header'
 import Paginator from '../../../global/paginator'
 
 export default class AccountReplies extends React.Component {

@@ -34,7 +34,16 @@ export default class ForumPost extends React.Component {
           />
           <AccountLink username={topic.last_reply_by} />
           <br/>
-          <TimeAgo date={`${topic.last_reply}Z`} />
+          {(topic.last_reply_url)
+            ? (
+              <Link to={topic.last_reply_url}>
+                <TimeAgo date={`${topic.last_reply}Z`} />
+              </Link>
+            )
+            : (
+              <TimeAgo date={`${topic.last_reply}Z`} />
+            )
+          }
         </Grid.Column>
       )
     }
