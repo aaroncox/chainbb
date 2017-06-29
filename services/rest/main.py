@@ -144,6 +144,75 @@ def account(username):
       'page': page
     })
 
+@app.route("/@<username>/replies")
+def replies(username):
+    sort = {"created": -1}
+    page = int(request.args.get('page', 1))
+    perPage = 20
+    skip = (page - 1) * perPage
+    limit = perPage
+    pipeline = [
+      {'$match': {
+        'parent_author': username
+      }},
+      {'$sort': sort},
+      {'$limit': limit + skip},
+      {'$skip': skip},
+      {'$project': {
+        'parent_id': {'$concat': ['$parent_author', '/', '$parent_permlink']},
+        'reply': '$$ROOT'
+      }},
+      {'$lookup': {
+        'from': 'posts',
+        'localField': 'parent_id',
+        'foreignField': '_id',
+        'as': 'parent_post'
+      }},
+      {'$lookup': {
+        'from': 'replies',
+        'localField': 'parent_id',
+        'foreignField': '_id',
+        'as': 'parent_reply'
+      }},
+      {'$project': {
+        'reply': 1,
+        'parent': {
+          '$cond': {
+            'if': { '$eq': [ "$parent_reply", [] ] },
+            'then': '$parent_post',
+            'else': '$parent_reply'
+          }
+        }
+      }},
+      {'$unwind': '$parent'},
+    ]
+    total = db.replies.count({'parent_author': username})
+    replies = db.replies.aggregate(pipeline)
+    results = []
+    for idx, reply in enumerate(replies):
+      # Format parent votes
+      parent_votes = {}
+      for vote in reply['parent']['active_votes']:
+          parent_votes.update({vote[0]: vote[1]})
+      reply['parent'].pop('active_votes', None)
+      reply['parent'].update({
+          'votes': parent_votes
+      })
+      # Format reply votes
+      reply_votes = {}
+      for vote in reply['reply']['active_votes']:
+          reply_votes.update({vote[0]: vote[1]})
+      reply['reply'].pop('active_votes', None)
+      reply['reply'].update({
+          'votes': reply_votes
+      })
+      results.append(reply)
+    return response({
+      'replies': results,
+      'total': total,
+      'page': page,
+    })
+
 @app.route("/@<username>/responses")
 def accountResponses(username):
     query = {
