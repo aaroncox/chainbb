@@ -63,7 +63,7 @@ python3 reindex.py '{
   "group_order": null,
   "forum_order": 1,
   "description": "",
-  "tags": ["painting","drawing","doodle","drawingboards"]
+  "tags": ["art","painting","drawing","doodle","drawingboards"]
 }'
 
 python3 reindex.py '{
@@ -104,23 +104,12 @@ python3 reindex.py '{
 }'
 
 python3 reindex.py '{
-  "_id": "biology",
-  "name": "Biology",
-  "parent": "education",
-  "group": null,
-  "group_order": null,
-  "forum_order": 1,
-  "description": "",
-  "tags": ["biology","nature","anatomy"]
-}'
-
-python3 reindex.py '{
   "_id": "math",
   "name": "Mathematics",
   "parent": "education",
   "group": null,
   "group_order": null,
-  "forum_order": 2,
+  "forum_order": 1,
   "description": "",
   "tags": ["mathematics","maths","math","mathematics-help","runthemath"]
 }'
@@ -131,18 +120,40 @@ python3 reindex.py '{
   "parent": "education",
   "group": null,
   "group_order": null,
-  "forum_order": 3,
+  "forum_order": 2,
   "description": "",
   "tags": ["philosophy"]
 }'
 
 python3 reindex.py '{
-  "_id": "physics",
-  "name": "Physics",
+  "_id": "science",
+  "name": "Science",
   "parent": "education",
   "group": null,
   "group_order": null,
-  "forum_order": 4,
+  "forum_order": 3,
+  "description": "",
+  "tags": ["science"]
+}'
+
+python3 reindex.py '{
+  "_id": "biology",
+  "name": "Biology",
+  "parent": "science",
+  "group": null,
+  "group_order": null,
+  "forum_order": 1,
+  "description": "",
+  "tags": ["biology","nature","anatomy"]
+}'
+
+python3 reindex.py '{
+  "_id": "physics",
+  "name": "Physics",
+  "parent": "science",
+  "group": null,
+  "group_order": null,
+  "forum_order": 2,
   "description": "",
   "tags": ["physics"]
 }'
