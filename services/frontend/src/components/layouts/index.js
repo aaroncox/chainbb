@@ -12,7 +12,10 @@ export default class IndexLayout extends React.Component {
       <Grid stackable>
         <Grid.Row>
           <Grid.Column width={4} className='mobile hidden'>
-            <Sidebar forums={params} />
+            <Sidebar
+              section='index'
+              forums={params}
+            />
           </Grid.Column>
           <Grid.Column mobile={16} tablet={12} computer={12}>
             <Forums forums={params} />
