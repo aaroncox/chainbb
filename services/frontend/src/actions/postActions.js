@@ -286,7 +286,7 @@ export function submit(account, data, parent, action = 'post') {
     const parent_permlink = (data.existingPost) ? data.existingPost.parent_permlink : (parent) ? parent.permlink : data.category
     // JSON to append to the post
     const json_metadata = JSON.stringify({
-      app: 'chainbb/0.2',
+      app: 'chainbb/0.3',
       format: 'markdown+html',
       tags: data.tags
     })
