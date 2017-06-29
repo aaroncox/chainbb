@@ -7,6 +7,7 @@ import Account from '../containers/account'
 import IndexLayout from '../components/layouts/index'
 import FeedLayout from '../components/layouts/feed'
 import ForumLayout from '../components/layouts/forum'
+import ForumsLayout from '../components/layouts/forums'
 import RepliesLayout from '../components/layouts/replies'
 import Thread from '../containers/thread'
 import TopicLayout from '../components/layouts/topic'
@@ -30,6 +31,7 @@ const App = () => (
         <Route exact path="/" component={IndexLayout} />
         <Route path="/@:username" component={Account} />
         <Route path="/feed" component={FeedLayout} />
+        <Route path="/forums" component={ForumsLayout} />
         <Route path="/forums/:group" component={IndexLayout} />
         <Route path="/forum/:id" component={ForumLayout} />
         <Route path="/replies" component={RepliesLayout} />
