@@ -105,6 +105,15 @@ def index():
       }
     })
 
+@app.route("/forums")
+def forums():
+    query = {}
+    sort = [("_id",1),("parent",1)]
+    results = db.forums.find(query).sort(sort)
+    return response({
+      'forums': list(results)
+    })
+
 @app.route("/@<username>")
 def account(username):
     query = {
