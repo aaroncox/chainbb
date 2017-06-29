@@ -9,16 +9,16 @@ import * as statusActions from '../../actions/statusActions'
 
 class GlobalNotice extends Component {
   render() {
-    const { height, head_block_number } = this.props.status.network
+    const { height, height_processed } = this.props.status.network
     let warning = false
-    if ( head_block_number > height + 10) {
-      const timeBehind = new Date() - (head_block_number - height) * 3 * 1000
-      console.log(timeBehind)
+    if ( height > height_processed + 10) {
+      const blocksBehind = height - height_processed
+      const timeBehind = new Date() - blocksBehind * 3 * 1000
       warning = (
         <Container style={{margin: '0.5em 0 1em'}}>
           <Message warning>
             <Icon name='warning' />
-            chainBB is currently <strong>{head_block_number - height} blocks</strong> (<TimeAgo date={timeBehind} />) behind on syncronization due to networking issues. This may cause a delay in your actions displaying on chainBB.com.
+            chainBB is currently <strong>{blocksBehind} blocks</strong> (<TimeAgo date={timeBehind} />) behind on syncronization due to networking issues. This may cause a delay in your actions displaying on chainBB.com.
           </Message>
         </Container>
       )
