@@ -354,7 +354,6 @@ def process_global_props():
     global props
     props = b.info()
     # Save height
-    l(props)
     db.status.update({'_id': 'height'}, {"$set" : {'value': props['last_irreversible_block_num']}}, upsert=True)
     # Save steem_per_mvests
     db.status.update({'_id': 'sbd_median_price'}, {"$set" : {'value': c.sbd_median_price()}}, upsert=True)
