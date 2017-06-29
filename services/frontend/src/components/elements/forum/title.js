@@ -11,7 +11,19 @@ export default class ForumTitle extends React.Component {
   render() {
     let { attached, forum } = this.props
     let tags = false
+    let parent = false
     let subheader = false
+    if(forum.parent) {
+      parent = (
+        <Header.Subheader style={{marginTop: '0.25em'}}>
+          Child of
+          {' '}
+          <Link to={`/forum/${forum.parent}`}>
+            {forum.parent_name}
+          </Link>
+        </Header.Subheader>
+      )
+    }
     if(forum.tags) {
       tags = (
         <Header.Subheader style={{marginTop: '0.25em'}}>
@@ -30,6 +42,7 @@ export default class ForumTitle extends React.Component {
         <Header.Subheader>
           {forum.description}
         </Header.Subheader>
+        {parent}
         {tags}
       </div>
     )
@@ -49,6 +62,7 @@ export default class ForumTitle extends React.Component {
             <Grid.Column width={4} textAlign="right">
               <ForumSubscribe
                 forum={forum}
+                isUser={this.props.account.isUser}
                 subscriptions={this.props.subscriptions.forums}
                 onSubscribe={this.props.actions.forumSubscribe}
                 onUnsubscribe={this.props.actions.forumUnsubscribe}
