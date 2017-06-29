@@ -336,6 +336,7 @@ def forum(slug):
         'json_metadata': 1,
         'last_reply': 1,
         'last_reply_by': 1,
+        'last_reply_url': 1,
         'max_accepted_payout': 1,
         'percent_steem_dollars': 1,
         'permlink': 1,
