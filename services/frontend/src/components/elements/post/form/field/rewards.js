@@ -44,7 +44,6 @@ export default class PostFormFieldRewards extends React.Component {
     // Inject any additional accounts that are added to the beneficiaries
     Object.keys(beneficiaries).forEach((account) => {
       const cleaned = account.replace("@","").trim()
-      const weight = beneficiaries[cleaned]
       rows.push(this.generateRow('Beneficiary', cleaned, true))
     })
     return rows

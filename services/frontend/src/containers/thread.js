@@ -176,6 +176,7 @@ class Thread extends React.Component {
             action='threadReply'
             actions={this.props.actions}
             formHeader={postFormHeader}
+            disableAutoFocus={true}
             elements={['body']}
             parent={this.props.post.content}
             onCancel={this.handleCancel}

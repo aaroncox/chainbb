@@ -24,6 +24,8 @@ import * as statusActions from '../../actions/statusActions'
 class PostForm extends React.Component {
 
   state = {}
+  drafts = {}
+  preview = {}
 
   handleItemClick = (e, { name }) => this.setState({ activeItem: name })
 
@@ -36,11 +38,11 @@ class PostForm extends React.Component {
         tags = existingPost.json_metadata.tags;
       }
     }
+    this.drafts = props.drafts || {}
     this.state = {
       formId: _.uniqueId('postform_'),
       activeItem: 'post',
       beneficiaries: {},
-      drafts: props.drafts || {},
       existingPost: (existingPost) ? existingPost : false,
       category: (existingPost) ? existingPost.parent_permlink : (props.forum && props.forum.tags) ? props.forum.tags[0] : null,
       recommended: (props.forum && props.forum.tags) ? props.forum.tags : [],
@@ -64,7 +66,8 @@ class PostForm extends React.Component {
   }
 
   componentWillMount() {
-    if(this.props.drafts[this.getIdentifier()]) {
+    const draft = this.drafts[this.getIdentifier()]
+    if(draft) {
       new Noty({
         closeWith: ['click', 'button'],
         layout: 'topRight',
@@ -81,6 +84,7 @@ class PostForm extends React.Component {
         type: 'success',
         timeout: 8000
       }).show();
+      this.setState({preview: draft || {}})
     }
   }
 
@@ -133,8 +137,13 @@ class PostForm extends React.Component {
     e.preventDefault()
     // Remove any drafts upon cancel
     this.removeDraft()
+    // Clear the preview
+    this.setState({preview: {}})
+    // Reset the form
+    this.form.formsyForm.reset()
     // Parent callback
     this.props.onCancel()
+    e.preventDefault()
     return false
   }
 
@@ -143,6 +152,7 @@ class PostForm extends React.Component {
     const drafts = store.get('drafts') || {}
     delete drafts[identifier]
     store.set('drafts', drafts)
+    this.drafts = drafts
   }
 
   handleChange = (e, { name, value }) => {
@@ -151,20 +161,21 @@ class PostForm extends React.Component {
 
   handleBeneficiariesUpdate = (beneficiaries) => this.setState({beneficiaries})
 
-  handleOnChange = (data) => {
-    const drafts = store.get('drafts') || {}
-    const identifier = this.getIdentifier();
-    const { title, body, rewards } = data
-    const preview = { body, title, rewards, updated: +new Date() }
-    // Store the preview as a draft
-    if(title || body || rewards) {
-      drafts[identifier] = { ...preview, beneficiaries: this.state.beneficiaries }
-      store.set('drafts', drafts)
-    }
-    this.setState({
-      drafts,
-      preview
-    })
+  handleOnChange = _.debounce((data) => {
+      const drafts = this.drafts || store.get('drafts') || {}
+      const identifier = this.getIdentifier();
+      const { title, body, rewards } = data
+      const preview = { body, title, rewards, updated: +new Date() }
+      // Store the preview as a draft
+      if(title || body || rewards) {
+        drafts[identifier] = { ...preview, beneficiaries: this.state.beneficiaries }
+        store.set('drafts', drafts)
+      }
+      this.drafts = drafts
+  }, 50);
+
+  handleOnBlur = () => {
+    this.setState({preview: this.drafts[this.getIdentifier()] || {}})
   }
 
   addTag = (e, data) => {
@@ -230,7 +241,8 @@ class PostForm extends React.Component {
     const { activeItem } = this.state
     const { account } = this.props
     const identifier = this.getIdentifier(),
-          draft = this.state.drafts[identifier] || {}
+          draft = this.drafts[identifier] || {}
+    const disableAutoFocus = this.props.disableAutoFocus || false
     let formHeader = this.props.formHeader,
         { existingPost, tags } = this.state,
         enableMenu = false,
@@ -309,6 +321,7 @@ class PostForm extends React.Component {
           <Segment attached='bottom' padded className={`${activeItem === 'post' ? 'active ' : ''}tab`}>
             {formFieldTitle}
             <PostFormFieldBody
+              disableAutoFocus={disableAutoFocus}
               value={ (draft.body) ? draft.body : (existingPost) ? existingPost.body : '' }
             />
           </Segment>
@@ -324,6 +337,7 @@ class PostForm extends React.Component {
     } else {
       menuDisplay = (
         <PostFormFieldBody
+          disableAutoFocus={disableAutoFocus}
           value={ (draft.body) ? draft.body : (existingPost) ? existingPost.body : '' }
         />
       )
@@ -353,6 +367,7 @@ class PostForm extends React.Component {
           ref={ref => this.form = ref }
           onChange={ this.handleOnChange }
           onKeyDown={this.onKeyDown}
+          onBlur={this.handleOnBlur}
         >
           {formHeader}
           {formNotice}
