@@ -56,18 +56,20 @@ export function fetchAccount() {
           })))
           dispatch(fetchAccountFollowing(payload.name))
         })
-      }, 500)
+      }, 50)
     }
   }
 }
 
-export function fetchAccountFollowing(name, start="", limit=10) {
+export function fetchAccountFollowing(name, start="", limit=100) {
   return dispatch => {
     steem.api.getFollowing(name, start, "blog", limit, function(err, result) {
       const accounts = result.map((c) => { return c.following })
       if(result.length === limit) {
         const last = result[result.length-1].following
-        dispatch(fetchAccountFollowing(name, last, limit))
+        setTimeout(function() {
+          dispatch(fetchAccountFollowing(name, last, limit))
+        }, 50)
       }
       dispatch({
         type: types.ACCOUNT_FOLLOWING_APPEND,
