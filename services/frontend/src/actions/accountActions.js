@@ -54,9 +54,26 @@ export function fetchAccount() {
             data: data[0],
             loading: false
           })))
+          dispatch(fetchAccountFollowing(payload.name))
         })
       }, 500)
     }
+  }
+}
+
+export function fetchAccountFollowing(name, start="", limit=10) {
+  return dispatch => {
+    steem.api.getFollowing(name, start, "blog", limit, function(err, result) {
+      const accounts = result.map((c) => { return c.following })
+      if(result.length === limit) {
+        const last = result[result.length-1].following
+        dispatch(fetchAccountFollowing(name, last, limit))
+      }
+      dispatch({
+        type: types.ACCOUNT_FOLLOWING_APPEND,
+        following: accounts
+      })
+    })
   }
 }
 
@@ -78,4 +95,27 @@ export function signinAccount(account, key, data) {
     data: data
   }
   return {type: types.ACCOUNT_SIGNIN, payload: payload}
+}
+
+export function follow(payload) {
+  return (dispatch: () => void) => {
+    const wif = payload.account.key
+    const account = payload.account.name
+    const who = payload.who
+    const what = (payload.action == 'follow') ? ['blog'] : []
+    const json = JSON.stringify(['follow', {follower: account, following: who, what: what}])
+    steem.broadcast.customJsonAsync(wif, [], [account], 'follow', json, function(err, result) {
+      if(payload.action == 'follow') {
+        dispatch({
+          type: types.ACCOUNT_FOLLOWING_APPEND,
+          following: [who]
+        })
+      } else {
+        dispatch({
+          type: types.ACCOUNT_FOLLOWING_REMOVE,
+          account: who
+        })
+      }
+    })
+  }
 }

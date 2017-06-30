@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Divider, Dropdown, Header, Icon, Menu, Segment } from 'semantic-ui-react'
 import AccountAvatar from './avatar'
+import AccountFollow from './follow'
 import AccountLink from './link'
 import AccountSidebarInfo from './sidebar/info'
 
@@ -40,6 +41,10 @@ export default class AccountSidebar extends React.Component {
               username={username}
             />
           </Header>
+          <AccountFollow
+            who={this.props.match.params.username}
+            {...this.props}
+          />
         </Segment>
         <Divider horizontal>Account Info</Divider>
         <Menu color='blue' inverted fluid vertical>

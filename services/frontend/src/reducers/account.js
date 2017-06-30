@@ -1,9 +1,20 @@
 import * as types from '../actions/actionTypes';
 import store from 'store'
+import _ from 'lodash'
 
 export default function account(state = false, action) {
   // Load from localStorage as default
+  const existingFollowers = state.following || []
   switch(action.type) {
+    case types.ACCOUNT_FOLLOWING_APPEND:
+      const following = action.following
+      return Object.assign({}, state, {
+        following: _.uniq(existingFollowers.concat(following))
+      })
+    case types.ACCOUNT_FOLLOWING_REMOVE:
+      return Object.assign({}, state, {
+        following: _.uniq(_.pull(existingFollowers, action.account))
+      })
     case types.ACCOUNT_SIGNOUT:
       // Remove from localStorage
       store.remove('account')
