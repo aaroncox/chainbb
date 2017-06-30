@@ -33,6 +33,7 @@ export default class AccountFollow extends React.Component {
     })
   }
   render() {
+    if(this.props.account.name === this.props.who) return false
     const loading = (this.state.processing || !this.props.account || !this.props.account.following)
     const following = (this.props.account.following && this.props.account.following.indexOf(this.props.who) !== -1)
     return (
