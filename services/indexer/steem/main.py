@@ -132,6 +132,9 @@ def get_parent_post_id(reply):
     return parent_id
 
 def update_parent_post(parent_id, reply):
+    # Prevent bots from updating the parent post
+    if reply['author'] in bots:
+        return
     # Split the ID into parameters for loading the post
     author, permlink = parent_id.split('/')
     # Load + Parse the parent post
