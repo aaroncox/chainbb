@@ -286,16 +286,19 @@ def process_post(opData, op, quick=False):
     comment = parse_post(_id, author, permlink)
     # Determine where it's posted from, and record for active users
     if isinstance(comment['json_metadata'], dict) and 'app' in comment['json_metadata'] and not quick:
-      app = comment['json_metadata']['app'].split("/")[0]
-      db.activeusers.update({
-        '_id': comment['author']
-      }, {
-        '$set': {
-          '_id': comment['author'],
-          'ts': datetime.strptime(op['timestamp'], "%Y-%m-%dT%H:%M:%S")
-        },
-        '$addToSet': {'app': app},
-      }, upsert=True)
+      try:
+        app = comment['json_metadata']['app'].split("/")[0]
+        db.activeusers.update({
+          '_id': comment['author']
+        }, {
+          '$set': {
+            '_id': comment['author'],
+            'ts': datetime.strptime(op['timestamp'], "%Y-%m-%dT%H:%M:%S")
+          },
+          '$addToSet': {'app': app},
+        }, upsert=True)
+      except:
+          pass
     # Update the indexes it's contained within
     update_indexes(comment)
     # Collapse the votes
