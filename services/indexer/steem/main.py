@@ -154,8 +154,9 @@ def update_parent_post(parent_id, reply):
     db.posts.update(query, update)
 
 def update_indexes(comment):
-    update_topics(comment)
-    update_forums(comment)
+    if comment['author'] not in bots:
+        update_topics(comment)
+        update_forums(comment)
 
 def update_topics(comment):
     query = {
@@ -368,16 +369,24 @@ def process_rewards_pools():
     recent_claims = int(fund["recent_claims"].split(" ")[0])
     db.status.update({'_id': 'recent_claims'}, {"$set" : {'value': recent_claims}}, upsert=True)
 
+def rebuild_bots_cache():
+    global bots
+    docs = db.bots.find()
+    for bot in docs:
+      bots.add(str(bot['_id']))
+
 if __name__ == '__main__':
     l("Starting services @ block #{}".format(last_block_processed))
 
     process_global_props()
     process_rewards_pools()
     rebuild_forums_cache()
+    rebuild_bots_cache()
 
     scheduler = BackgroundScheduler()
     scheduler.add_job(process_global_props, 'interval', seconds=9, id='process_global_props')
     scheduler.add_job(rebuild_forums_cache, 'interval', minutes=1, id='rebuild_forums_cache')
+    scheduler.add_job(rebuild_bots_cache, 'interval', minutes=1, id='rebuild_bots_cache')
     scheduler.add_job(process_vote_queue, 'interval', minutes=5, id='process_vote_queue')
     scheduler.add_job(process_rewards_pools, 'interval', minutes=10, id='process_rewards_pools')
     scheduler.start()
