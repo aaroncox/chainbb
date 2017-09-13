@@ -1,6 +1,8 @@
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta
 from steem import Steem
+from steem.steemd import Steemd
+from steem.utils import block_num_from_hash
 from steem.blockchain import Blockchain
 from steem.converter import Converter
 from pymongo import MongoClient
@@ -60,14 +62,14 @@ def l(msg):
     print("[FORUM][INDEXER][{}] {}".format(str(caller), str(msg)))
     sys.stdout.flush()
 
-def process_op(op, quick=False):
+def process_op(op, block, quick=False):
     # Split the array into type and data
-    opType = op['op'][0]
-    opData = op['op'][1]
+    opType = op[0]
+    opData = op[1]
     if opType == "vote" and quick == False:
         queue_parent_update(opData)
     if opType == "comment":
-        process_post(opData, op, quick=False)
+        process_post(opData, block, quick=False)
     if opType == "delete_comment":
         remove_post(opData)
 
@@ -277,9 +279,9 @@ def collapse_votes(votes):
         ])
     return collapsed
 
-def process_post(opData, op, quick=False):
+def process_post(opData, block, quick=False):
     # Derive the timestamp
-    ts = float(datetime.strptime(op['timestamp'], "%Y-%m-%dT%H:%M:%S").strftime("%s"))
+    ts = float(datetime.strptime(block['timestamp'], "%Y-%m-%dT%H:%M:%S").strftime("%s"))
     # Create the author/permlink identifier
     author = opData['author']
     permlink = opData['permlink']
@@ -296,7 +298,7 @@ def process_post(opData, op, quick=False):
         }, {
           '$set': {
             '_id': comment['author'],
-            'ts': datetime.strptime(op['timestamp'], "%Y-%m-%dT%H:%M:%S")
+            'ts': datetime.strptime(block['timestamp'], "%Y-%m-%dT%H:%M:%S")
           },
           '$addToSet': {'app': app},
         }, upsert=True)
@@ -359,7 +361,7 @@ def process_vote_queue():
 
 def process_global_props():
     global props
-    props = b.info()
+    props = d.get_dynamic_global_properties()
     # Save height
     db.status.update({'_id': 'height'}, {"$set" : {'value': props['last_irreversible_block_num']}}, upsert=True)
     # Save steem_per_mvests
@@ -398,10 +400,10 @@ if __name__ == '__main__':
     scheduler.start()
 
     quick = False
-    for block in b.stream_from(start_block=last_block_processed, batch_operations=True):
-        if(len(block) > 0):
-            block_num = block[0]['block']
-            timestamp = block[0]['timestamp']
+    for block in b.stream_from(start_block=last_block_processed, batch_operations=False, full_blocks=True):
+        if(len(block['transactions']) > 0):
+            block_num = block_num_from_hash(block['block_id'])
+            timestamp = block['timestamp']
             # If behind by more than X (for initial indexes), set quick to true to prevent unneeded past operations
             remaining_blocks = props['last_irreversible_block_num'] - block_num
             if remaining_blocks > quick_value:
@@ -409,13 +411,9 @@ if __name__ == '__main__':
             dt = datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S")
             l("----------------------------------")
             l("#{} - {} - {} ops ({} remaining|quick:{})".format(block_num, dt, len(block), remaining_blocks, quick))
-            for op in block:
-                # pprint("-----------------------------")
-                # pprint(op)
-                # pprint(last_block_processed)
-                # pprint("-----------------------------")
-                # Process op
-                process_op(op, quick=quick)
+            for tx in block['transactions']:
+                for op in tx['operations']:
+                    process_op(op, block, quick=quick)
 
             # Update our saved block height
             db.status.update({'_id': 'height_processed'}, {"$set" : {'value': block_num}}, upsert=True)
