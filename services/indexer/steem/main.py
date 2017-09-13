@@ -55,7 +55,7 @@ quick_value = 100
 # where you want some data but don't want to sync the entire blockchain.
 # ------------
 
-# last_block_processed = 12880609
+# last_block_processed = 15443000
 
 def l(msg):
     caller = inspect.stack()[1][3]
