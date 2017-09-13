@@ -37,6 +37,7 @@ else:
 props = {}
 forums_cache = {}
 vote_queue = []
+bots = set()
 
 # ------------
 # If the indexer is behind more than the quick_value, it will:
@@ -137,6 +138,7 @@ def get_parent_post_id(reply):
 def update_parent_post(parent_id, reply):
     # Prevent bots from updating the parent post
     if reply['author'] in bots:
+        l("Skipping: {} - http://localhost:3000{}".format(reply['author'], reply['url']))
         return
     # Split the ID into parameters for loading the post
     author, permlink = parent_id.split('/')
