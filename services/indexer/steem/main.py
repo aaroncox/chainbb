@@ -20,6 +20,7 @@ nodes = [
 ]
 
 s = Steem(nodes)
+d = Steemd(nodes)
 b = Blockchain(steemd_instance=s, mode='head')
 c = Converter(steemd_instance=s)
 
