@@ -143,7 +143,7 @@ def update_parent_post(parent_id, reply):
     # Split the ID into parameters for loading the post
     author, permlink = parent_id.split('/')
     # Load + Parse the parent post
-    l(parent_id)
+    # l(parent_id)
     parent_post = parse_post(parent_id, author, permlink)
     # Update the parent post (within `posts`) to show last_reply + last_reply_by
     parent_post.update({
@@ -195,7 +195,7 @@ def update_topics(comment):
     db.topics.update(query, {'$set': updates, }, upsert=True)
 
 def update_forums_last_post(index, comment):
-    l("updating /forum/{} with post {}/{})".format(index, comment['author'], comment['permlink']))
+    # l("updating /forum/{} with post {}/{})".format(index, comment['author'], comment['permlink']))
     query = {
         '_id': index,
     }
@@ -215,7 +215,7 @@ def update_forums_last_post(index, comment):
     db.forums.update(query, {'$set': updates, '$inc': increments}, upsert=True)
 
 def update_forums_last_reply(index, comment):
-    l("updating /forum/{} with post {}/{})".format(index, comment['author'], comment['permlink']))
+    # l("updating /forum/{} with post {}/{})".format(index, comment['author'], comment['permlink']))
     query = {
         '_id': index,
     }
@@ -252,7 +252,7 @@ def update_forums(comment):
 
 def process_vote(_id, author, permlink):
     # Grab the parsed data of the post
-    l(_id)
+    # l(_id)
     comment = parse_post(_id, author, permlink)
     # Ensure we a post was returned
     if comment['author'] != '':
@@ -290,7 +290,7 @@ def process_post(opData, block, quick=False):
     permlink = opData['permlink']
     _id = author + '/' + permlink
     # Grab the parsed data of the post
-    l(_id)
+    # l(_id)
     comment = parse_post(_id, author, permlink)
     # Determine where it's posted from, and record for active users
     if isinstance(comment['json_metadata'], dict) and 'app' in comment['json_metadata'] and not quick:
@@ -353,7 +353,7 @@ def rebuild_forums_cache():
 
 def process_vote_queue():
     global vote_queue
-    l("Updating {} posts that were voted upon.".format(len(vote_queue)))
+    # l("Updating {} posts that were voted upon.".format(len(vote_queue)))
     # Process all queued votes from block
     for _id in vote_queue:
         # Split the ID into parameters for loading the post
@@ -370,7 +370,7 @@ def process_global_props():
     # Save steem_per_mvests
     db.status.update({'_id': 'sbd_median_price'}, {"$set" : {'value': c.sbd_median_price()}}, upsert=True)
     db.status.update({'_id': 'steem_per_mvests'}, {"$set" : {'value': c.steem_per_mvests()}}, upsert=True)
-    l("Props updated to #{}".format(props['last_irreversible_block_num']))
+    # l("Props updated to #{}".format(props['last_irreversible_block_num']))
 
 def process_rewards_pools():
     # Save reward pool info
