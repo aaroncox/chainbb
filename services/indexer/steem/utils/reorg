@@ -67,6 +67,17 @@ python3 reindex.py '{
 }'
 
 python3 reindex.py '{
+  "_id": "photography",
+  "name": "Photography",
+  "parent": "creative",
+  "group": null,
+  "group_order": null,
+  "forum_order": 1,
+  "description": "",
+  "tags": ["photography","photo"]
+}'
+
+python3 reindex.py '{
   "_id": "poetry",
   "name": "Poetry",
   "parent": "creative",
@@ -78,14 +89,14 @@ python3 reindex.py '{
 }'
 
 python3 reindex.py '{
-  "_id": "photography",
-  "name": "Photography",
+  "_id": "writing",
+  "name": "Writing",
   "parent": "creative",
   "group": null,
   "group_order": null,
-  "forum_order": 1,
+  "forum_order": 3,
   "description": "",
-  "tags": ["photography","photo"]
+  "tags": ["writing"]
 }'
 
 
@@ -148,12 +159,23 @@ python3 reindex.py '{
 }'
 
 python3 reindex.py '{
+  "_id": "chemistry",
+  "name": "Chemistry",
+  "parent": "science",
+  "group": null,
+  "group_order": null,
+  "forum_order": 2,
+  "description": "",
+  "tags": ["chemistry","chemist"]
+}'
+
+python3 reindex.py '{
   "_id": "physics",
   "name": "Physics",
   "parent": "science",
   "group": null,
   "group_order": null,
-  "forum_order": 2,
+  "forum_order": 3,
   "description": "",
   "tags": ["physics"]
 }'
@@ -472,6 +494,16 @@ python3 reindex.py '{
   "description": "For the ents",
   "tags": ["cannabis","marijuana","hemp","pot","weed"]
 }'
+python3 reindex.py '{
+  "_id": "diy",
+  "name": "DIY",
+  "parent": "uncategorized",
+  "group": null,
+  "group_order": null,
+  "forum_order": 3,
+  "description": "",
+  "tags": ["diy","doityourself","imadethis"]
+}'
 
 #############################################################################
 # ---------------------------------------------------------------------------
@@ -750,13 +782,25 @@ python3 reindex.py '{
 
 
 
+python3 reindex.py '{
+  "_id": "minnowsupportproject",
+  "name": "MinnowSupportProject",
+  "group": "projects",
+  "group_order": 3,
+  "forum_order": 2,
+  "description": "",
+  "tags": [
+    "minnowsupport",
+    "minnowsupportproject"
+  ]
+}'
 
 python3 reindex.py '{
   "_id": "steemgigs",
   "name": "Steem Gigs",
   "group": "projects",
   "group_order": 3,
-  "forum_order": 2,
+  "forum_order": 3,
   "description": "",
   "tags": [
     "steemgigs",
@@ -768,7 +812,7 @@ python3 reindex.py '{
   "name": "zappl.io",
   "group": "projects",
   "group_order": 3,
-  "forum_order": 3,
+  "forum_order": 4,
   "description": "",
   "tags": [
     "zappl",
