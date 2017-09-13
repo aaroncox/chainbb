@@ -60,14 +60,14 @@ export default class Forum extends React.Component {
                               <Header.Subheader>
                                 <AccountLink username={topic.author} />
                                 {' • '}
-                                <TimeAgo date={topic.created} />
+                                <TimeAgo date={`${topic.created}Z`} />
                               </Header.Subheader>
                             </Header>
                           </Grid.Column>
                           <Grid.Column width={8} className="right aligned">
                             <Link to={`/@${topic.last_reply_by}`}>{topic.last_reply_by}</Link>
                             <br/>
-                            <TimeAgo date={topic.last_reply} />
+                            <TimeAgo date={`${topic.last_reply}Z`} />
                           </Grid.Column>
                         </Grid.Row>
                       </Grid>
