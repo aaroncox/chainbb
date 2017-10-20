@@ -5,7 +5,7 @@
   "dependencies": {
     "@steem/crypto-session": "git+https://github.com/steemit/crypto-session.git#83a90b319ce5bc6a70362d52a15a815de7e729bb",
     "formsy-react": "^0.19.2",
-    "formsy-semantic-ui-react": "^0.2.3",
+    "formsy-semantic-ui-react": "^0.2.11",
     "immutability-helper": "^2.2.2",
     "immutable": "^3.7.6",
     "noty": "^3.1.0",
