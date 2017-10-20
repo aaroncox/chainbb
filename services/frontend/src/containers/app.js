@@ -1,6 +1,8 @@
 import React from 'react'
 import { BrowserRouter, browserHistory, Route } from 'react-router-dom';
 
+import steem from 'steem'
+
 import { Container } from 'semantic-ui-react'
 
 import Account from '../containers/account'
@@ -20,6 +22,7 @@ import GlobalNotice from '../components/global/notice'
 import './app.css'
 import '../../node_modules/noty/lib/noty.css'
 
+steem.config.set('websocket', 'wss://rpc.buildteam.io')
 
 const App = () => (
   <BrowserRouter history={browserHistory}>
