@@ -64,6 +64,7 @@ export function fetchAccount() {
 export function fetchAccountFollowing(name, start="", limit=100) {
   return dispatch => {
     steem.api.getFollowing(name, start, "blog", limit, function(err, result) {
+      if(!result) return
       const accounts = result.map((c) => { return c.following })
       if(result.length === limit) {
         const last = result[result.length-1].following
