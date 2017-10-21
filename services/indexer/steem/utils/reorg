@@ -40,6 +40,17 @@ python3 reindex.py '{
   "tags": ["travel","adventure"]
 }'
 
+python3 reindex.py '{
+  "_id": "introductions",
+  "name": "Introductions",
+  "parent": "general-discussion",
+  "group": null,
+  "group_order": null,
+  "forum_order": 3,
+  "description": "",
+  "tags": ["introductions","introduceyourself","introducemyself","welcome"]
+}'
+
 
 # ---------------------------------------------------------------------------
 # Creative + children
@@ -539,6 +550,79 @@ python3 reindex.py '{
   "tags": ["bitshares", "bts"]
 }'
 
+
+# ---------------------------------------------------------------------------
+# Decent + children
+# ---------------------------------------------------------------------------
+
+python3 reindex.py '{
+  "_id": "decent",
+  "name": "Decent",
+  "group": "crypto",
+  "group_order": 2,
+  "forum_order": 3,
+  "description": "General discussions about Decent",
+  "tags": ["decent"]
+}'
+python3 reindex.py '{
+  "_id": "decent-announcements",
+  "name": "Announcements",
+  "parent": "decent",
+  "group": null,
+  "group_order": null,
+  "forum_order": 1,
+  "description": "Announcements from the official Decent team",
+  "tags": [],
+  "accounts": ["decent"]
+}'
+python3 reindex.py '{
+  "_id": "decent-projects",
+  "name": "Community Projects",
+  "parent": "decent",
+  "group": null,
+  "group_order": null,
+  "forum_order": 2,
+  "description": "Updates for community projects and efforts",
+  "tags": ["decent-project", "decentdb"]
+}'
+python3 reindex.py '{
+  "_id": "decent-help",
+  "name": "Support",
+  "parent": "decent",
+  "group": null,
+  "group_order": null,
+  "forum_order": 4,
+  "description": "Help others and get help regarding Decent",
+  "tags": ["decent-help", "decent-support"]
+}'
+python3 reindex.py '{
+  "_id": "decent-dev",
+  "name": "Developers",
+  "parent": "decent",
+  "group": null,
+  "group_order": null,
+  "forum_order": 5,
+  "description": "Developer chat, guides and project chatter.",
+  "tags": [
+    "decent-dev",
+    "decentdev"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "decent-witnesses",
+  "name": "Witnesses",
+  "parent": "decent",
+  "group": null,
+  "group_order": null,
+  "forum_order": 6,
+  "description": "Decent witness updates",
+  "tags": [
+    "decent-witness-update",
+    "decent-witness",
+    "decent-witness-category"
+  ]
+}'
+
 # ---------------------------------------------------------------------------
 # EOS + children
 # ---------------------------------------------------------------------------
@@ -548,7 +632,7 @@ python3 reindex.py '{
   "name": "EOS",
   "group": "crypto",
   "group_order": 2,
-  "forum_order": 3,
+  "forum_order": 4,
   "description": "EOS discussions and news",
   "tags": [ "eos" ]
 }'
@@ -563,9 +647,81 @@ python3 reindex.py '{
   "name": "Gridcoin",
   "group": "crypto",
   "group_order": 2,
-  "forum_order": 4,
+  "forum_order": 5,
   "description": "Gridcoin discussions and news",
   "tags": [ "gridcoin" ]
+}'
+
+# ---------------------------------------------------------------------------
+# Muse + children
+# ---------------------------------------------------------------------------
+
+python3 reindex.py '{
+  "_id": "muse",
+  "name": "Muse",
+  "group": "crypto",
+  "group_order": 2,
+  "forum_order": 6,
+  "description": "General discussions about Muse",
+  "tags": ["muse"]
+}'
+python3 reindex.py '{
+  "_id": "muse-announcements",
+  "name": "Announcements",
+  "parent": "muse",
+  "group": null,
+  "group_order": null,
+  "forum_order": 1,
+  "description": "Announcements from the official Muse team",
+  "tags": [],
+  "accounts": ["muse"]
+}'
+python3 reindex.py '{
+  "_id": "muse-projects",
+  "name": "Community Projects",
+  "parent": "muse",
+  "group": null,
+  "group_order": null,
+  "forum_order": 2,
+  "description": "Updates for community projects and efforts",
+  "tags": ["muse-project", "musedb"]
+}'
+python3 reindex.py '{
+  "_id": "muse-help",
+  "name": "Support",
+  "parent": "muse",
+  "group": null,
+  "group_order": null,
+  "forum_order": 4,
+  "description": "Help others and get help regarding Muse",
+  "tags": ["muse-help", "muse-support"]
+}'
+python3 reindex.py '{
+  "_id": "muse-dev",
+  "name": "Developers",
+  "parent": "muse",
+  "group": null,
+  "group_order": null,
+  "forum_order": 5,
+  "description": "Developer chat, guides and project chatter.",
+  "tags": [
+    "muse-dev",
+    "musedev"
+  ]
+}'
+python3 reindex.py '{
+  "_id": "muse-witnesses",
+  "name": "Witnesses",
+  "parent": "muse",
+  "group": null,
+  "group_order": null,
+  "forum_order": 6,
+  "description": "Muse witness updates",
+  "tags": [
+    "muse-witness-update",
+    "muse-witness",
+    "muse-witness-category"
+  ]
 }'
 
 # ---------------------------------------------------------------------------
@@ -577,7 +733,7 @@ python3 reindex.py '{
   "name": "Peerplays",
   "group": "crypto",
   "group_order": 2,
-  "forum_order": 5,
+  "forum_order": 7,
   "description": "General discussions about Peerplays",
   "tags": ["peerplays", "ppy"]
 }'
@@ -649,7 +805,7 @@ python3 reindex.py '{
   "name": "Steem",
   "group": "crypto",
   "group_order": 2,
-  "forum_order": 6,
+  "forum_order": 8,
   "description": "General discussions about Steem",
   "tags": ["steemit", "steem"]
 }'
@@ -777,17 +933,25 @@ python3 reindex.py '{
   ]
 }'
 
-
-
-
-
+python3 reindex.py '{
+  "_id": "buildteam",
+  "name": "MinnowBooster/BuildTeam",
+  "group": "projects",
+  "group_order": 3,
+  "forum_order": 2,
+  "description": "",
+  "tags": [
+    "minnowbooster",
+    "buildteam"
+  ]
+}'
 
 python3 reindex.py '{
   "_id": "minnowsupportproject",
   "name": "MinnowSupportProject",
   "group": "projects",
   "group_order": 3,
-  "forum_order": 2,
+  "forum_order": 3,
   "description": "",
   "tags": [
     "minnowsupport",
@@ -800,7 +964,7 @@ python3 reindex.py '{
   "name": "Steem Gigs",
   "group": "projects",
   "group_order": 3,
-  "forum_order": 3,
+  "forum_order": 4,
   "description": "",
   "tags": [
     "steemgigs",
@@ -812,7 +976,7 @@ python3 reindex.py '{
   "name": "zappl.io",
   "group": "projects",
   "group_order": 3,
-  "forum_order": 4,
+  "forum_order": 5,
   "description": "",
   "tags": [
     "zappl",
