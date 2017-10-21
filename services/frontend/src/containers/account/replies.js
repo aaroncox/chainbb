@@ -2,7 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 
-import { Grid, Header, Segment } from 'semantic-ui-react'
+import { Grid, Header, Icon, Segment } from 'semantic-ui-react'
 import { goToTop } from 'react-scrollable-anchor'
 
 import * as accountActions from '../../actions/accountActions'
@@ -56,16 +56,32 @@ class Replies extends React.Component {
       if(replies && replies.length > 0) {
         content = replies.map((topic, idx) => <ForumPostReply topic={topic} key={idx} {... nextProps} />)
       }
-      this.setState({ content, replies, totalReplies })
+      this.setState({ content, replies, totalReplies, loaded: true })
     }
   }
   render() {
     const { totalReplies } = this.state
-    let { content } = this.state
-    if(!content) content = <Segment attached padded="very" loading style={{margin: '2em 0'}} />
+    let { content, loaded } = this.state
+    if(!content && !loaded) {
+        content = <Segment attached padded='very' loading style={{margin: '2em 0'}} />
+    }
+    if(!content && loaded) {
+        content = (
+            <Segment attached textAlign='center' padded='very' style={{margin: '2em 0'}}>
+                <Header as='h2' icon>
+                    <Icon name='inbox' />
+                    No posts found
+                    <Header.Subheader>
+                        There are no replies to any of your posts.
+                    </Header.Subheader>
+                </Header>
+            </Segment>
+        )
+    }
+    console.log(this.state)
     return (
       <div>
-        <Segment stacked color="purple">
+        <Segment stacked color='purple'>
           <Grid>
             <Grid.Row>
               <Grid.Column width={12}>
