@@ -1,16 +1,5 @@
 version: '2.1'
-# volumes:
-#   redis-data:
-#     driver: local
 services:
-  # avatars:
-  #   build: ./services/avatars/steem
-  #   env_file: .env
-  #   # restart: always
-  #   volumes:
-  #     # - ./.aws:/root/.aws
-  #     - ./.boto:/root/.boto
-  #     - ./services/avatars/steem:/src:rw
   mongodata:
     image: mongo:3.3.10
     volumes:
@@ -25,45 +14,30 @@ services:
     ports:
       - "27017:27017"
     command: --smallfiles --rest
-  # redis:
-  #   image: redis:3.2.4-alpine
-  #   ports:
-  #     # We'll bind our host's port 6379 to redis's port 6379, so we can use
-  #     # Redis Desktop Manager (or other tools) with it:
-  #     - 6379:6379
-  #   volumes:
-  #     # We'll mount the 'redis-data' volume into the location redis stores it's data:
-  #     - redis-data:/var/lib/redis
-  #   command: redis-server --appendonly yes
   rest:
     build: ./services/rest
     environment:
-      steemnode: "prv.steem.ws"
+      steem_node: "https://api.steemit.com"
     external_links:
       - mongo:forums_mongo_1
     ports:
       - "5000:5000"
-    restart: always
+    restart: on-failure
     volumes:
       - ./services/rest:/src:rw
   statistics:
     build: ./services/statistics/steem
     links:
       - mongo
-    restart: always
+    restart: on-failure
     volumes:
       - ./services/statistics/steem:/src:rw
   steem:
     build: ./services/indexer/steem
+    environment:
+      steem_node: "https://api.steemit.com"
     links:
       - mongo
-    restart: always
+    restart: on-failure
     volumes:
       - ./services/indexer/steem:/src:rw
-  # test:
-  #   build: ./services/test
-  #   volumes:
-  #     - ./services/test:/src:rw
-# volumes:
-#   redis-data:
-#     driver: local
