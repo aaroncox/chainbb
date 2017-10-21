@@ -5,6 +5,7 @@ from bson.json_util import dumps
 from flask_cors import CORS, cross_origin
 from mongodb_jsonencoder import MongoJsonEncoder
 from steem import Steem
+import os
 
 app = Flask(__name__)
 app.json_encoder = MongoJsonEncoder
