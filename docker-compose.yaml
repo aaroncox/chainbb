@@ -30,6 +30,8 @@ services:
         build: ./services/statistics/steem
         links:
             - mongo
+        environment:
+            namespace: "chainbb"
         restart: on-failure
         volumes:
             - ./services/statistics/steem:/src:rw
