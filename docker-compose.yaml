@@ -1,43 +1,43 @@
 version: '2.1'
 services:
-  mongodata:
-    image: mongo:3.3.10
-    volumes:
-      - /data/db
-    command: --break-mongo
-  mongo:
-    image: mongo:3.3.10
-    volumes:
-      - ./:/tempo:rw
-    volumes_from:
-      - mongodata
-    ports:
-      - "27017:27017"
-    command: --smallfiles --rest
-  rest:
-    build: ./services/rest
-    environment:
-      steem_node: "https://api.steemit.com"
-    external_links:
-      - mongo:forums_mongo_1
-    ports:
-      - "5000:5000"
-    restart: on-failure
-    volumes:
-      - ./services/rest:/src:rw
-  statistics:
-    build: ./services/statistics/steem
-    links:
-      - mongo
-    restart: on-failure
-    volumes:
-      - ./services/statistics/steem:/src:rw
-  steem:
-    build: ./services/indexer/steem
-    environment:
-      steem_node: "https://api.steemit.com"
-    links:
-      - mongo
-    restart: on-failure
-    volumes:
-      - ./services/indexer/steem:/src:rw
+    mongodata:
+        image: mongo:3.3.10
+        volumes:
+            - /data/db
+        command: --break-mongo
+    mongo:
+        image: mongo:3.3.10
+        volumes:
+            - ./:/tempo:rw
+        volumes_from:
+            - mongodata
+        ports:
+            - "27017:27017"
+        command: --smallfiles --rest
+    rest:
+        build: ./services/rest
+        environment:
+            steem_node: "https://steem.chainbb.com"
+        external_links:
+            - mongo:forums_mongo_1
+        ports:
+            - "5000:5000"
+        restart: on-failure
+        volumes:
+            - ./services/rest:/src:rw
+    statistics:
+        build: ./services/statistics/steem
+        links:
+            - mongo
+        restart: on-failure
+        volumes:
+            - ./services/statistics/steem:/src:rw
+    steem:
+        build: ./services/indexer/steem
+        environment:
+            steem_node: "https://steem.chainbb.com"
+        links:
+            - mongo
+        restart: on-failure
+        volumes:
+            - ./services/indexer/steem:/src:rw
