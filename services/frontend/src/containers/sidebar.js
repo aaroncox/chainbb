@@ -1,7 +1,7 @@
 import React from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { Divider, Header, Icon, Menu, Segment } from 'semantic-ui-react'
+import { Button, Divider, Header, Icon, Menu, Segment } from 'semantic-ui-react'
 import * as accountActions from '../actions/accountActions'
 import { Link } from 'react-router-dom'
 
@@ -12,15 +12,21 @@ class Sidebar extends React.Component {
     const { isUser } = account
     let userMenu = false
     let requestForum = (
-          <Segment basic textAlign='center'>
+        <Segment basic textAlign='center'>
             <Header size='small'>
-              Have an idea for a forum?
+                Want to start a community forum of your own?
             </Header>
             <p>
-              Make a post on the <Link to='/forum/chainbb'>chainBB forum</Link> with what you would like to see or any ideas you may have.
+                <Button
+                    as={Link}
+                    to='/create/forum'
+                    content='Get Started'
+                    size='small'
+                    color='blue'
+                />
             </p>
-          </Segment>
-        )
+        </Segment>
+    )
     let subscribedForums = false
         // ,
         // categories = (
