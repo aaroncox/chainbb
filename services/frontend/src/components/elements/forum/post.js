@@ -6,10 +6,39 @@ import { Link } from 'react-router-dom'
 import AccountAvatar from '../account/avatar'
 import AccountLink from '../account/link'
 import Paginator from './post/paginator'
+import ForumPostModeration from './post/moderation'
 
 export default class ForumPost extends React.Component {
+  constructor(props) {
+    super(props)
+    const isModerator = (props && props.account && props.account.isUser && props.account.name === 'jesta')
+    this.state = {
+      isModerator: isModerator,
+      hovering: false,
+      moderating: false,
+    }
+  }
+  onMouseEnter = () => this.setState({hovering: true})
+  onMouseLeave = () => this.setState({hovering: false})
+  onOpen = () => this.setState({moderating: true})
+  onClose = (removePost = false) => this.setState({moderating: false})
+
   render() {
-    let {topic} = this.props,
+    let { account, forum, moderation, topic } = this.props,
+        moderatorRemoved = (topic._removedFrom && topic._removedFrom.indexOf(forum['_id']) >= 0),
+        control =
+            (moderatorRemoved)
+            ? <Icon name='trash' />
+            : (topic.cbb && topic.cbb.sticky)
+            ? <Icon name='pin' />
+            : (topic.children > 50)
+            ? <Icon color='blue' name='chevron right' />
+            : (topic.children > 20)
+            ? <Icon color='blue' name='angle double right' />
+            : (topic.children > 0)
+            ? <Icon color='blue' name='angle right' />
+            : <Icon name='warning' />
+        ,
         paginator = false,
         last_reply = (
           <Grid.Column mobile={6} tablet={6} computer={5} largeScreen={4} textAlign="center">
@@ -47,21 +76,34 @@ export default class ForumPost extends React.Component {
         </Grid.Column>
       )
     }
+    if(this.state.isModerator && (this.state.hovering || this.state.moderating)) {
+      control = (
+        <ForumPostModeration
+          account={account}
+          actions={this.props.actions}
+          forum={forum}
+          moderation={moderation}
+          topic={topic}
+          onOpen={this.onOpen.bind(this)}
+          onClose={this.onClose.bind(this)}
+          removeTopic={this.props.removeTopic}
+        />
+      )
+    }
     return (
-      <Segment attached key={topic._id}>
+      <Segment
+        attached
+        key={topic._id}
+        onMouseEnter={this.onMouseEnter}
+        onMouseLeave={this.onMouseLeave}
+        tertiary={moderatorRemoved}
+      >
         <Grid>
-          <Grid.Row verticalAlign='middle'>
-            <Grid.Column width={1} className="center aligned tablet or lower hidden">
-              {(topic.cbb && topic.cbb.sticky)
-                ? <Icon size='large' name='pin' />
-                : (topic.children > 50)
-                ? <Icon color='blue' size='large' name='chevron right' />
-                : (topic.children > 20)
-                ? <Icon color='blue' size='large' name='angle double right' />
-                : (topic.children > 0)
-                ? <Icon color='blue' size='large' name='angle right' />
-                : <Icon />
-              }
+          <Grid.Row
+            verticalAlign='middle'
+            >
+            <Grid.Column width={1} textAlign="center" className="center aligned tablet or lower hidden">
+              {control}
             </Grid.Column>
             <Grid.Column mobile={10} tablet={10} computer={9} largeScreen={9}>
               <Header size='small'>

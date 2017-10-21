@@ -6,10 +6,11 @@ import { goToTop } from 'react-scrollable-anchor'
 import ReactDOMServer from 'react-dom/server';
 import Noty from 'noty';
 
-import { Button, Dimmer, Divider, Grid, Header, Label, Loader, Popup, Segment } from 'semantic-ui-react'
+import { Button, Checkbox, Dimmer, Divider, Grid, Header, Label, Loader, Popup, Segment } from 'semantic-ui-react'
 
 import * as GLOBAL from '../global';
 import * as breadcrumbActions from '../actions/breadcrumbActions'
+import * as moderationActions from '../actions/moderationActions'
 import * as subscriptionActions from '../actions/subscriptionActions'
 import * as postActions from '../actions/postActions'
 import * as statusActions from '../actions/statusActions'
@@ -32,6 +33,7 @@ class Forum extends React.Component {
       page: 1,
       topics: false,
       showNewPost: false,
+      showModerated: false,
       forum: {
         name: this.props.forumid
       }
@@ -39,17 +41,9 @@ class Forum extends React.Component {
     this.getForum = this.getForum.bind(this);
   }
 
-  changePage = (page) => {
-    this.setState({page: page})
-    this.getForum(page)
-  }
-
-  showNewPost = (e) => {
-    this.setState({
-      page: 1,
-      showNewPost: true
-    })
-  }
+  changePage = (page) => this.setState({ page: page }, () => this.getForum(page))
+  showNewPost = () => this.setState({ page: 1, showNewPost: true })
+  hideNewPost = (e) => this.setState({ showNewPost: false })
 
   handleNewPost = (data) => {
     new Noty({
@@ -78,12 +72,6 @@ class Forum extends React.Component {
     }, 4000)
   }
 
-  hideNewPost = (e) => {
-    this.setState({
-      showNewPost: false
-    })
-  }
-
   componentDidUpdate(prevProps, prevState) {
     if(prevProps.forumid !== this.props.forumid) {
       this.getForum(1);
@@ -98,16 +86,20 @@ class Forum extends React.Component {
     this.getForum()
   }
 
-  async getForum(page = 1) {
+  async getForum(page = false) {
     this.setState({
       topics: false,
       showNewPost: false,
       loadingPosts: true
     })
-    if (!page) page = 1;
+    if (!page) page = this.state.page;
     try {
       const { forumid } = this.props
-      const response = await fetch(`${ GLOBAL.REST_API }/forum/${ forumid }?page=${ page }`)
+      let url = `${ GLOBAL.REST_API }/forum/${ forumid }?page=${ page }`
+      if (this.state.showModerated) {
+        url += `&filter=all`
+      }
+      const response = await fetch(url)
       if (response.ok) {
         const result = await response.json()
         this.setState({
@@ -137,8 +129,22 @@ class Forum extends React.Component {
     }
   }
 
+  changeVisibility = (e, data) => {
+    this.setState({showModerated: data.checked}, () => {
+      this.getForum()
+    })
+  }
+
+  removeTopic = (id) => {
+    const topics = this.state.topics.filter(function(topic) {
+      return topic._id !== id;
+    });
+    this.setState({topics})
+  }
+
   render() {
-    let forum = this.state.forum,
+    let account = this.props.account,
+        forum = this.state.forum,
         children = this.state.children,
         display = false,
         rows = false,
@@ -163,10 +169,9 @@ class Forum extends React.Component {
             basic
           />
         )
-
     if(isUser) {
       newPostButton = (
-        <Button floated='left' color='green' size='tiny' onClick={this.showNewPost}>
+        <Button fluid floated='left' color='green' size='tiny' onClick={this.showNewPost}>
           <i className='pencil icon'></i>
           New Post
         </Button>
@@ -225,13 +230,31 @@ class Forum extends React.Component {
         if(topics.length > 0) {
           posts = (forum.stats) ? forum.stats.posts : 0
           if(topics.length > 0) {
-            rows = topics.map((topic, idx) => <ForumPost topic={topic} key={idx} />)
+            rows = topics.map((topic, idx) => (
+              <ForumPost
+                account={account}
+                actions={this.props.actions}
+                forum={forum}
+                key={idx}
+                moderation={this.props.moderation}
+                topic={topic}
+                removeTopic={this.removeTopic.bind(this)}
+              />
+            ))
             controls = (
               <Grid.Row>
-                <Grid.Column width={6} verticalAlign="middle">
+                <Grid.Column width={3} verticalAlign="middle">
                   {newPostButton}
                 </Grid.Column>
-                <Grid.Column width={10} verticalAlign="middle">
+                <Grid.Column width={5} verticalAlign="middle">
+                  <Checkbox
+                    label='Show moderated posts'
+                    name='moderatedVisible'
+                    onChange={this.changeVisibility}
+                    checked={this.state.showModerated}
+                  />
+                </Grid.Column>
+                <Grid.Column width={8} verticalAlign="middle">
                   <Paginator
                     page={page}
                     perPage={perPage}
@@ -312,6 +335,7 @@ class Forum extends React.Component {
 function mapStateToProps(state, ownProps) {
   return {
     account: state.account,
+    moderation: state.moderation,
     post: state.post,
     subscriptions: state.subscriptions
   }
@@ -320,6 +344,7 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {actions: bindActionCreators({
     ...breadcrumbActions,
+    ...moderationActions,
     ...postActions,
     ...statusActions,
     ...subscriptionActions,
