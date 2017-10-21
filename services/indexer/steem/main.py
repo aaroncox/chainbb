@@ -87,20 +87,21 @@ def process_custom_op(custom_json):
       process_modpost(opData, custom_json)
 
 def process_modpost(opData, custom_json):
-  moderator = custom_json['required_posting_auths'][0]
-  forum = opData['forum']
-  topic = opData['topic']
-  if isModerator(moderator, forum):
-    if 'remove' in opData:
-      if opData['remove'] == True:
-        db.posts.update({'_id': topic}, {'$addToSet': {
-          '_removedFrom': forum
-        }})
-      if opData['remove'] == False:
-        l("restoring")
-        db.posts.update({'_id': topic}, {'$pull': {
-          '_removedFrom': forum
-        }})
+    moderator = custom_json['required_posting_auths'][0]
+    forum = opData['forum']
+    topic = opData['topic']
+    if isModerator(moderator, forum):
+        if 'remove' in opData:
+            if opData['remove'] == True:
+                l("{} removed {} in {}".format(moderator, topic, forum))
+                db.posts.update({'_id': topic}, {'$addToSet': {
+                '_removedFrom': forum
+                }})
+            if opData['remove'] == False:
+                l("{} restored {} in {}".format(moderator, topic, forum))
+                db.posts.update({'_id': topic}, {'$pull': {
+                '_removedFrom': forum
+                }})
 
 def isModerator(user, forum):
   if user == 'jesta':
@@ -114,7 +115,7 @@ def remove_post(opData):
 
     # Generate ID
     _id = author + '/' + permlink
-    l("remove post {}".format(_id))
+    l("post self-removed {}".format(_id))
 
     # Remove any matches
     db.posts.remove({'_id': _id})
@@ -171,7 +172,7 @@ def get_parent_post_id(reply):
 def update_parent_post(parent_id, reply):
     # Prevent bots from updating the parent post
     if reply['author'] in bots:
-        l("Skipping: {} - http://localhost:3000{}".format(reply['author'], reply['url']))
+        l("skipping bot {} - {}".format(reply['author'], reply['url']))
         return
     # Split the ID into parameters for loading the post
     author, permlink = parent_id.split('/')
@@ -323,7 +324,7 @@ def process_post(opData, block, quick=False):
     permlink = opData['permlink']
     _id = author + '/' + permlink
     # Grab the parsed data of the post
-    # l(_id)
+    l(_id)
     comment = parse_post(_id, author, permlink)
     # Determine where it's posted from, and record for active users
     if isinstance(comment['json_metadata'], dict) and 'app' in comment['json_metadata'] and not quick:
