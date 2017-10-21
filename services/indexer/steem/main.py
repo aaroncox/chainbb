@@ -16,7 +16,7 @@ import os
 
 # Connections
 nodes = [
-    'http://localhost:5090',
+    os.environ['steem_node']
 ]
 
 s = Steem(nodes)

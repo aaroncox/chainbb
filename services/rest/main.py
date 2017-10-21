@@ -13,7 +13,7 @@ mongo = MongoClient("mongodb://mongo", connect=False)
 db = mongo.forums
 
 nodes = [
-    'http://steem.chainbb.com'
+    os.environ['steem_node']
 ]
 s = Steem(nodes)
 
