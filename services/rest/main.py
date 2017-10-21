@@ -7,9 +7,6 @@ from mongodb_jsonencoder import MongoJsonEncoder
 from steem import Steem
 import os
 
-app = Flask(__name__)
-app.json_encoder = MongoJsonEncoder
-CORS(app)
 ns = os.environ['namespace'] if 'namespace' in os.environ else ''
 mongo = MongoClient("mongodb://mongo")
 db = mongo[ns]
@@ -18,6 +15,10 @@ nodes = [
     os.environ['steem_node']
 ]
 s = Steem(nodes)
+
+app = Flask(__name__)
+app.json_encoder = MongoJsonEncoder
+CORS(app)
 
 
 def response(json, forum=False, children=False):
@@ -256,26 +257,6 @@ def accountResponses(username):
         'total': total,
         'page': page
     })
-
-
-@app.route("/crypto")
-def crypto():
-    query = {
-        "group": {"$in": ["chainbb", "crypto-general", "crypto-index"]}
-    }
-    sort = [("group_order", 1), ("forum_order", 1)]
-    results = db.forums.find(query).sort(sort)
-    return response(list(results))
-
-
-@app.route("/steem")
-def steem():
-    query = {
-        "group": {"$in": ["steem-general", "steem-projects"]}
-    }
-    sort = [("group_order", 1), ("forum_order", 1)]
-    results = db.forums.find(query).sort(sort)
-    return response(list(results))
 
 
 @app.route("/tags")

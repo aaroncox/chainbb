@@ -14,11 +14,14 @@ import time
 import sys
 import os
 
+#########################################
 # Connections
+#########################################
+
+# steemd
 nodes = [
     os.environ['steem_node']
 ]
-
 s = Steem(nodes)
 d = Steemd(nodes)
 b = Blockchain(steemd_instance=s, mode='head')
@@ -29,16 +32,27 @@ ns = os.environ['namespace'] if 'namespace' in os.environ else ''
 mongo = MongoClient("mongodb://mongo")
 db = mongo[ns]
 
-# Determine which block was last processed
+#########################################
+# Globals
+#########################################
+
+# Which block was last processed
 init = db.status.find_one({'_id': 'height_processed'})
 if(init):
     last_block_processed = int(init['value'])
 else:
     last_block_processed = 1
 
+# Global Properties
 props = {}
+
+# Forums Cache
 forums_cache = {}
+
+# Vote Queue
 vote_queue = []
+
+# Known Bots
 bots = set()
 
 # ------------
