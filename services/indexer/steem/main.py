@@ -68,12 +68,45 @@ def process_op(op, block, quick=False):
     # Split the array into type and data
     opType = op[0]
     opData = op[1]
+    if opType == "custom_json" and opData['id'] == "chainbb":
+        process_custom_op(opData)
     if opType == "vote" and quick == False:
         queue_parent_update(opData)
     if opType == "comment":
         process_post(opData, block, quick=False)
     if opType == "delete_comment":
         remove_post(opData)
+
+def process_custom_op(custom_json):
+  # Process the JSON
+  op = json.loads(custom_json['json'])
+  # Split the array into type and data
+  opType = op[0]
+  opData = op[1]
+  if opType == 'modpost':
+      process_modpost(opData, custom_json)
+
+def process_modpost(opData, custom_json):
+  moderator = custom_json['required_posting_auths'][0]
+  forum = opData['forum']
+  topic = opData['topic']
+  if isModerator(moderator, forum):
+    if 'remove' in opData:
+      if opData['remove'] == True:
+        db.posts.update({'_id': topic}, {'$addToSet': {
+          '_removedFrom': forum
+        }})
+      if opData['remove'] == False:
+        l("restoring")
+        db.posts.update({'_id': topic}, {'$pull': {
+          '_removedFrom': forum
+        }})
+
+def isModerator(user, forum):
+  if user == 'jesta':
+    return True
+  return False
+
 
 def remove_post(opData):
     author = opData['author']
