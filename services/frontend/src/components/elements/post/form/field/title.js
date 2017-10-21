@@ -6,7 +6,6 @@ import { Form } from 'formsy-semantic-ui-react'
 export default class PostFormFieldTitle extends React.Component {
   render() {
     const { value } = this.props
-    const errorLabel = <Label color="red" pointing/>
     return (
       <Form.Field>
         <Form.Input
@@ -18,7 +17,7 @@ export default class PostFormFieldTitle extends React.Component {
           validationErrors={{
             isDefaultRequiredValue: 'A title is required'
           }}
-          errorLabel={ errorLabel }
+          errorLabel={<Label color="red" pointing/>}
         />
       </Form.Field>
     )

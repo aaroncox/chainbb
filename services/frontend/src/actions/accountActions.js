@@ -105,10 +105,10 @@ export function follow(payload) {
     const wif = payload.account.key
     const account = payload.account.name
     const who = payload.who
-    const what = (payload.action == 'follow') ? ['blog'] : []
+    const what = (payload.action === 'follow') ? ['blog'] : []
     const json = JSON.stringify(['follow', {follower: account, following: who, what: what}])
     steem.broadcast.customJsonAsync(wif, [], [account], 'follow', json, function(err, result) {
-      if(payload.action == 'follow') {
+      if(payload.action === 'follow') {
         dispatch({
           type: types.ACCOUNT_FOLLOWING_APPEND,
           following: [who]

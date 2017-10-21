@@ -1,5 +1,4 @@
 import React from 'react';
-import steem from 'steem'
 
 import { Button } from 'semantic-ui-react'
 

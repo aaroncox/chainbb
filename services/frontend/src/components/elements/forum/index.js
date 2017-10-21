@@ -8,7 +8,7 @@ import UserAvatar from '../account/avatar'
 import NumericLabel from '../../../utils/NumericLabel'
 import ForumLink from '../../../utils/forumlink'
 
-export default class ForumTitle extends React.Component {
+export default class ForumIndex extends React.Component {
   render() {
     const { forum, isMinimized, displayParent } = this.props
     let lastPost = (forum.last_post) ? (new Date(forum.last_post['created']).getTime()) : 0,
