@@ -1,3 +1,16 @@
+db.posts.update({
+  _id: 'jesta/chainbb-v030-social-feed-following-and-forum-subscriptions'
+}, {
+  $set: { cbb: { sticky: true } }
+});
+
+
+db.posts.update({
+  _id: 'jesta/chainbb-beta-update-new-forums-claiming-rewards-post-previews'
+}, {
+  $unset: { cbb: true }
+});
+
 python3 reindex.py '{
     "_id": "unique-id",
     "name": "Display Name",
