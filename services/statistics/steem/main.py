@@ -6,8 +6,10 @@ import inspect
 import sys
 import os
 
+ns = os.environ['namespace'] if 'namespace' in os.environ else ''
 mongo = MongoClient("mongodb://mongo")
-db = mongo.forums
+db = mongo[ns]
+
 
 def l(msg):
     caller = inspect.stack()[1][3]

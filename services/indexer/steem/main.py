@@ -24,8 +24,10 @@ d = Steemd(nodes)
 b = Blockchain(steemd_instance=s, mode='head')
 c = Converter(steemd_instance=s)
 
+# MongoDB
+ns = os.environ['namespace'] if 'namespace' in os.environ else ''
 mongo = MongoClient("mongodb://mongo")
-db = mongo.forums
+db = mongo[ns]
 
 # Determine which block was last processed
 init = db.status.find_one({'_id': 'height_processed'})
@@ -70,7 +72,7 @@ def process_op(op, block, quick=False):
     # Split the array into type and data
     opType = op[0]
     opData = op[1]
-    if opType == "custom_json" and opData['id'] == "chainbb":
+    if opType == "custom_json" and opData['id'] == ns:
         process_custom_op(opData)
     if opType == "vote" and quick == False:
         queue_parent_update(opData)

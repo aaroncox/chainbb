@@ -17,6 +17,7 @@ services:
     rest:
         build: ./services/rest
         environment:
+            namespace: "chainbb"
             steem_node: "https://steem.chainbb.com"
         external_links:
             - mongo:forums_mongo_1
@@ -35,6 +36,7 @@ services:
     steem:
         build: ./services/indexer/steem
         environment:
+            namespace: "chainbb"
             steem_node: "https://steem.chainbb.com"
         links:
             - mongo
