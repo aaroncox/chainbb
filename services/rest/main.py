@@ -314,7 +314,11 @@ def forum(slug):
     }
     children = db.forums.find(query)
     # Load the posts
-    query = {}
+    query = {
+      '_removedFrom': {
+        '$nin': [slug]
+      }
+    }
     if 'tags' in forum and len(forum['tags']) > 0:
         query.update({
             'category': {
