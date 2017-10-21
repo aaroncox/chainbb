@@ -314,11 +314,14 @@ def forum(slug):
     }
     children = db.forums.find(query)
     # Load the posts
-    query = {
-      '_removedFrom': {
+    query = {}
+    # ?filter=all will allow display of all posts
+    postFilter = request.args.get('filter', False)
+    if postFilter != 'all':
+      query['_removedFrom'] = {
         '$nin': [slug]
       }
-    }
+
     if 'tags' in forum and len(forum['tags']) > 0:
         query.update({
             'category': {
@@ -347,6 +350,9 @@ def forum(slug):
         'title': 1,
         'url': 1
     }
+    # ?filter=all should also display the _removedFrom field
+    if postFilter == 'all':
+      fields['_removedFrom'] = 1
     sort = [("cbb.sticky",-1),("active",-1)]
     page = int(request.args.get('page', 1))
     perPage = 20
