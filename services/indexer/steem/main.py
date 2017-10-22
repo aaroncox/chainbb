@@ -1,18 +1,19 @@
-from apscheduler.schedulers.background import BackgroundScheduler
+import collections
+import inspect
+import json
+import os
+import sys
+import time
 from datetime import datetime, timedelta
+from pprint import pprint
+
+from apscheduler.schedulers.background import BackgroundScheduler
+from pymongo import MongoClient
 from steem import Steem
-from steem.steemd import Steemd
-from steem.utils import block_num_from_hash
 from steem.blockchain import Blockchain
 from steem.converter import Converter
-from pymongo import MongoClient
-from pprint import pprint
-import collections
-import json
-import inspect
-import time
-import sys
-import os
+from steem.steemd import Steemd
+from steem.utils import block_num_from_hash
 
 #########################################
 # Connections
@@ -20,17 +21,33 @@ import os
 
 # steemd
 nodes = [
-    os.environ['steem_node']
+    'http://192.168.1.50:8090',
+    # os.environ['steem_node']
 ]
 s = Steem(nodes)
 d = Steemd(nodes)
 b = Blockchain(steemd_instance=s, mode='head')
 c = Converter(steemd_instance=s)
 
+fullnodes = [
+    'https://rpc.buildteam.io',
+    'https://api.steemit.com',
+    'https://steemd.steemit.com',
+]
+fn = Steem(fullnodes)
+
 # MongoDB
 ns = os.environ['namespace'] if 'namespace' in os.environ else ''
 mongo = MongoClient("mongodb://mongo")
 db = mongo[ns]
+
+# MongoDB Schema Enforcement
+db.forum_requests.ensure_index('timestamp', expireAfterSeconds=60*60) # Forum creation request TTL
+
+# timestamp = datetime.now()
+# db.forum_requests.insert({'_id': 'session', "timestamp": timestamp, "session": "test session"})
+# utc_timestamp = datetime.utcnow()
+# db.forum_requests.insert({'_id': 'utc_session', "timestamp": utc_timestamp, "session": "test session"})
 
 #########################################
 # Globals
@@ -73,7 +90,7 @@ quick_value = 100
 # where you want some data but don't want to sync the entire blockchain.
 # ------------
 
-# last_block_processed = 15443000
+# last_block_processed = 16528580
 
 
 def l(msg):
@@ -162,7 +179,7 @@ def queue_parent_update(opData):
     # pprint("-----------------------------")
 
 
-def parse_post(_id, author, permlink):
+def load_post(_id, author, permlink):
     # Fetch from the rpc
     comment = s.get_content(author, permlink).copy()
     # Add our ID
@@ -203,7 +220,7 @@ def update_parent_post(parent_id, reply):
     author, permlink = parent_id.split('/')
     # Load + Parse the parent post
     # l(parent_id)
-    parent_post = parse_post(parent_id, author, permlink)
+    parent_post = load_post(parent_id, author, permlink)
     # Update the parent post (within `posts`) to show last_reply + last_reply_by
     parent_post.update({
         'active_votes': collapse_votes(parent_post['active_votes']),
@@ -318,7 +335,7 @@ def update_forums(comment):
 def process_vote(_id, author, permlink):
     # Grab the parsed data of the post
     # l(_id)
-    comment = parse_post(_id, author, permlink)
+    comment = load_post(_id, author, permlink)
     # Ensure we a post was returned
     if comment['author'] != '':
         comment.update({
@@ -360,7 +377,7 @@ def process_post(opData, block, quick=False):
     _id = author + '/' + permlink
     # Grab the parsed data of the post
     l(_id)
-    comment = parse_post(_id, author, permlink)
+    comment = load_post(_id, author, permlink)
     # Determine where it's posted from, and record for active users
     if isinstance(comment['json_metadata'], dict) and 'app' in comment['json_metadata'] and not quick:
         try:
@@ -457,13 +474,11 @@ def process_rewards_pools():
     db.status.update({'_id': 'recent_claims'}, {
                      "$set": {'value': recent_claims}}, upsert=True)
 
-
 def rebuild_bots_cache():
     global bots
     docs = db.bots.find()
     for bot in docs:
         bots.add(str(bot['_id']))
-
 
 if __name__ == '__main__':
     l("Starting services @ block #{}".format(last_block_processed))
@@ -474,20 +489,15 @@ if __name__ == '__main__':
     rebuild_bots_cache()
 
     scheduler = BackgroundScheduler()
-    scheduler.add_job(process_global_props, 'interval',
-                      seconds=9, id='process_global_props')
-    scheduler.add_job(rebuild_forums_cache, 'interval',
-                      minutes=1, id='rebuild_forums_cache')
-    scheduler.add_job(rebuild_bots_cache, 'interval',
-                      minutes=1, id='rebuild_bots_cache')
-    scheduler.add_job(process_vote_queue, 'interval',
-                      minutes=5, id='process_vote_queue')
-    scheduler.add_job(process_rewards_pools, 'interval',
-                      minutes=10, id='process_rewards_pools')
+    scheduler.add_job(process_global_props, 'interval', seconds=9, id='process_global_props')
+    scheduler.add_job(rebuild_forums_cache, 'interval', minutes=1, id='rebuild_forums_cache')
+    scheduler.add_job(rebuild_bots_cache, 'interval', minutes=1, id='rebuild_bots_cache')
+    scheduler.add_job(process_vote_queue, 'interval', minutes=5, id='process_vote_queue')
+    scheduler.add_job(process_rewards_pools, 'interval', minutes=10, id='process_rewards_pools')
     scheduler.start()
 
     quick = False
-    for block in b.stream_from(start_block=last_block_processed, batch_operations=False, full_blocks=True):
+    for block in b.stream_from(start_block=last_block_processed, full_blocks=True):
         if(len(block['transactions']) > 0):
             block_num = block_num_from_hash(block['block_id'])
             timestamp = block['timestamp']
