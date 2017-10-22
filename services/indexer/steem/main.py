@@ -21,8 +21,8 @@ from steem.utils import block_num_from_hash
 
 # steemd
 nodes = [
-    'http://192.168.1.50:8090',
-    # os.environ['steem_node']
+    # 'http://192.168.1.50:8090',
+    os.environ['steem_node']
 ]
 s = Steem(nodes)
 d = Steemd(nodes)
