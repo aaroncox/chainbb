@@ -515,13 +515,14 @@ def process_platform_history():
     l("platform account")
     moreops = True
     limit = 100
+    # How many history ops have been processed previously?
     init = db.status.find_one({'_id': 'history_processed'})
     if(init):
         last_op_processed = int(init['value'])
     else:
         last_op_processed = limit
     while moreops:
-        ops = fn.get_account_history(ns, last_op_processed, limit)
+        ops = fn.get_account_history(ns, last_op_processed + 100, limit)
         if ops[-1][0] == last_op_processed:
             moreops = False
         for idx, op in ops:
