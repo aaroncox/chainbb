@@ -2,12 +2,14 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 
-import { Button, Grid, Header, Icon, Menu, Segment, Table } from 'semantic-ui-react'
+import { Button, Grid, Header, Icon, Menu, Message, Segment, Table } from 'semantic-ui-react'
 
 import * as accountActions from '../../actions/accountActions'
 import * as forumActions from '../../actions/forumActions'
 import * as statusActions from '../../actions/statusActions'
 import * as preferenceActions from '../../actions/preferenceActions'
+
+import ForumCreateButton from './create/button'
 
 class ForumCreate extends React.Component {
     render() {
@@ -21,18 +23,24 @@ class ForumCreate extends React.Component {
                         </Header.Subheader>
                     </Header>
                 </Segment>
+                <Message
+                    content='The pricing below is subject to change as more features become available and as chainBB leaves beta.'
+                    header='Beta Price Availability'
+                    icon='hourglass start'
+                    info
+                />
                 <Table definition celled>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell/>
                             <Table.HeaderCell width={4}>
                                 <Header textAlign='center'>
-                                    Free Forum
+                                    Basic Forum
                                 </Header>
                             </Table.HeaderCell>
                             <Table.HeaderCell width={4}>
                                 <Header textAlign='center'>
-                                    Paid Forum
+                                    Moderated Forum
                                 </Header>
                             </Table.HeaderCell>
                             <Table.HeaderCell width={4}>
@@ -47,9 +55,9 @@ class ForumCreate extends React.Component {
                             <Table.Cell>Price</Table.Cell>
                             <Table.Cell textAlign='center' verticalAlign='top'>
                                 <Header>
-                                    0 STEEM
+                                    1 STEEM
                                     <Header.Subheader>
-                                        Create a proposal
+                                        one time
                                     </Header.Subheader>
                                 </Header>
                             </Table.Cell>
@@ -113,7 +121,7 @@ class ForumCreate extends React.Component {
                                 <Header>
                                     Moderation
                                     <Header.Subheader>
-                                        Tools to keep the forum free of spam and on-topic.
+                                        Tools to let you keep the forum free of spam and on-topic.
                                     </Header.Subheader>
                                 </Header>
                             </Table.Cell>
@@ -155,7 +163,7 @@ class ForumCreate extends React.Component {
                                 <Header>
                                     Beneficiary Rewards
                                     <Header.Subheader>
-                                        Earn a portion of rewards from posts in the forum.
+                                        Earn a portion of rewards from evert post in this forum.
                                     </Header.Subheader>
                                 </Header>
                             </Table.Cell>
@@ -175,19 +183,13 @@ class ForumCreate extends React.Component {
                             <Table.Cell>
                             </Table.Cell>
                             <Table.Cell textAlign='center'>
-                                <Button color='blue'>
-                                    Create a Proposal
-                                </Button>
+                                <ForumCreateButton />
                             </Table.Cell>
                             <Table.Cell textAlign='center'>
-                                <Button color='green'>
-                                    Create Forum
-                                </Button>
+                                <ForumCreateButton />
                             </Table.Cell>
                             <Table.Cell textAlign='center'>
-                                <Button color='green'>
-                                    Create Forum
-                                </Button>
+                                <ForumCreateButton />
                             </Table.Cell>
                         </Table.Row>
                     </Table.Body>
