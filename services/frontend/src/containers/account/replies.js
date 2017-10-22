@@ -78,7 +78,6 @@ class Replies extends React.Component {
             </Segment>
         )
     }
-    console.log(this.state)
     return (
       <div>
         <Segment stacked color='purple'>
