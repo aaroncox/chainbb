@@ -135,7 +135,7 @@ class ForumCreate extends React.Component {
                                 <Icon size='big' name='checkmark box' color='green' />
                             </Table.Cell>
                         </Table.Row>
-                        <Table.Row>
+                        {/* <Table.Row>
                             <Table.Cell>
                                 <Header>
                                     Subforums
@@ -157,7 +157,7 @@ class ForumCreate extends React.Component {
                                     5
                                 </Header>
                             </Table.Cell>
-                        </Table.Row>
+                        </Table.Row> */}
                         <Table.Row>
                             <Table.Cell>
                                 <Header>
