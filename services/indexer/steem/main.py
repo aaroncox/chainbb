@@ -94,6 +94,42 @@ def process_op(op, block, quick=False):
         process_post(opData, block, quick=False)
     if opType == "delete_comment":
         remove_post(opData)
+    if opType == "comment_benefactor_reward":
+        process_benefactor_reward(opData)
+
+
+def process_benefactor_reward(opData):
+    _id = opData['author'] + '/' + opData['permlink']
+    # l(_id)
+    try:
+        # Load the post now that it processed rewards
+        comment = load_post(_id, opData['author'], opData['permlink'])
+        # Ensure we a post was returned
+        if comment['author'] != '':
+            db.rewards.update({'_id': _id}, {'$set': {
+                'author': opData['author'],
+                'author_payout': comment['total_payout_value'],
+                'category': comment['category'],
+                'curator_payout': comment['curator_payout_value'],
+                'permlink': opData['permlink'],
+                'platform_payout': float(opData['reward'].split(' ')[0]),
+                'timestamp': comment['last_payout'],
+            }}, upsert=True)
+            # Update the post in the DB since we have it (once last time)
+            comment.update({
+                'active_votes': collapse_votes(comment['active_votes'])
+            })
+            # If this is a top level post, update the `posts` collection
+            if comment['parent_author'] == '':
+                db.posts.update({'_id': _id}, {'$set': comment}, upsert=True)
+            # Otherwise save it into the `replies` collection and update the parent
+            else:
+                # Update this post within the `replies` collection
+                db.replies.update({'_id': _id}, {'$set': comment}, upsert=True)
+    except:
+        l("Error parsing post")
+        l(comment)
+        pass
 
 
 def process_custom_op(custom_json):
@@ -458,6 +494,28 @@ def process_rewards_pools():
                      "$set": {'value': recent_claims}}, upsert=True)
 
 
+def process_platform_history():
+    l("platform account")
+    moreops = True
+    limit = 100
+    init = db.status.find_one({'_id': 'history_processed'})
+    if(init):
+        last_op_processed = int(init['value'])
+    else:
+        last_op_processed = limit
+    while moreops:
+        ops = fn.get_account_history(ns, last_op_processed, limit)
+        if ops[-1][0] == last_op_processed:
+            moreops = False
+        for idx, op in ops:
+            if idx > last_op_processed:
+                block = {
+                    'timestamp': op['timestamp'],
+                }
+                process_op(op['op'], block)
+                last_op_processed = idx
+                db.status.update({'_id': 'history_processed'}, {'$set': {'value': idx}}, upsert=True)
+
 def rebuild_bots_cache():
     global bots
     docs = db.bots.find()
@@ -468,6 +526,7 @@ def rebuild_bots_cache():
 if __name__ == '__main__':
     l("Starting services @ block #{}".format(last_block_processed))
 
+    process_platform_history()
     process_global_props()
     process_rewards_pools()
     rebuild_forums_cache()
@@ -484,6 +543,7 @@ if __name__ == '__main__':
                       minutes=5, id='process_vote_queue')
     scheduler.add_job(process_rewards_pools, 'interval',
                       minutes=10, id='process_rewards_pools')
+    scheduler.add_job(process_platform_history, 'interval', minutes=15, id='process_platform_history')
     scheduler.start()
 
     quick = False
