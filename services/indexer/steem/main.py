@@ -42,7 +42,7 @@ mongo = MongoClient("mongodb://mongo")
 db = mongo[ns]
 
 # MongoDB Schema Enforcement
-db.forum_requests.ensure_index('timestamp', expireAfterSeconds=60*60) # Forum creation request TTL
+# db.forum_requests.ensure_index('timestamp', expireAfterSeconds=60*60) # Forum creation request TTL
 
 # timestamp = datetime.now()
 # db.forum_requests.insert({'_id': 'session', "timestamp": timestamp, "session": "test session"})
