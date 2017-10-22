@@ -14,7 +14,7 @@ class Sidebar extends React.Component {
     let requestForum = (
         <Segment basic textAlign='center'>
             <Header size='small'>
-                Want to start a community forum of your own?
+                Start your own community forum!
             </Header>
             <p>
                 <Button
@@ -126,9 +126,9 @@ class Sidebar extends React.Component {
           </Link>
         </Menu>
         {userMenu}
-        {subscribedForums}
-        <Divider />
         {requestForum}
+        <Divider />
+        {subscribedForums}
       </div>
     )
   }
