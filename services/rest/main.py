@@ -21,18 +21,18 @@ app.json_encoder = MongoJsonEncoder
 CORS(app)
 
 
-def response(json, forum=False, children=False):
+def response(json, forum=False, children=False, meta=False, status='ok'):
     # Load height
     # NYI - should be cached at for 3 seconds
     statuses = db.status.find()
-    status = {}
+    network = {}
     for doc in statuses:
-        status.update({
+        network.update({
             str(doc['_id']): doc['value']
         })
     response = {
-        'status': 'ok',
-        'network': status,
+        'status': status,
+        'network': network,
         'data': json
     }
     if forum:
@@ -376,7 +376,7 @@ def forum(slug):
     skip = (page - 1) * perPage
     limit = perPage
     results = db.posts.find(query, fields).sort(sort).skip(skip).limit(limit)
-    return response(list(results), forum=forum, children=children)
+    return response(list(results), forum=forum, children=children, meta={'query': query})
 
 @app.route('/status/<slug>')
 def status(slug):
