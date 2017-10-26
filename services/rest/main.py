@@ -358,6 +358,28 @@ def forum(slug):
     results = db.posts.find(query, fields).sort(sort).skip(skip).limit(limit)
     return response(list(results), forum=forum, children=children)
 
+@app.route('/status/<slug>')
+def status(slug):
+    # Load the specified forum
+    query = {
+        '_id': slug
+    }
+    forum = db.forums.find_one(query)
+    # And those who funded it
+    query = {
+        'ns': slug
+    }
+    funding = db.funding.find(query).sort([('timestamp', -1)])
+    # Total contributions
+    contributions = db.funding.aggregate([
+        {'$match': {'ns': slug}},
+        {'$group': {'_id': '$from', 'count': {'$sum': 1}, 'total': {'$sum': '$steem_value'}}},
+        {'$sort': {'total': -1}}
+    ])
+    return response({
+        'history': list(funding),
+        'contributors': list(contributions)
+    }, forum=forum)
 
 @app.route('/topics/<category>')
 def topics(category):
