@@ -114,8 +114,111 @@ def process_op(op, block, quick=False):
         process_post(opData, block, quick=False)
     if opType == 'delete_comment':
         remove_post(opData)
-    if opType == "comment_benefactor_reward":
+    if opType == 'transfer' and opData['to'] == ns:
+        # Format the data better
+        amount, symbol = opData['amount'].split(" ")
+        opData['amount'] = float(amount)
+        opData['symbol'] = symbol
+        # Process incoming transfer
+        process_incoming_transfer(opData)
+    if opType == 'comment_benefactor_reward':
         process_benefactor_reward(opData)
+
+
+def process_incoming_transfer(opData):
+    # Save record of the op
+    db.transfer.update({
+        '_id': opData['txid']
+    }, {
+        '$set': opData
+    }, upsert=True)
+    # Attempt to process the command within the transfer
+    try:
+        dataType, ns = opData['memo'].split(':')
+        if dataType == 'ns':
+            # Store the namespace for this transfer
+            opData['ns'] = ns
+            opData['timestamp'] = datetime.strptime(opData['timestamp'], '%Y-%m-%dT%H:%M:%S')
+            # Store the value of this transfer, in STEEM
+            opData['steem_value'] = opData['amount']
+            if opData['symbol'] == 'SBD':
+                opData['steem_value'] = opData['amount'] * sbd_median_price
+            # Process the funding data
+            process_namespace_funding(opData)
+    except:
+        # Save the transfers that caused errors
+        db.transfer_errors.update({
+            '_id': opData['txid']
+        }, {
+            '$set': opData
+        }, upsert=True)
+        l('Error parsing transfer')
+        l(opData)
+        l(block)
+        pass
+    time.sleep(3000)
+
+def update_funding(opData):
+    db.funding.update({
+        '_id': opData['txid']
+    }, {
+        '$set': opData
+    }, upsert=True)
+    # Determine the total funding for this namespace
+    total = list(db.funding.aggregate([
+        {'$match': {'ns': opData['ns']}},
+        {'$group': {'_id': 'total', 'amount': {'$sum': '$steem_value'}}}
+    ]))[0]['amount']
+    # Return the total
+    return total
+
+
+def process_namespace_funding(opData):
+    l('funding for {} - {} {} '.format(opData['ns'], opData['amount'], opData['symbol']))
+    is_request = False
+    sufficient_funds = False
+    forum = db.forums.find_one({'_id': opData['ns']})
+    if not forum:
+        forum = db.forum_requests.find_one({'_id': opData['ns']})
+        is_request = True
+    if forum:
+        # Record the funding event
+        total = update_funding(opData)
+        if total > 1:
+            sufficient_funds = True
+        # If this is a forum request
+        if is_request:
+            # and it has exceeded the minimum
+            if total >= 1:
+                # create the forum
+                forum.pop('expires', None)
+                forum['funded'] = total
+                db.forums.insert(forum)
+            else:
+                # If it's still under the threshold, update the request
+                db.forum_requests.update({
+                    '_id': opData['ns']
+                }, {
+                    '$set': {
+                        'funded': total
+                    }
+                })
+        else:
+            # If this is an actual forum
+            db.forums.update({
+                '_id': opData['ns']
+            }, {
+                '$set': {
+                    'funded': total
+                }
+            })
+
+
+        # Store the funding value on the forum
+
+    else:
+        l('invalid namespace: {}'.format(opData['ns']))
+        l(opData)
 
 
 def process_benefactor_reward(opData):
