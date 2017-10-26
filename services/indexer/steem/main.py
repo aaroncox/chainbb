@@ -99,6 +99,8 @@ def l(msg):
     print('[FORUM][INDEXER][{}] {}'.format(str(caller), str(msg)))
     sys.stdout.flush()
 
+def sanitize(string):
+    return BeautifulSoup(string, 'html.parser').get_text()
 
 def process_op(op, block, quick=False):
     # Split the array into type and data
