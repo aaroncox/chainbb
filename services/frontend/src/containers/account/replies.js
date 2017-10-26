@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from "react-helmet";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 
@@ -80,6 +81,9 @@ class Replies extends React.Component {
     }
     return (
       <div>
+        <Helmet>
+            <title>Post Replies</title>
+        </Helmet>
         <Segment stacked color='purple'>
           <Grid>
             <Grid.Row>

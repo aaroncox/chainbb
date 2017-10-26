@@ -1,4 +1,5 @@
 import React from 'react'
+import { Helmet } from "react-helmet";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 
@@ -37,8 +38,12 @@ class Account extends React.Component {
   }
 
   render() {
+    const { username } = this.props.match.params;
     return (
       <Grid>
+        <Helmet>
+            <title>{username}</title>
+        </Helmet>
         <Grid.Row>
           <Grid.Column className='mobile hidden' width={4}>
             <AccountSidebar {...this.props} />

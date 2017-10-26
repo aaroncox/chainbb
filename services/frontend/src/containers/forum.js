@@ -1,5 +1,6 @@
-import React from 'react';
-import { bindActionCreators } from 'redux';
+import React from 'react'
+import { Helmet } from "react-helmet";
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { goToTop } from 'react-scrollable-anchor'
@@ -321,6 +322,10 @@ class Forum extends React.Component {
     }
     return(
       <div>
+        <Helmet>
+            <meta charSet="utf-8" />
+            {(forum && forum._id) ? <title>/f/{forum._id} - {forum.name}</title> : false}
+        </Helmet>
         <ForumTitle
           forum={forum}
           attached={(subforums) ? 'top' : false}

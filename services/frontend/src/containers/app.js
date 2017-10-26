@@ -1,4 +1,5 @@
 import React from 'react'
+import { Helmet } from "react-helmet";
 import { BrowserRouter, browserHistory, Route } from 'react-router-dom';
 
 import steem from 'steem'
@@ -26,27 +27,32 @@ import '../../node_modules/noty/lib/noty.css'
 steem.config.set('websocket', 'wss://rpc.buildteam.io')
 
 const App = () => (
-  <BrowserRouter history={browserHistory}>
-    <div className="AppContainer">
-      <HeaderMenu />
-      <BreadcrumbMenu />
-      <GlobalNotice />
-      <Container>
-        <Route exact path="/" component={IndexLayout} />
-        <Route path="/@:username" component={Account} />
-        <Route path="/create/forum" component={ForumCreateLayout} />
-        <Route path="/feed" component={FeedLayout} />
-        <Route path="/forums" component={ForumsLayout} />
-        <Route path="/forums/:group" component={IndexLayout} />
-        <Route path="/forum/:id" component={ForumLayout} />
-        <Route path="/replies" component={RepliesLayout} />
-        <Route path="/topic/:category" component={TopicLayout} />
-        <Route path="/:category/@:author/:permlink" component={Thread} />
-      </Container>
-      <BreadcrumbMenu />
-      <FooterMenu />
-    </div>
-  </BrowserRouter>
+    <BrowserRouter history={browserHistory}>
+      <div className="AppContainer">
+        <Helmet>
+            <meta charSet="utf-8" />
+            <title>chainBB</title>
+        </Helmet>
+        <HeaderMenu />
+        <BreadcrumbMenu />
+        <GlobalNotice />
+        <Container>
+          <Route exact path="/" component={IndexLayout} />
+          <Route path="/@:username" component={Account} />
+          <Route path="/create/forum" component={ForumCreateLayout} />
+          <Route path="/feed" component={FeedLayout} />
+          <Route path="/forums" component={ForumsLayout} />
+          <Route path="/forums/:group" component={IndexLayout} />
+          <Route path="/f/:id/:section?" component={ForumLayout} />
+          <Route path="/forum/:id" render={(props) => <Redirect to={`/f/${props.match.params.id}`}/>}/>
+          <Route path="/replies" component={RepliesLayout} />
+          <Route path="/topic/:category" component={TopicLayout} />
+          <Route path="/:category/@:author/:permlink" component={Thread} />
+        </Container>
+        <BreadcrumbMenu />
+        <FooterMenu />
+      </div>
+    </BrowserRouter>
 )
 
 export default App

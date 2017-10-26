@@ -1,4 +1,5 @@
 import React from 'react'
+import { Helmet } from "react-helmet";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { goToTop, goToAnchor } from 'react-scrollable-anchor'
@@ -187,6 +188,9 @@ class Thread extends React.Component {
     }
     return (
       <div>
+        <Helmet>
+            <title>{this.props.post.content.title}</title>
+        </Helmet>
         <Post
           page={page}
           changePage={this.changePage}

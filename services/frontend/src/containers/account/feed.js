@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from "react-helmet";
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
 import { goToTop } from 'react-scrollable-anchor'
@@ -82,7 +83,7 @@ class Feed extends React.Component {
           })
         } else {
           display = (
-            <Segment textAlign='center'>
+            <Segment attached textAlign='center'>
               <Header>
                 No posts found
                 <Header.Subheader>
@@ -95,6 +96,9 @@ class Feed extends React.Component {
       }
       return(
         <div>
+          <Helmet>
+            <title>Activity Feed</title>
+          </Helmet>
           <FeedTitle />
           <Segment attached='top' secondary>
             <Grid>
