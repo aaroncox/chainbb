@@ -1,8 +1,9 @@
 import React from 'react';
-
 import { Grid, Header, Icon, Segment } from 'semantic-ui-react'
 import TimeAgo from 'react-timeago'
 import { Link } from 'react-router-dom'
+import slug from 'slug'
+
 import AccountAvatar from '../account/avatar'
 import AccountLink from '../account/link'
 import Paginator from './post/paginator'
@@ -11,7 +12,8 @@ import ForumPostModeration from './post/moderation'
 export default class ForumPost extends React.Component {
   constructor(props) {
     super(props)
-    const isModerator = (props && props.account && props.account.isUser && props.account.name === 'jesta')
+    const hasModeration = (props && props.tier) ? props.tier.moderation : false
+    const isModerator = hasModeration && (props && props.account && props.account.isUser && props.account.name === props.forum.creator)
     this.state = {
       isModerator: isModerator,
       hovering: false,
@@ -22,7 +24,10 @@ export default class ForumPost extends React.Component {
   onMouseLeave = () => this.setState({hovering: false})
   onOpen = () => this.setState({moderating: true})
   onClose = (removePost = false) => this.setState({moderating: false})
-
+  changeFilter = (e, data) => {
+      const tag = slug(data.value).toString()
+      this.props.changeFilter(tag)
+  }
   render() {
     let { account, forum, moderation, topic } = this.props,
         moderatorRemoved = (topic._removedFrom && topic._removedFrom.indexOf(forum['_id']) >= 0),

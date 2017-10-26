@@ -3,6 +3,7 @@ import slug from 'slug'
 
 import * as types from './actionTypes';
 import * as BreadcrumbActions from './breadcrumbActions';
+import * as ForumActions from './forumActions';
 import * as GLOBAL from '../global';
 
 export function setVoteProcessing(id) {
@@ -80,6 +81,7 @@ export function fetchPost(params) {
           network: result.network
         }
       })
+      dispatch(ForumActions.setForum(result.forum))
       dispatch(fetchPostResolved({
         forum: result.forum,
         content: result.data
@@ -280,20 +282,31 @@ export function submit(account, data, parent, action = 'post') {
     // Set our post data
     const author = account.name
     const body = data.body
+    const namespace = data.namespace
     const title = (data.title) ? data.title : ''
     const permlink = (data.existingPost) ? data.existingPost.permlink : generatePermlink(title, parent) // Prevent editing
     const parent_author = (data.existingPost) ? data.existingPost.parent_author : (parent) ? parent.author : ''
     const parent_permlink = (data.existingPost) ? data.existingPost.parent_permlink : (parent) ? parent.permlink : data.category
     // JSON to append to the post
     const json_metadata = JSON.stringify({
-      app: 'chainbb/0.3',
+      app: 'chainbb/0.4',
       format: 'markdown+html',
       tags: data.tags
     })
     // Predefined beneficiaries for the platform
-    const beneficiaries = [
-      { "account":"chainbb", "weight": 1500 }
+    let beneficiaries = [
+      { "account": "chainbb", "weight": 1500 }
     ]
+    // If the forum is premium, add the creator as a beneficiary
+    if (data.forum && data.forum.target) {
+        const { target } = data.forum
+        if(target.funded >= 250 && target.creator) {
+            beneficiaries = [
+                { "account": "chainbb", "weight": 1000 },
+                { "account": target.creator, "weight": 500},
+            ]
+        }
+    }
     // The percentage overall (after platform splits) that the user receives - should be dynamic in the future
     const authorPercent = 85
     // Add additional beneficiaries as requested by the user
@@ -327,6 +340,19 @@ export function submit(account, data, parent, action = 'post') {
           break
       }
       ops.push(['comment_options', { allow_curation_rewards, allow_votes, author, extensions, max_accepted_payout, percent_steem_dollars, permlink }]);
+      // If this is a root post, associate it with the namespace, regardless of category used
+      if(!parent) {
+          ops.push(['custom_json', {
+              required_auths: [],
+              required_posting_auths: [author],
+              id: 'chainbb',
+              json: JSON.stringify(['forum_post', {
+                  namespace,
+                  author,
+                  permlink,
+              }])
+          }])
+      }
     }
     // Uncomment below to debug posts without submitting
     // console.log('data')
@@ -343,7 +369,7 @@ export function submit(account, data, parent, action = 'post') {
     //       ts: +new Date()
     //     }
     //   })
-    // }, 60000)
+    // }, 6000)
     steem.broadcast.send({ operations: ops, extensions: [] }, { posting: account.key }, function(err, result) {
       if(err) {
         dispatch({
