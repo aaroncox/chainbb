@@ -42,12 +42,12 @@ mongo = MongoClient('mongodb://mongo')
 db = mongo[ns]
 
 # MongoDB Schema Enforcement
-# db.forum_requests.ensure_index('timestamp', expireAfterSeconds=60*60) # Forum creation request TTL
-
-# timestamp = datetime.now()
-# db.forum_requests.insert({'_id': 'session', "timestamp": timestamp, "session": "test session"})
-# utc_timestamp = datetime.utcnow()
-# db.forum_requests.insert({'_id': 'utc_session', "timestamp": utc_timestamp, "session": "test session"})
+if not 'forum_requests' in db.collection_names():
+    db.create_collection('forum_requests')
+request_index = 'created'
+request_collection = db.forum_requests
+if request_index not in request_collection.index_information():
+    request_collection.create_index('created', unique=True, name='created', expireAfterSeconds=60*60)
 
 #########################################
 # Globals
