@@ -685,6 +685,7 @@ def process_vote_queue():
 
 def process_global_props():
     global props
+    global sbd_median_price
     props = d.get_dynamic_global_properties()
     # Save height
     db.status.update({'_id': 'height'}, {
