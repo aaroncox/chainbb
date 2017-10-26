@@ -14,7 +14,7 @@ export default class ForumPostModerationStatus extends React.Component {
         <Header.Subheader>
           Child of
           {' '}
-          <Link to={`/forum/${forum.parent}`}>
+          <Link to={`/f/${forum.parent}`}>
             {forum.parent_name}
           </Link>
         </Header.Subheader>

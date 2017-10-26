@@ -75,7 +75,7 @@ class Sidebar extends React.Component {
                     <Link
                       key={index}
                       className='item'
-                      to={`/forum/${forums[index].id}`}
+                      to={`/f/${forums[index].id}`}
                     >
                       <Header size='small'>
                         {(forums[index].parent)

@@ -34,8 +34,8 @@ export default class PostFormFieldTags extends React.Component {
         <Table.Row>
           <Table.Cell collapsing>Forum Placement</Table.Cell>
           <Table.Cell>
-            <Link to={`/forum/${forum._id}`}>
-              {forum.name}
+            <Link to={`/f/${target._id}`}>
+              {target.name}
             </Link>
           </Table.Cell>
         </Table.Row>

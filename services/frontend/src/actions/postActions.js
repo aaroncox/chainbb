@@ -70,7 +70,7 @@ export function fetchPost(params) {
       if(result.forum) {
         trail.unshift({
           name: result.forum.name,
-          link: `/forum/${result.forum._id}`
+          link: `/f/${result.forum._id}`
         })
       }
       dispatch(BreadcrumbActions.setBreadcrumb(trail));

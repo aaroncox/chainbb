@@ -31,7 +31,7 @@ export default class ForumIndex extends React.Component {
           {(forum.parent)
             ? ' / '
             : ' '}
-          <Link to={`/forum/${forum.parent}`}>
+          <Link to={`/f/${forum.parent}`}>
             {forum.parent_name}
           </Link>
         </Header.Subheader>
