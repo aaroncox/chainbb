@@ -1,7 +1,7 @@
 import * as types from '../actions/actionTypes';
 import _ from 'lodash'
 
-export default function account(state = {last: null}, action) {
+export default function moderation(state = {last: null}, action) {
   switch(action.type) {
     case types.MODERATION_REMOVE_PROCESSING:
     case types.MODERATION_REMOVE_RESOLVED:
