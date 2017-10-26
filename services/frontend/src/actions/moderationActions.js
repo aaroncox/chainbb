@@ -5,7 +5,7 @@ export function moderatorRemoveTopicForum(moderator, topic, forum) {
   return (dispatch: () => void) => {
     const { key, name } = moderator
     const id = 'chainbb'
-    let json = ['modpost']
+    let json = ['moderate_post']
     json.push({
       forum: forum['_id'],
       topic: topic['_id'],
