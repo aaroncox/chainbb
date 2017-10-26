@@ -1,6 +1,5 @@
 .aws
 .boto
-deploy.sh
 
 snapshot
 
