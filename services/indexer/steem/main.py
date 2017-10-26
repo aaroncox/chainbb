@@ -729,7 +729,8 @@ def process_platform_history():
                 block = {
                     'timestamp': op['timestamp'],
                 }
-                process_op(op['op'], block)
+                if op['op'][0] in ['comment_benefactor_reward']:
+                    process_op(op['op'], block)
                 last_op_processed = idx
                 db.status.update({'_id': 'history_processed'}, {'$set': {'value': idx}}, upsert=True)
 
