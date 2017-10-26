@@ -20,21 +20,45 @@ def update_statistics():
     l("Updating stats for all forums...")
     forums = db.forums.find()
     for forum in forums:
+        # l(forum['_id'])
+        if ('tags' in forum):
+            if 'exclusive' in forum and forum['exclusive']:
+                stats = {
+                    'posts': get_post_count(namespace=forum['_id']),
+                    'replies': get_reply_count(namespace=forum['_id'])
+                }
+            else:
+                stats = {
+                    'posts': get_post_count(tags=forum['tags']),
+                    'replies': get_reply_count(tags=forum['tags'])
+                }
+
+            l(stats)
+            db.forums.update({'_id': forum['_id']}, {'$set': {'stats': stats}})
+
+def update_statistics_queue():
+    l("Updating stats for next queued forum...")
+    forums = db.forums.find({'_update': True}).limit(5)
+    for forum in forums:
         l(forum['_id'])
         if ('tags' in forum):
             stats = {
                 'posts': get_post_count(forum['tags']),
                 'replies': get_reply_count(forum['tags'])
             }
-            l(stats)
-            db.forums.update({'_id': forum['_id']}, {'$set': {'stats': stats}})
+            # l(stats)
+            db.forums.update({'_id': forum['_id']}, {'$set': {'stats': stats}, '$unset': {'_update': True}})
 
 
-def get_post_count(tags=[]):
+def get_post_count(tags=[], namespace=False):
+    if namespace:
+        return db.posts.count({'namespace': namespace})
     return db.posts.count({'category': {'$in': tags}})
 
 
-def get_reply_count(tags=[]):
+def get_reply_count(tags=[], namespace=False):
+    if namespace:
+        return db.replies.count({'root_namespace': namespace})
     return db.replies.count({'category': {'$in': tags}})
 
 
@@ -43,7 +67,9 @@ if __name__ == '__main__':
     update_statistics()
     scheduler = BackgroundScheduler()
     scheduler.add_job(update_statistics, 'interval',
-                      hours=24, id='update_statistics')
+                      hours=1, id='update_statistics')
+    scheduler.add_job(update_statistics_queue, 'interval',
+                      minutes=5, id='update_statistics_queue')
     scheduler.start()
     # Loop
     try:
