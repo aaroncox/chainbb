@@ -96,7 +96,7 @@ quick_value = 100
 
 def l(msg):
     caller = inspect.stack()[1][3]
-    print("[FORUM][INDEXER][{}] {}".format(str(caller), str(msg)))
+    print('[FORUM][INDEXER][{}] {}'.format(str(caller), str(msg)))
     sys.stdout.flush()
 
 
@@ -104,13 +104,13 @@ def process_op(op, block, quick=False):
     # Split the array into type and data
     opType = op[0]
     opData = op[1]
-    if opType == "custom_json" and opData['id'] == ns:
+    if opType == 'custom_json' and opData['id'] == ns:
         process_custom_op(opData)
-    if opType == "vote" and quick == False:
+    if opType == 'vote' and quick == False:
         queue_parent_update(opData)
-    if opType == "comment":
+    if opType == 'comment':
         process_post(opData, block, quick=False)
-    if opType == "delete_comment":
+    if opType == 'delete_comment':
         remove_post(opData)
     if opType == "comment_benefactor_reward":
         process_benefactor_reward(opData)
@@ -145,7 +145,7 @@ def process_benefactor_reward(opData):
                 # Update this post within the `replies` collection
                 db.replies.update({'_id': _id}, {'$set': comment}, upsert=True)
     except:
-        l("Error parsing post")
+        l('Error parsing post')
         l(comment)
         pass
 
@@ -167,12 +167,12 @@ def process_modpost(opData, custom_json):
     if isModerator(moderator, forum):
         if 'remove' in opData:
             if opData['remove'] == True:
-                l("{} removed {} in {}".format(moderator, topic, forum))
+                l('{} removed {} in {}'.format(moderator, topic, forum))
                 db.posts.update({'_id': topic}, {'$addToSet': {
                     '_removedFrom': forum
                 }})
             if opData['remove'] == False:
-                l("{} restored {} in {}".format(moderator, topic, forum))
+                l('{} restored {} in {}'.format(moderator, topic, forum))
                 db.posts.update({'_id': topic}, {'$pull': {
                     '_removedFrom': forum
                 }})
@@ -190,7 +190,7 @@ def remove_post(opData):
 
     # Generate ID
     _id = author + '/' + permlink
-    l("post self-removed {}".format(_id))
+    l('post self-removed {}'.format(_id))
 
     # Remove any matches
     db.posts.remove({'_id': _id})
@@ -209,11 +209,11 @@ def queue_parent_update(opData):
         keys[e] = True
     # Set the list to the unique values
     vote_queue = list(keys.keys())
-    # pprint("-----------------------------")
-    # pprint("Vote Queue")
+    # pprint('-----------------------------')
+    # pprint('Vote Queue')
     # pprint(opData)
     # pprint(vote_queue)
-    # pprint("-----------------------------")
+    # pprint('-----------------------------')
 
 
 def load_post(_id, author, permlink):
@@ -231,7 +231,7 @@ def load_post(_id, author, permlink):
     for key in ['total_pending_payout_value', 'pending_payout_value', 'max_accepted_payout', 'total_payout_value', 'curator_payout_value']:
         comment[key] = float(comment[key].split()[0])
     for key in ['active', 'created', 'cashout_time', 'last_payout', 'last_update']:
-        comment[key] = datetime.strptime(comment[key], "%Y-%m-%dT%H:%M:%S")
+        comment[key] = datetime.strptime(comment[key], '%Y-%m-%dT%H:%M:%S')
     for key in ['json_metadata']:
         try:
             comment[key] = json.loads(comment[key])
@@ -251,7 +251,7 @@ def get_parent_post_id(reply):
 def update_parent_post(parent_id, reply):
     # Prevent bots from updating the parent post
     if reply['author'] in bots:
-        l("skipping bot {} - {}".format(reply['author'], reply['url']))
+        l('skipping bot {} - {}'.format(reply['author'], reply['url']))
         return
     # Split the ID into parameters for loading the post
     author, permlink = parent_id.split('/')
@@ -311,7 +311,7 @@ def update_topics(comment):
 
 
 def update_forums_last_post(index, comment):
-    # l("updating /forum/{} with post {}/{})".format(index, comment['author'], comment['permlink']))
+    # l('updating /forum/{} with post {}/{})'.format(index, comment['author'], comment['permlink']))
     query = {
         '_id': index,
     }
@@ -332,7 +332,7 @@ def update_forums_last_post(index, comment):
 
 
 def update_forums_last_reply(index, comment):
-    # l("updating /forum/{} with post {}/{})".format(index, comment['author'], comment['permlink']))
+    # l('updating /forum/{} with post {}/{})'.format(index, comment['author'], comment['permlink']))
     query = {
         '_id': index,
     }
@@ -392,7 +392,7 @@ def collapse_votes(votes):
     # Convert time to timestamps
     for key, vote in enumerate(votes):
         votes[key]['time'] = int(datetime.strptime(
-            votes[key]['time'], "%Y-%m-%dT%H:%M:%S").strftime("%s"))
+            votes[key]['time'], '%Y-%m-%dT%H:%M:%S').strftime('%s'))
     # Sort based on time
     sortedVotes = sorted(votes, key=lambda k: k['time'])
     # Iterate and append to return value
@@ -407,7 +407,7 @@ def collapse_votes(votes):
 def process_post(opData, block, quick=False):
     # Derive the timestamp
     ts = float(datetime.strptime(
-        block['timestamp'], "%Y-%m-%dT%H:%M:%S").strftime("%s"))
+        block['timestamp'], '%Y-%m-%dT%H:%M:%S').strftime('%s'))
     # Create the author/permlink identifier
     author = opData['author']
     permlink = opData['permlink']
@@ -418,13 +418,13 @@ def process_post(opData, block, quick=False):
     # Determine where it's posted from, and record for active users
     if isinstance(comment['json_metadata'], dict) and 'app' in comment['json_metadata'] and not quick:
         try:
-            app = comment['json_metadata']['app'].split("/")[0]
+            app = comment['json_metadata']['app'].split('/')[0]
             db.activeusers.update({
                 '_id': comment['author']
             }, {
                 '$set': {
                     '_id': comment['author'],
-                    'ts': datetime.strptime(block['timestamp'], "%Y-%m-%dT%H:%M:%S")
+                    'ts': datetime.strptime(block['timestamp'], '%Y-%m-%dT%H:%M:%S')
                 },
                 '$addToSet': {'app': app},
             }, upsert=True)
@@ -455,13 +455,13 @@ def process_post(opData, block, quick=False):
                 # Update this post within the `replies` collection
                 db.replies.update({'_id': _id}, {'$set': comment}, upsert=True)
     except:
-        l("Error parsing post")
+        l('Error parsing post')
         l(comment)
         pass
 
 
 def rebuild_forums_cache():
-    # l("rebuilding forums cache ({} forums)".format(len(list(forums))))
+    # l('rebuilding forums cache ({} forums)'.format(len(list(forums))))
     forums = db.forums.find()
     forums_cache.clear()
     for forum in forums:
@@ -477,7 +477,7 @@ def rebuild_forums_cache():
 
 def process_vote_queue():
     global vote_queue
-    # l("Updating {} posts that were voted upon.".format(len(vote_queue)))
+    # l('Updating {} posts that were voted upon.'.format(len(vote_queue)))
     # Process all queued votes from block
     for _id in vote_queue:
         # Split the ID into parameters for loading the post
@@ -492,29 +492,29 @@ def process_global_props():
     props = d.get_dynamic_global_properties()
     # Save height
     db.status.update({'_id': 'height'}, {
-                     "$set": {'value': props['last_irreversible_block_num']}}, upsert=True)
+                     '$set': {'value': props['last_irreversible_block_num']}}, upsert=True)
     # Save steem_per_mvests
     sbd_median_price = c.sbd_median_price()
     db.status.update({'_id': 'sbd_median_price'}, {
-                     "$set": {'value': c.sbd_median_price()}}, upsert=True)
+                     '$set': {'value': sbd_median_price}}, upsert=True)
     db.status.update({'_id': 'steem_per_mvests'}, {
-                     "$set": {'value': c.steem_per_mvests()}}, upsert=True)
-    # l("Props updated to #{}".format(props['last_irreversible_block_num']))
+                     '$set': {'value': c.steem_per_mvests()}}, upsert=True)
+    # l('Props updated to #{}'.format(props['last_irreversible_block_num']))
 
 
 def process_rewards_pools():
     # Save reward pool info
     fund = s.get_reward_fund('post')
-    reward_balance = float(fund["reward_balance"].split(" ")[0])
+    reward_balance = float(fund['reward_balance'].split(' ')[0])
     db.status.update({'_id': 'reward_balance'}, {
-                     "$set": {'value': reward_balance}}, upsert=True)
-    recent_claims = int(fund["recent_claims"].split(" ")[0])
+                     '$set': {'value': reward_balance}}, upsert=True)
+    recent_claims = int(fund['recent_claims'].split(' ')[0])
     db.status.update({'_id': 'recent_claims'}, {
-                     "$set": {'value': recent_claims}}, upsert=True)
+                     '$set': {'value': recent_claims}}, upsert=True)
 
 
 def process_platform_history():
-    l("platform account")
+    l('platform account')
     moreops = True
     limit = 100
     # How many history ops have been processed previously?
@@ -544,7 +544,10 @@ def rebuild_bots_cache():
         bots.add(str(bot['_id']))
 
 if __name__ == '__main__':
-    l("Starting services @ block #{}".format(last_block_processed))
+    l('Starting services @ block #{}'.format(last_block_processed))
+
+    # while True:
+    #     time.sleep(30)
 
     process_platform_history()
     process_global_props()
@@ -580,4 +583,4 @@ if __name__ == '__main__':
 
             # Update our saved block height
             db.status.update({'_id': 'height_processed'}, {
-                             "$set": {'value': block_num}}, upsert=True)
+                             '$set': {'value': block_num}}, upsert=True)
