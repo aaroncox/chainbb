@@ -449,6 +449,17 @@ def active():
     results = db.posts.find(query, fields).sort(sort).limit(limit)
     return response(list(results))
 
+@app.route('/api/ns_lookup')
+def ns_lookup():
+    ns = request.args.get('ns', False)
+    query = {
+        '_id': ns
+    }
+    forums = db.forums.find_one(query)
+    requests = db.forum_requests.find_one(query)
+    return response({
+        'exists': bool(forums or requests)
+    })
 
 @app.route('/height')
 def height():
