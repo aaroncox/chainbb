@@ -7,12 +7,12 @@ from mongodb_jsonencoder import MongoJsonEncoder
 from steem import Steem
 import os
 
-ns = os.environ['namespace'] if 'namespace' in os.environ else ''
-mongo = MongoClient("mongodb://mongo")
+ns = os.environ['namespace'] if 'namespace' in os.environ else 'chainbb'
+mongo = MongoClient("mongodb://mongo", connect=False)
 db = mongo[ns]
 
 nodes = [
-    os.environ['steem_node']
+    os.environ['steem_node'] if 'steem_node' in os.environ else 'localhost:5090',
 ]
 s = Steem(nodes)
 
