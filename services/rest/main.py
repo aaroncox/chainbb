@@ -43,6 +43,10 @@ def response(json, forum=False, children=False):
         response.update({
             'children': list(children)
         })
+    if meta:
+        response.update({
+            'meta': meta
+        })
     return jsonify(response)
 
 
@@ -305,6 +309,13 @@ def forum(slug):
         '_id': slug
     }
     forum = db.forums.find_one(query)
+    # No forum? Look for a reservation
+    if not forum:
+        reservation = db.forum_requests.find_one(query)
+        return response({}, meta={'reservation': reservation}, status='not-found')
+    # No tags or authors? It's unconfigured
+    if 'tags' not in forum and 'accounts' not in forum:
+        return response(list(), forum=forum, meta={'configured': False})
     # Load children forums
     query = {
         'parent': str(forum['_id'])
@@ -318,7 +329,6 @@ def forum(slug):
         query['_removedFrom'] = {
             '$nin': [slug]
         }
-
     if 'tags' in forum and len(forum['tags']) > 0:
         query.update({
             'category': {
@@ -331,12 +341,22 @@ def forum(slug):
                 '$in': forum['accounts']
             }
         })
+    if postFilter != False and postFilter != 'all':
+        query.update({
+            'category': postFilter
+        })
+    if 'exclusive' in forum:
+        if postFilter == False and postFilter == 'all':
+            query.pop('category', None)
+        query.update({'namespace': slug})
+    # If we have an empty query, it's an unconfigured forum
     fields = {
         'author': 1,
         'category': 1,
         'cbb': 1,
         'created': 1,
         'children': 1,
+        'funded': 1,
         'json_metadata': 1,
         'last_reply': 1,
         'last_reply_by': 1,
