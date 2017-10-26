@@ -14,6 +14,7 @@ from steem.blockchain import Blockchain
 from steem.converter import Converter
 from steem.steemd import Steemd
 from steem.utils import block_num_from_hash
+from bs4 import BeautifulSoup
 
 #########################################
 # Connections

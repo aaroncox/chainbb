@@ -1,3 +1,4 @@
+apscheduler
+beautifulsoup4
 pymongo==3.3.1
 steem
-apscheduler
