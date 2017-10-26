@@ -6,7 +6,7 @@ export default class PostFormHeader extends React.Component {
   render() {
     const { color } = this.props
     return (
-      <Segment color={color}>
+      <Segment color={color} style={{marginTop: '1em'}}>
         <Header size='large'>
           {this.props.title}
           <Header.Subheader>

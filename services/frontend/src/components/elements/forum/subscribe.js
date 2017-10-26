@@ -1,37 +1,43 @@
 import React from 'react';
 
-import { Button } from 'semantic-ui-react'
+import { Button, Popup } from 'semantic-ui-react'
 
 export default class ForumSubscribe extends React.Component {
-  onSubscribe = (e, data) => {
-    this.props.onSubscribe(data.value)
-  }
-  onUnsubscribe = (e, data) => {
-    this.props.onUnsubscribe(data.value)
-  }
+  onSubscribe = () => this.props.onSubscribe(this.props.forum)
+  onUnsubscribe = () => this.props.onUnsubscribe(this.props.forum)
   render() {
     const { isUser, forum } = this.props
     if(!isUser) return false
-    const isSubscribed = (this.props.subscriptions && this.props.subscriptions.hasOwnProperty(forum._id))
+    const isSubscribed = (this.props.subscriptions && this.props.subscriptions.hasOwnProperty((forum) ? forum._id : false))
     if(isSubscribed) {
       return (
-        <Button
-          icon='minus circle'
-          color='orange'
-          content='Unsubscribe'
-          onClick={this.onUnsubscribe}
-          value={forum}
-        />
+          <Popup
+            trigger={
+                <Button
+                    icon='checkmark'
+                    color='green'
+                    size='tiny'
+                    onClick={this.onUnsubscribe}
+                />
+            }
+            content='You are subscribed to this forum. Click to unsubscribe.'
+            inverted
+          />
       )
     }
     return (
-      <Button
-        icon='plus circle'
-        color='blue'
-        content='Subscribe'
-        onClick={this.onSubscribe}
-        value={forum}
-      />
+        <Popup
+          trigger={
+              <Button
+                icon='plus circle'
+                color='blue'
+                size='tiny'
+                onClick={this.onSubscribe}
+              />
+          }
+          content='Subscribe to this forum.'
+          inverted
+        />
     )
   }
 }

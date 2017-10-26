@@ -32,14 +32,16 @@ export default class Forum404 extends React.Component {
       )
     }
     return (
-      <Segment textAlign='center' padded attached>
+      <Segment textAlign='center' padded='very'>
         <Header size='huge'>
           No posts yet!
           <Header.Subheader>
             <p>Be the first to create a post in this forum.</p>
             {button}
             <Divider hidden></Divider>
-            <p>Make sure to use one of the following tags as the first tag in your post:</p>
+            <p>
+                If you'd like to post to this forum from another Steem powered application, please make sure to use one of the following tags as the first tag in your post:
+            </p>
           </Header.Subheader>
         </Header>
         <List>

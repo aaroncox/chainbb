@@ -165,7 +165,7 @@ export default class ForumPostModeration extends React.Component {
         color='blue'
         onClose={this.props.onClose}
         onOpen={this.props.onOpen}
-        size='large'
+        size='small'
         trigger={ <Button size='small' color='blue' icon='settings' /> }
       >
         <Segment basic style={{marginTop: 0}}>

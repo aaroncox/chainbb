@@ -7,7 +7,6 @@ import Sidebar from '../../../containers/sidebar'
 
 export default class ForumCreateLayout extends React.Component {
     render() {
-        const { id } = this.props.match.params;
         return(
             <Grid>
                 <Grid.Row>

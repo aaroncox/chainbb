@@ -53,7 +53,6 @@ class ForumList extends React.Component {
     async getForumList() {
       try {
         let uri = GLOBAL.REST_API + '/forums';
-        console.log(uri)
         const response = await fetch(uri);
         if (response.ok) {
           const result = await response.json();

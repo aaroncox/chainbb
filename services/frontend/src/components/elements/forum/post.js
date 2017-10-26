@@ -37,7 +37,7 @@ export default class ForumPost extends React.Component {
             ? <Icon color='blue' name='angle double right' />
             : (topic.children > 0)
             ? <Icon color='blue' name='angle right' />
-            : <Icon name='warning' />
+            : <Icon name='circle thin' />
         ,
         paginator = false,
         last_reply = (
@@ -108,7 +108,7 @@ export default class ForumPost extends React.Component {
             <Grid.Column mobile={10} tablet={10} computer={9} largeScreen={9}>
               <Header size='small'>
                 <Header.Content>
-                  <Link to={`${topic.url}`}>
+                  <Link to={`/${(forum) ? forum._id : topic.category}/@${topic._id}`}>
                     {topic.title}
                   </Link>
                   <Header.Subheader>
@@ -116,6 +116,8 @@ export default class ForumPost extends React.Component {
                     <TimeAgo date={`${topic.created}Z`} />
                     {' • '}
                     <AccountLink username={topic.author} />
+                    {' • '}
+                    #{topic.category}
                     {paginator}
                   </Header.Subheader>
                 </Header.Content>

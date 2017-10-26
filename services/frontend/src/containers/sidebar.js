@@ -1,7 +1,7 @@
 import React from 'react'
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux'
-import { Button, Divider, Header, Icon, Menu, Segment } from 'semantic-ui-react'
+import { Button, Header, Icon, Menu, Segment } from 'semantic-ui-react'
 import * as accountActions from '../actions/accountActions'
 import { Link } from 'react-router-dom'
 
@@ -11,7 +11,8 @@ class Sidebar extends React.Component {
     const { account, section } = this.props
     const { isUser } = account
     let userMenu = false
-    let requestForum = (
+    let requestForum = false
+    requestForum = (
         <Segment basic textAlign='center'>
             <Header size='small'>
                 Start your own community forum!
@@ -27,6 +28,7 @@ class Sidebar extends React.Component {
             </p>
         </Segment>
     )
+    requestForum = false // Disable for now
     let subscribedForums = false
         // ,
         // categories = (
@@ -127,7 +129,6 @@ class Sidebar extends React.Component {
         </Menu>
         {userMenu}
         {requestForum}
-        <Divider />
         {subscribedForums}
       </div>
     )

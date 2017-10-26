@@ -108,12 +108,12 @@ class Forums extends React.Component {
         activeusers = (
           <Segment>
             <Header size='large'>
-              Active Users (Posting)
+              Active Posters
               <Header.Subheader>
-                {' '}<strong>{users.stats.chainbb}</strong>{' '}
-                users have posted on chainBB, with
+                {' '}<strong>{users.stats.app}</strong>{' '}
+                users have posted on chainBB in the last 24 hours, out of a total of
                 {' '}<strong>{users.stats.total}</strong>{' '}
-                users total posting on the Steem network in the last 24 hours.
+                users.
               </Header.Subheader>
             </Header>
             <Divider horizontal>

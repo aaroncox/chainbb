@@ -108,7 +108,7 @@ export default class VoteButtonOptions extends React.Component {
                   as={Input}
                   fluid
                   name='weight'
-                  className='ui labeled input'
+                  className='ui fluid labeled input'
                   label='Vote Power'
                   value={this.state.weight}
                   onChange={this.handleManualChange}
