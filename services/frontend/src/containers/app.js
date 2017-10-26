@@ -1,6 +1,6 @@
 import React from 'react'
 import { Helmet } from "react-helmet";
-import { BrowserRouter, browserHistory, Route } from 'react-router-dom';
+import { BrowserRouter, browserHistory, Route, Redirect } from 'react-router-dom';
 
 import steem from 'steem'
 

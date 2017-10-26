@@ -11,6 +11,9 @@ export default function forum(state = {last: null}, action) {
               'contributors': (action.payload.data && action.payload.data.contributors) ? action.payload.data.contributors : [],
           }
       })
+    case types.FORUM_CONFIG_PROCESSING:
+    case types.FORUM_CONFIG_RESOLVED:
+    case types.FORUM_CONFIG_RESOLVED_ERROR:
     case types.FORUM_RESERVATION_PROCESSING:
     case types.FORUM_RESERVATION_RESOLVED:
     case types.FORUM_RESERVATION_RESOLVED_ERROR:
