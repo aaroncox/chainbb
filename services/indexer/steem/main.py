@@ -467,6 +467,7 @@ def update_parent_post(parent_id, reply):
         '$set': parent_post
     }
     db.posts.update(query, update)
+    return db.posts.find_one({'_id': parent_id})
 
 
 def update_indexes(comment):
@@ -640,12 +641,13 @@ def process_post(opData, block, quick=False):
             else:
                 # Get the parent_id to update
                 parent_id = get_parent_post_id(comment)
-                # Add the `root_post` field containing the ID of the parent
-                comment.update({
-                    'root_post': parent_id
-                })
                 # Update the parent post to indicate a new reply
-                update_parent_post(parent_id, comment)
+                parent_post = update_parent_post(parent_id, comment)
+                # Add data from the parent to this comment
+                comment.update({
+                    'root_post': parent_id,
+                    'root_namespace': parent_post['namespace'] if 'namespace' in parent_post else False,
+                })
                 # Update this post within the `replies` collection
                 db.replies.update({'_id': _id}, {'$set': comment}, upsert=True)
     except:
