@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 
 import account from './account'
 import breadcrumb from './breadcrumb'
+import forum from './forum'
 import moderation from './moderation'
 import post from './post'
 import preferences from './preferences'
@@ -13,6 +14,7 @@ import status from './status'
 const forumReducer = combineReducers({
   account,
   breadcrumb,
+  forum,
   moderation,
   post,
   preferences,
