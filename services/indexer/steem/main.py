@@ -770,12 +770,16 @@ if __name__ == '__main__':
             remaining_blocks = props['last_irreversible_block_num'] - block_num
             if remaining_blocks > quick_value:
                 quick = True
-            dt = datetime.strptime(timestamp, "%Y-%m-%dT%H:%M:%S")
-            l("----------------------------------")
-            l("#{} - {} - {} ops ({} remaining|quick:{})".format(block_num,
-                                                                 dt, len(block), remaining_blocks, quick))
-            for tx in block['transactions']:
+            dt = datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S')
+            l('----------------------------------')
+            l('#{} - {} - {} ops ({} remaining|quick:{})'.format(block_num,
+                                                                 dt, len(block['transactions']), remaining_blocks, quick))
+            for idx, tx in enumerate(block['transactions']):
+                txid = block['transaction_ids'][idx]
                 for op in tx['operations']:
+                    op[1]['height'] = block_num
+                    op[1]['timestamp'] = timestamp
+                    op[1]['txid'] = txid
                     process_op(op, block, quick=quick)
 
             # Update our saved block height
