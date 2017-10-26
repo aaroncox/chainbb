@@ -5,10 +5,10 @@ import AccountCard from '../../../containers/account/card'
 
 export default class AccountLink extends React.Component {
   render() {
-    const { username, noPopup } = this.props;
+    const { color, username, noPopup } = this.props;
     const content = this.props.content || `@${username}`
     const link = (
-      <Link to={`/@${username}`}>
+      <Link to={`/@${username}`} style={{color}}>
         {content}
       </Link>
     );
