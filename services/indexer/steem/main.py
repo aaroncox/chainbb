@@ -261,11 +261,100 @@ def process_custom_op(custom_json):
     # Split the array into type and data
     opType = op[0]
     opData = op[1]
-    if opType == 'modpost':
-        process_modpost(opData, custom_json)
+    # Save record of the op
+    db.custom_op.update({
+        '_id': custom_json['txid']
+    }, {
+        '$set': {
+            'height': custom_json['height'],
+            'id': custom_json['id'],
+            'opType': opType,
+            'opData': opData,
+            'required_posting_auths': custom_json['required_posting_auths'],
+            'timestamp': datetime.strptime(custom_json['timestamp'], '%Y-%m-%dT%H:%M:%S'),
+        }
+    }, upsert=True)
+    # Process the op
+    if opType == 'forum_post':
+        process_forum_post(opData, custom_json)
+    if opType == 'forum_reserve':
+        process_forum_reserve(opData, custom_json)
+    if opType == 'forum_config':
+        process_forum_config(opData, custom_json)
+    if opType == 'moderate_post':
+        process_moderate_post(opData, custom_json)
+
+def process_forum_post(opData, custom_json):
+    operator = custom_json['required_posting_auths'][0]
+    try:
+        namespace = sanitize(opData['namespace'])
+        author = sanitize(opData['author'])
+        permlink = sanitize(opData['permlink'])
+        _id = author + '/' + permlink
+        l("Associating {} with namespace {}".format(_id, namespace))
+        db.posts.update({
+            '_id': _id
+        }, {
+            '$set': {
+                'namespace': namespace
+            }
+        })
+    except:
+        pprint(custom_json)
+        l('error processing')
+        pass
 
 
-def process_modpost(opData, custom_json):
+def process_forum_config(opData, custom_json):
+    operator = custom_json['required_posting_auths'][0]
+    try:
+        settings = opData['settings']
+        namespace = sanitize(opData['namespace'])
+        query = {'_id': opData['namespace']}
+        forum = db.forums.find_one(query)
+        if forum and 'creator' in forum and forum['creator'] == operator:
+            # Clean all the data as it's coming in
+            name = sanitize(settings['name'])[:80]
+            description = sanitize(settings['description'])[:255]
+            tags = list(map(sanitize, settings['tags']))
+            exclusive = bool(settings['exclusive'])
+            # Update in the database
+            l('{} modifying settings for {} ({})'.format(operator, name, namespace))
+            db.forums.update(query, {
+                '$set': {
+                    '_update': True,
+                    'name': name,
+                    'description': description,
+                    'tags': tags,
+                    'exclusive': exclusive,
+                }
+            })
+    except:
+        pprint(custom_json)
+        l('error processing')
+        pass
+
+def process_forum_reserve(opData, custom_json):
+    operator = custom_json['required_posting_auths'][0]
+    l('{} created reservation for {} ({})'.format(operator, opData['name'], opData['namespace']))
+    try:
+        name = sanitize(opData['name'])
+        namespace = sanitize(opData['namespace'])
+        created = datetime.strptime(custom_json['timestamp'], '%Y-%m-%dT%H:%M:%S')
+        result = db.forum_requests.insert({
+            '_id': namespace,
+            'name': name,
+            'creator': operator,
+            'created': created,
+            'created_height': custom_json['height'],
+            'created_tx': custom_json['txid'],
+            'expires': created + timedelta(hours=1)
+        })
+    except:
+        pass
+
+
+def process_moderate_post(opData, custom_json):
     moderator = custom_json['required_posting_auths'][0]
     forum = opData['forum']
     topic = opData['topic']
