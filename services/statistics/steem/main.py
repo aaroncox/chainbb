@@ -6,7 +6,7 @@ import inspect
 import sys
 import os
 
-ns = os.environ['namespace'] if 'namespace' in os.environ else ''
+ns = os.environ['namespace'] if 'namespace' in os.environ else 'chainbb'
 mongo = MongoClient("mongodb://mongo")
 db = mongo[ns]
 
