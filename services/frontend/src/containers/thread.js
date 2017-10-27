@@ -139,6 +139,7 @@ class Thread extends React.Component {
     let page = (this.state) ? this.state.page : 1,
         perPage = this.props.preferences.threadPostsPerPage,
         responses = (this.props.post) ? this.props.post.responses : 0,
+        content = (this.props.post) ? this.props.post.content : false,
         pages = Math.ceil(responses.length / perPage),
         postForm = false
     let comments_nav = (
@@ -186,10 +187,24 @@ class Thread extends React.Component {
           </Segment>
       )
     }
+    let image = 'https://steemit-production-imageproxy-upload.s3.amazonaws.com/DQmckc76UaBZSicePvDG9dKwrgyS5GoZRxAnBZ8AzxtVwH8'
+    if(content && content.json_metadata && content.json_metadata.image && content.json_metadata.image.length > 0) {
+        image = content.json_metadata.image[0]
+    }
     return (
       <div>
         <Helmet>
-            <title>{this.props.post.content.title}</title>
+            <title>{content.title}</title>
+            <meta name="description" content={`Posted by ${content.author} on ${content.created} UTC.`} />
+            <meta itemprop="name" content={content.title} />
+            <meta itemprop="description" content={`Posted by ${content.author} on ${content.created} UTC.`} />
+            <meta itemprop="image" content={image} />
+            <meta name="twitter:title" content={content.title} />
+            <meta name="twitter:description" content={`Posted by ${content.author} on ${content.created} UTC.`} />
+            <meta name="twitter:image:src" content={image} />
+            <meta property="og:title" content={content.title} />
+            <meta property="og:url" content={`http://netify.chainbb.com/${(content.post && content.post.forum) ? content.post.forum._id : content.category}/@${content.author}/${content.permlink}`} />
+            <meta property="og:description" content={`Posted by ${content.author} on ${content.created} UTC.`} />
         </Helmet>
         <Post
           page={page}

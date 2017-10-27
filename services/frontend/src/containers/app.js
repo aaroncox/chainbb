@@ -30,8 +30,25 @@ const App = () => (
     <BrowserRouter history={browserHistory}>
       <div className="AppContainer">
         <Helmet>
-            <meta charSet="utf-8" />
             <title>chainBB</title>
+            <meta name="description" content="Blockchain based decentralized forum software powered by the Steem blockchain." />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <meta charSet="utf-8" />
+            <meta itemprop="name" content="chainBB Forums" />
+            <meta itemprop="description" content="Blockchain based decentralized forum software powered by the Steem blockchain." />
+            <meta itemprop="image" content="https://steemit-production-imageproxy-upload.s3.amazonaws.com/DQmckc76UaBZSicePvDG9dKwrgyS5GoZRxAnBZ8AzxtVwH8" />
+            <meta name="twitter:card" content="summary" />
+            <meta name="twitter:site" content="@chain_bb" />
+            <meta name="twitter:title" content="chainBB Forums" />
+            <meta name="twitter:description" content="Blockchain based decentralized forum software powered by the Steem blockchain." />
+            <meta name="twitter:creator" content="@greymass" />
+            <meta name="twitter:image:src" content="https://steemit-production-imageproxy-upload.s3.amazonaws.com/DQmckc76UaBZSicePvDG9dKwrgyS5GoZRxAnBZ8AzxtVwH8" />
+            <meta property="og:title" content="chainBB Forums" />
+            <meta property="og:type" content="article" />
+            <meta property="og:url" content="http://netify.chainbb.com/" />
+            <meta property="og:image" content="https://steemit-production-imageproxy-upload.s3.amazonaws.com/DQmckc76UaBZSicePvDG9dKwrgyS5GoZRxAnBZ8AzxtVwH8" />
+            <meta property="og:description" content="Blockchain based decentralized forum software powered by the Steem blockchain." />
+            <meta property="og:site_name" content="chainBB" />
         </Helmet>
         <HeaderMenu />
         <BreadcrumbMenu />

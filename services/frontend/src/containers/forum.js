@@ -463,12 +463,27 @@ class Forum extends React.Component {
         </Segment>
       )
     }
+    let meta = false
+    if(forum && forum._id) {
+        meta = (
+            <Helmet>
+                <title>{`/f/${forum._id} - ${forum.name}`}</title>
+                <meta name="description" content={forum.description} />
+                <meta itemprop="name" content={`${forum._id} - ${forum.name}`} />
+                <meta itemprop="description" content={forum.description} />
+                <meta itemprop="image" content="https://steemit-production-imageproxy-upload.s3.amazonaws.com/DQmckc76UaBZSicePvDG9dKwrgyS5GoZRxAnBZ8AzxtVwH8" />
+                <meta name="twitter:title" content={`${forum._id} - ${forum.name}`} />
+                <meta name="twitter:description" content={forum.description} />
+                <meta name="twitter:image:src" content="https://steemit-production-imageproxy-upload.s3.amazonaws.com/DQmckc76UaBZSicePvDG9dKwrgyS5GoZRxAnBZ8AzxtVwH8" />
+                <meta property="og:title" content={`${forum._id} - ${forum.name}`} />
+                <meta property="og:url" content={`http://netify.chainbb.com/f/${forum._id}`} />
+                <meta property="og:description" content={forum.description} />
+            </Helmet>
+        )
+    }
     return(
       <div>
-        <Helmet>
-            <meta charSet="utf-8" />
-            {(forum && forum._id) ? <title>/f/{forum._id} - {forum.name}</title> : false}
-        </Helmet>
+        {meta}
         <ForumTitle
             active={this.state.filter}
             tier={tier || {}}
