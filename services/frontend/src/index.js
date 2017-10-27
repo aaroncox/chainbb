@@ -1,3 +1,5 @@
+import 'core-js/fn/map'
+
 import React from 'react'
 import { render } from 'react-dom'
 import { createStore, applyMiddleware } from 'redux'

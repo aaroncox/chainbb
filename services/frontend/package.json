@@ -6,6 +6,7 @@
     "@steem/crypto-session": "git+https://github.com/steemit/crypto-session.git#83a90b319ce5bc6a70362d52a15a815de7e729bb",
     "axios": "^0.17.0",
     "babel-runtime": "6.26.0",
+    "core-js": "^2.5.1",
     "formsy-react": "^0.19.2",
     "formsy-semantic-ui-react": "^0.2.11",
     "immutability-helper": "^2.2.2",
@@ -41,6 +42,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:server": "NODE_ENV=development nodemon server",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
