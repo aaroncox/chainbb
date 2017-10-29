@@ -477,44 +477,60 @@ def update_topics(comment):
 
 def update_forums_last_post(index, comment):
     # l('updating /forum/{} with post {}/{})'.format(index, comment['author'], comment['permlink']))
-    query = {
-        '_id': index,
-    }
-    updates = {
-        '_id': index,
-        'updated': comment['created'],
-        'last_post': {
-            'created': comment['created'],
-            'author': comment['author'],
-            'title': comment['title'],
-            'url': comment['url']
+    forum = db.forums.find_one({'_id': index})
+    if forum:
+        # If we have an exclusive flag
+        if 'exclusive' in forum and forum['exclusive'] == True:
+            # and the namespace of the post doesn't match the forum itself
+            if 'namespace' not in comment or comment['namespace'] != forum['_id']:
+                # don't update this forum
+                return
+        query = {
+            '_id': index,
         }
-    }
-    increments = {
-        'stats.posts': 1
-    }
-    db.forums.update(query, {'$set': updates, '$inc': increments}, upsert=True)
+        updates = {
+            '_id': index,
+            'updated': comment['created'],
+            'last_post': {
+                'created': comment['created'],
+                'author': comment['author'],
+                'title': comment['title'],
+                'url': comment['url']
+            }
+        }
+        increments = {
+            'stats.posts': 1
+        }
+        db.forums.update(query, {'$set': updates, '$inc': increments}, upsert=True)
 
 
 def update_forums_last_reply(index, comment):
-    # l('updating /forum/{} with post {}/{})'.format(index, comment['author'], comment['permlink']))
-    query = {
-        '_id': index,
-    }
-    updates = {
-        '_id': index,
-        'updated': comment['created'],
-        'last_reply': {
-            'created': comment['created'],
-            'author': comment['author'],
-            'title': comment['root_title'],
-            'url': comment['url']
+    l('updating /forum/{} with post {}/{})'.format(index, comment['author'], comment['permlink']))
+    forum = db.forums.find_one({'_id': index})
+    if forum:
+        # If we have an exclusive flag
+        if 'exclusive' in forum and forum['exclusive'] == True:
+            # and the namespace of the post doesn't match the forum itself
+            if 'root_namespace' not in comment or comment['root_namespace'] != forum['_id']:
+                # don't update this forum
+                return
+        query = {
+            '_id': index,
         }
-    }
-    increments = {
-        'stats.replies': 1
-    }
-    db.forums.update(query, {'$set': updates, '$inc': increments}, upsert=True)
+        updates = {
+            '_id': index,
+            'updated': comment['created'],
+            'last_reply': {
+                'created': comment['created'],
+                'author': comment['author'],
+                'title': comment['root_title'],
+                'url': comment['url']
+            }
+        }
+        increments = {
+            'stats.replies': 1
+        }
+        db.forums.update(query, {'$set': updates, '$inc': increments}, upsert=True)
 
 
 def update_forums(comment):
@@ -580,6 +596,10 @@ def process_post(opData, block, quick=False):
     # Grab the parsed data of the post
     l(_id)
     comment = load_post(_id, author, permlink)
+    if 'namespace' in opData:
+        comment.update({
+            'namespace': opData['namespace']
+        })
     # Determine where it's posted from, and record for active users
     if isinstance(comment['json_metadata'], dict) and 'app' in comment['json_metadata'] and not quick:
         try:
@@ -595,8 +615,6 @@ def process_post(opData, block, quick=False):
             }, upsert=True)
         except:
             pass
-    # Update the indexes it's contained within
-    update_indexes(comment)
     # Collapse the votes
     comment.update({
         'active_votes': collapse_votes(comment['active_votes'])
@@ -624,6 +642,8 @@ def process_post(opData, block, quick=False):
         l('Error parsing post')
         l(comment)
         pass
+    # Update the indexes it's contained within
+    update_indexes(comment)
 
 
 def rebuild_forums_cache():
