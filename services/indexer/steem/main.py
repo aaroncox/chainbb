@@ -133,30 +133,30 @@ def process_incoming_transfer(opData):
         '$set': opData
     }, upsert=True)
     # Attempt to process the command within the transfer
-    try:
-        dataType, ns = opData['memo'].split(':')
-        if dataType == 'ns':
-            # Store the namespace for this transfer
-            opData['ns'] = ns
-            opData['timestamp'] = datetime.strptime(opData['timestamp'], '%Y-%m-%dT%H:%M:%S')
-            # Store the value of this transfer, in STEEM
-            opData['steem_value'] = opData['amount']
-            if opData['symbol'] == 'SBD':
-                opData['steem_value'] = opData['amount'] * sbd_median_price
-            # Process the funding data
-            process_namespace_funding(opData)
-    except:
-        # Save the transfers that caused errors
-        db.transfer_errors.update({
-            '_id': opData['txid']
-        }, {
-            '$set': opData
-        }, upsert=True)
-        l('Error parsing transfer')
-        l(opData)
-        l(block)
-        pass
-    time.sleep(3000)
+    # try:
+    dataType, ns = opData['memo'].split(':')
+    if dataType == 'ns':
+        # Store the namespace for this transfer
+        opData['ns'] = ns
+        opData['timestamp'] = datetime.strptime(opData['timestamp'], '%Y-%m-%dT%H:%M:%S')
+        # Store the value of this transfer, in STEEM
+        opData['steem_value'] = opData['amount']
+        if opData['symbol'] == 'SBD':
+            opData['steem_value'] = opData['amount'] * sbd_median_price
+        # Process the funding data
+        process_namespace_funding(opData)
+    # except:
+    #     # Save the transfers that caused errors
+    #     db.transfer_errors.update({
+    #         '_id': opData['txid']
+    #     }, {
+    #         '$set': opData
+    #     }, upsert=True)
+    #     l('Error parsing transfer')
+    #     l(opData)
+    #     l(block)
+    #     time.sleep(3000)
+    #     pass
 
 def update_funding(opData):
     db.funding.update({
