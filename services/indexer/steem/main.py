@@ -177,23 +177,29 @@ def process_namespace_funding(opData):
     l('funding for {} - {} {} '.format(opData['ns'], opData['amount'], opData['symbol']))
     is_request = False
     sufficient_funds = False
+    # Record the funding event
+    total = update_funding(opData)
     forum = db.forums.find_one({'_id': opData['ns']})
-    if not forum:
-        forum = db.forum_requests.find_one({'_id': opData['ns']})
-        is_request = True
     if forum:
-        # Record the funding event
-        total = update_funding(opData)
-        if total > 1:
-            sufficient_funds = True
-        # If this is a forum request
-        if is_request:
-            # and it has exceeded the minimum
-            if total >= 1:
+        # Store the funding value on the forum
+        db.forums.update({
+            '_id': opData['ns']
+        }, {
+            '$set': {
+                'funded': total
+            }
+        })
+    else:
+        request = db.forum_requests.find_one({'_id': opData['ns']})
+        if request:
+            if total >= 10:
+                sufficient_funds = True
+            # If it has exceeded the minimum
+            if sufficient_funds:
                 # create the forum
-                forum.pop('expires', None)
-                forum['funded'] = total
-                db.forums.insert(forum)
+                request.pop('expires', None)
+                request['funded'] = total
+                db.forums.insert(request)
             else:
                 # If it's still under the threshold, update the request
                 db.forum_requests.update({
@@ -204,21 +210,8 @@ def process_namespace_funding(opData):
                     }
                 })
         else:
-            # If this is an actual forum
-            db.forums.update({
-                '_id': opData['ns']
-            }, {
-                '$set': {
-                    'funded': total
-                }
-            })
-
-
-        # Store the funding value on the forum
-
-    else:
-        l('invalid namespace: {}'.format(opData['ns']))
-        l(opData)
+            l('invalid namespace: {}'.format(opData['ns']))
+            l(opData)
 
 
 def process_benefactor_reward(opData):
