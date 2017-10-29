@@ -120,7 +120,7 @@ def index():
 @app.route("/forums")
 def forums():
     query = {}
-    sort = [("_id", 1), ("parent", 1)]
+    sort = [("highlight", -1), ("_id", 1), ("parent", 1)]
     results = db.forums.find(query).sort(sort)
     return response({
         'forums': list(results)
