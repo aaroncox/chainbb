@@ -20,20 +20,19 @@ def update_statistics():
     l("Updating stats for all forums...")
     forums = db.forums.find()
     for forum in forums:
-        # l(forum['_id'])
+        l(forum['_id'])
         if ('tags' in forum):
             if 'exclusive' in forum and forum['exclusive']:
                 stats = {
                     'posts': get_post_count(namespace=forum['_id']),
                     'replies': get_reply_count(namespace=forum['_id'])
                 }
+                l("{} - {}".format(forum['_id'], stats))
             else:
                 stats = {
                     'posts': get_post_count(tags=forum['tags']),
                     'replies': get_reply_count(tags=forum['tags'])
                 }
-
-            l(stats)
             db.forums.update({'_id': forum['_id']}, {'$set': {'stats': stats}})
 
 def update_statistics_queue():
@@ -42,11 +41,17 @@ def update_statistics_queue():
     for forum in forums:
         l(forum['_id'])
         if ('tags' in forum):
-            stats = {
-                'posts': get_post_count(forum['tags']),
-                'replies': get_reply_count(forum['tags'])
-            }
-            # l(stats)
+            if 'exclusive' in forum and forum['exclusive']:
+                stats = {
+                    'posts': get_post_count(namespace=forum['_id']),
+                    'replies': get_reply_count(namespace=forum['_id'])
+                }
+                l("{} - {}".format(forum['_id'], stats))
+            else:
+                stats = {
+                    'posts': get_post_count(tags=forum['tags']),
+                    'replies': get_reply_count(tags=forum['tags'])
+                }
             db.forums.update({'_id': forum['_id']}, {'$set': {'stats': stats}, '$unset': {'_update': True}})
 
 
