@@ -268,35 +268,12 @@ def process_custom_op(custom_json):
         }
     }, upsert=True)
     # Process the op
-    if opType == 'forum_post':
-        process_forum_post(opData, custom_json)
     if opType == 'forum_reserve':
         process_forum_reserve(opData, custom_json)
     if opType == 'forum_config':
         process_forum_config(opData, custom_json)
     if opType == 'moderate_post':
         process_moderate_post(opData, custom_json)
-
-def process_forum_post(opData, custom_json):
-    operator = custom_json['required_posting_auths'][0]
-    try:
-        namespace = sanitize(opData['namespace'])
-        author = sanitize(opData['author'])
-        permlink = sanitize(opData['permlink'])
-        _id = author + '/' + permlink
-        l("Associating {} with namespace {}".format(_id, namespace))
-        db.posts.update({
-            '_id': _id
-        }, {
-            '$set': {
-                'namespace': namespace
-            }
-        })
-    except:
-        pprint(custom_json)
-        l('error processing')
-        pass
-
 
 def process_forum_config(opData, custom_json):
     operator = custom_json['required_posting_auths'][0]
@@ -770,6 +747,23 @@ if __name__ == '__main__':
                                                                  dt, len(block['transactions']), remaining_blocks, quick))
             for idx, tx in enumerate(block['transactions']):
                 txid = block['transaction_ids'][idx]
+                # Is this a group of ops for the forum?
+                if len(tx['operations']) > 1:
+                    is_forum_post = False
+                    custom_json = False
+                    custom_op = False
+                    comment = False
+                    for idx, op in enumerate(tx['operations']):
+                        if op[0] == 'comment':
+                            comment = idx
+                            pprint(idx)
+                        if op[0] == 'custom_json' and op[1]['id'] == ns:
+                            custom_op = json.loads(op[1]['json'])
+                            if custom_op[0] == 'forum_post':
+                                custom_json = idx
+                    # If both ops are found and valid, append the namespace before processing
+                    if custom_json is not False and comment is not False:
+                        tx['operations'][comment][1]['namespace'] = custom_op[1]['namespace']
                 for op in tx['operations']:
                     op[1]['height'] = block_num
                     op[1]['timestamp'] = timestamp
