@@ -625,7 +625,7 @@ def process_post(opData, block, quick=False):
         'active_votes': collapse_votes(comment['active_votes'])
     })
     try:
-            # Ensure we a post was returned
+        # Ensure we a post was returned
         if comment['author'] != '':
             # If this is a top level post, save into the `posts` collection
             if comment['parent_author'] == '':
@@ -736,7 +736,7 @@ def rebuild_bots_cache():
 
 if __name__ == '__main__':
     l('Starting services @ block #{}'.format(last_block_processed))
-
+    #
     # while True:
     #     time.sleep(30)
 
