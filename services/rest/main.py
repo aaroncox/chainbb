@@ -162,7 +162,7 @@ def account(username):
 def replies(username):
     sort = {"created": -1}
     page = int(request.args.get('page', 1))
-    perPage = 20
+    perPage = 10
     skip = (page - 1) * perPage
     limit = perPage
     pipeline = [
