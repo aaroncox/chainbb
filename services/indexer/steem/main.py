@@ -639,7 +639,7 @@ def process_post(opData, block, quick=False):
                 # Add data from the parent to this comment
                 comment.update({
                     'root_post': parent_id,
-                    'root_namespace': parent_post['namespace'] if 'namespace' in parent_post else False,
+                    'root_namespace': parent_post['namespace'] if parent_post and 'namespace' in parent_post else False,
                 })
                 # Update this post within the `replies` collection
                 db.replies.update({'_id': _id}, {'$set': comment}, upsert=True)
