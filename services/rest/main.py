@@ -167,7 +167,8 @@ def replies(username):
     limit = perPage
     pipeline = [
         {'$match': {
-            'parent_author': username
+            'parent_author': username,
+            'author': {'$ne': username},
         }},
         {'$sort': sort},
         {'$limit': limit + skip},
