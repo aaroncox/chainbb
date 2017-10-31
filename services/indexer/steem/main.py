@@ -283,9 +283,15 @@ def process_forum_config(opData, custom_json):
         forum = db.forums.find_one(query)
         if forum and 'creator' in forum and forum['creator'] == operator:
             # Clean all the data as it's coming in
-            name = sanitize(settings['name'])[:80]
-            description = sanitize(settings['description'])[:255]
-            tags = list(map(sanitize, settings['tags']))
+            name = ''
+            description = ''
+            tags = []
+            if 'name' in settings and settings['name']:
+                name = sanitize(settings['name'])[:80]
+            if 'description' in settings and settings['description']:
+                description = sanitize(settings['description'])[:255]
+            if 'tags' in settings and settings['tags']:
+                tags = list(map(sanitize, settings['tags']))
             exclusive = bool(settings['exclusive'])
             # Update in the database
             l('{} modifying settings for {} ({})'.format(operator, name, namespace))
