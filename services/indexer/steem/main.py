@@ -314,7 +314,7 @@ def process_forum_reserve(opData, custom_json):
     l('{} created reservation for {} ({})'.format(operator, opData['name'], opData['namespace']))
     try:
         name = sanitize(opData['name'])
-        namespace = sanitize(opData['namespace'])
+        namespace = sanitize(opData['namespace']).lower()
         created = datetime.strptime(custom_json['timestamp'], '%Y-%m-%dT%H:%M:%S')
         result = db.forum_requests.insert({
             '_id': namespace,
