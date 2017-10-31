@@ -782,7 +782,6 @@ if __name__ == '__main__':
                     for idx, op in enumerate(tx['operations']):
                         if op[0] == 'comment':
                             comment = idx
-                            pprint(idx)
                         if op[0] == 'custom_json' and op[1]['id'] == ns:
                             custom_op = json.loads(op[1]['json'])
                             if custom_op[0] == 'forum_post':
