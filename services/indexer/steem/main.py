@@ -347,9 +347,9 @@ def process_moderate_post(opData, custom_json):
                     '_removedFrom': forum
                 }})
 
-
 def isModerator(user, forum):
-    if user == 'jesta':
+    forum = db.forums.find_one({'_id': forum})
+    if forum and forum['creator'] == user:
         return True
     return False
 
