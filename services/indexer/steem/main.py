@@ -335,6 +335,7 @@ def process_moderate_post(opData, custom_json):
     topic = opData['topic']
     if isModerator(moderator, forum):
         if 'remove' in opData:
+            db.forums.update({'_id': forum}, {'$set': {'_update': True}}) # Queue runnign stats update on the forum
             if opData['remove'] == True:
                 l('{} removed {} in {}'.format(moderator, topic, forum))
                 db.posts.update({'_id': topic}, {'$addToSet': {
