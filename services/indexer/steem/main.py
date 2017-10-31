@@ -278,7 +278,7 @@ def process_forum_config(opData, custom_json):
     operator = custom_json['required_posting_auths'][0]
     try:
         settings = opData['settings']
-        namespace = sanitize(opData['namespace'])
+        namespace = sanitize(opData['namespace']).lower()
         query = {'_id': opData['namespace']}
         forum = db.forums.find_one(query)
         if forum and 'creator' in forum and forum['creator'] == operator:
