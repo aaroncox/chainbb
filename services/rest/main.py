@@ -419,13 +419,13 @@ def forum(slug):
     # ?filter=all should also display the _removedFrom field
     if postFilter == 'all':
         fields['_removedFrom'] = 1
-    sort = [("cbb.sticky", -1), ("active", -1)]
+    sort = [("active", -1)]
     page = int(request.args.get('page', 1))
     perPage = 20
     skip = (page - 1) * perPage
     limit = perPage
     results = db.posts.find(query, fields).sort(sort).skip(skip).limit(limit)
-    return response(list(results), forum=forum, children=children, meta={'query': query})
+    return response(list(results), forum=forum, children=children, meta={'query': query, 'sort': sort})
 
 @app.route('/status/<slug>')
 def status(slug):
