@@ -257,6 +257,18 @@ def replies(username):
         reply['reply'].update({
             'votes': reply_votes
         })
+        # Temporary way to retrieve forum
+        if 'root_namespace' in reply['reply']:
+            reply['forum'] = db.forums.find_one({
+                '_id': reply['reply']['root_namespace']
+            }, {
+                '_id': 1,
+                'creator': 1,
+                'exclusive': 1,
+                'funded': 1,
+                'name': 1,
+                'tags': 1,
+            })
         results.append(reply)
     return response({
         'replies': results,
