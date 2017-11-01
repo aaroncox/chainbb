@@ -171,8 +171,6 @@ def replies(username):
             'author': {'$ne': username},
         }},
         {'$sort': sort},
-        {'$limit': limit + skip},
-        {'$skip': skip},
         {'$project': {
             'parent_id': {'$concat': ['$parent_author', '/', '$parent_permlink']},
             'reply': '$$ROOT'
@@ -200,6 +198,44 @@ def replies(username):
             }
         }},
         {'$unwind': '$parent'},
+        {'$project': {
+            'reply': {
+                '_id': 1,
+                'active_votes': 1,
+                'author': 1,
+                'body': 1,
+                'category': 1,
+                'created': 1,
+                'depth': 1,
+                'json_metadata': 1,
+                'parent_author': 1,
+                'parent_permlink': 1,
+                'permlink': 1,
+                'root_namespace': 1,
+                'root_title': 1,
+                'title': 1,
+                'url': 1,
+            },
+            'parent': {
+                '_id': 1,
+                'active_votes': 1,
+                'author': 1,
+                'body': 1,
+                'category': 1,
+                'created': 1,
+                'depth': 1,
+                'parent_author': 1,
+                'parent_permlink': 1,
+                'permlink': 1,
+                'namespace': 1,
+                'root_namespace': 1,
+                'root_title': 1,
+                'title': 1,
+                'url': 1,
+            }
+        }},
+        {'$limit': limit + skip},
+        {'$skip': skip},
     ]
     total = db.replies.count({'parent_author': username})
     replies = db.replies.aggregate(pipeline)
