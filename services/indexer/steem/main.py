@@ -341,9 +341,15 @@ def process_moderate_post(opData, custom_json):
                 db.posts.update({'_id': topic}, {'$addToSet': {
                     '_removedFrom': forum
                 }})
+                db.replies.update({'root_post': topic}, {'$addToSet': {
+                    '_removedFrom': forum
+                }})
             if opData['remove'] == False:
                 l('{} restored {} in {}'.format(moderator, topic, forum))
                 db.posts.update({'_id': topic}, {'$pull': {
+                    '_removedFrom': forum
+                }})
+                db.replies.update({'root_post': topic}, {'$pull': {
                     '_removedFrom': forum
                 }})
 
