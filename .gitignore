@@ -1,11 +1,11 @@
 .aws
 .boto
-deploy.sh
 
 snapshot
 
 services/avatars/steem
 services/frontend/build
+services/frontend/scripts
 services/frontend/node_modules
 services/rest/__pycache__
 services/test

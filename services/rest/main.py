@@ -7,12 +7,12 @@ from mongodb_jsonencoder import MongoJsonEncoder
 from steem import Steem
 import os
 
-ns = os.environ['namespace'] if 'namespace' in os.environ else ''
-mongo = MongoClient("mongodb://mongo")
+ns = os.environ['namespace'] if 'namespace' in os.environ else 'chainbb'
+mongo = MongoClient("mongodb://mongo", connect=False)
 db = mongo[ns]
 
 nodes = [
-    os.environ['steem_node']
+    os.environ['steem_node'] if 'steem_node' in os.environ else 'localhost:5090',
 ]
 s = Steem(nodes)
 
@@ -21,18 +21,18 @@ app.json_encoder = MongoJsonEncoder
 CORS(app)
 
 
-def response(json, forum=False, children=False):
+def response(json, forum=False, children=False, meta=False, status='ok'):
     # Load height
     # NYI - should be cached at for 3 seconds
     statuses = db.status.find()
-    status = {}
+    network = {}
     for doc in statuses:
-        status.update({
+        network.update({
             str(doc['_id']): doc['value']
         })
     response = {
-        'status': 'ok',
-        'network': status,
+        'status': status,
+        'network': network,
         'data': json
     }
     if forum:
@@ -42,6 +42,10 @@ def response(json, forum=False, children=False):
     if children:
         response.update({
             'children': list(children)
+        })
+    if meta:
+        response.update({
+            'meta': meta
         })
     return jsonify(response)
 
@@ -116,7 +120,7 @@ def index():
 @app.route("/forums")
 def forums():
     query = {}
-    sort = [("_id", 1), ("parent", 1)]
+    sort = [("highlight", -1), ("_id", 1), ("parent", 1)]
     results = db.forums.find(query).sort(sort)
     return response({
         'forums': list(results)
@@ -158,16 +162,15 @@ def account(username):
 def replies(username):
     sort = {"created": -1}
     page = int(request.args.get('page', 1))
-    perPage = 20
+    perPage = 10
     skip = (page - 1) * perPage
     limit = perPage
     pipeline = [
         {'$match': {
-            'parent_author': username
+            'parent_author': username,
+            'author': {'$ne': username},
         }},
         {'$sort': sort},
-        {'$limit': limit + skip},
-        {'$skip': skip},
         {'$project': {
             'parent_id': {'$concat': ['$parent_author', '/', '$parent_permlink']},
             'reply': '$$ROOT'
@@ -195,6 +198,44 @@ def replies(username):
             }
         }},
         {'$unwind': '$parent'},
+        {'$project': {
+            'reply': {
+                '_id': 1,
+                'active_votes': 1,
+                'author': 1,
+                'body': 1,
+                'category': 1,
+                'created': 1,
+                'depth': 1,
+                'json_metadata': 1,
+                'parent_author': 1,
+                'parent_permlink': 1,
+                'permlink': 1,
+                'root_namespace': 1,
+                'root_title': 1,
+                'title': 1,
+                'url': 1,
+            },
+            'parent': {
+                '_id': 1,
+                'active_votes': 1,
+                'author': 1,
+                'body': 1,
+                'category': 1,
+                'created': 1,
+                'depth': 1,
+                'parent_author': 1,
+                'parent_permlink': 1,
+                'permlink': 1,
+                'namespace': 1,
+                'root_namespace': 1,
+                'root_title': 1,
+                'title': 1,
+                'url': 1,
+            }
+        }},
+        {'$limit': limit + skip},
+        {'$skip': skip},
     ]
     total = db.replies.count({'parent_author': username})
     replies = db.replies.aggregate(pipeline)
@@ -216,6 +257,18 @@ def replies(username):
         reply['reply'].update({
             'votes': reply_votes
         })
+        # Temporary way to retrieve forum
+        if 'root_namespace' in reply['reply']:
+            reply['forum'] = db.forums.find_one({
+                '_id': reply['reply']['root_namespace']
+            }, {
+                '_id': 1,
+                'creator': 1,
+                'exclusive': 1,
+                'funded': 1,
+                'name': 1,
+                'tags': 1,
+            })
         results.append(reply)
     return response({
         'replies': results,
@@ -305,6 +358,13 @@ def forum(slug):
         '_id': slug
     }
     forum = db.forums.find_one(query)
+    # No forum? Look for a reservation
+    if not forum:
+        reservation = db.forum_requests.find_one(query)
+        return response({}, meta={'reservation': reservation}, status='not-found')
+    # No tags or authors? It's unconfigured
+    if 'tags' not in forum and 'accounts' not in forum:
+        return response(list(), forum=forum, meta={'configured': False})
     # Load children forums
     query = {
         'parent': str(forum['_id'])
@@ -318,7 +378,6 @@ def forum(slug):
         query['_removedFrom'] = {
             '$nin': [slug]
         }
-
     if 'tags' in forum and len(forum['tags']) > 0:
         query.update({
             'category': {
@@ -331,12 +390,22 @@ def forum(slug):
                 '$in': forum['accounts']
             }
         })
+    if postFilter != False and postFilter != 'all':
+        query.update({
+            'category': postFilter
+        })
+    if 'exclusive' in forum and forum['exclusive'] == True:
+        if postFilter == False and postFilter == 'all':
+            query.pop('category', None)
+        query.update({'namespace': slug})
+    # If we have an empty query, it's an unconfigured forum
     fields = {
         'author': 1,
         'category': 1,
         'cbb': 1,
         'created': 1,
         'children': 1,
+        'funded': 1,
         'json_metadata': 1,
         'last_reply': 1,
         'last_reply_by': 1,
@@ -350,14 +419,36 @@ def forum(slug):
     # ?filter=all should also display the _removedFrom field
     if postFilter == 'all':
         fields['_removedFrom'] = 1
-    sort = [("cbb.sticky", -1), ("active", -1)]
+    sort = [("active", -1)]
     page = int(request.args.get('page', 1))
     perPage = 20
     skip = (page - 1) * perPage
     limit = perPage
     results = db.posts.find(query, fields).sort(sort).skip(skip).limit(limit)
-    return response(list(results), forum=forum, children=children)
+    return response(list(results), forum=forum, children=children, meta={'query': query, 'sort': sort})
 
+@app.route('/status/<slug>')
+def status(slug):
+    # Load the specified forum
+    query = {
+        '_id': slug
+    }
+    forum = db.forums.find_one(query)
+    # And those who funded it
+    query = {
+        'ns': slug
+    }
+    funding = db.funding.find(query).sort([('timestamp', -1)])
+    # Total contributions
+    contributions = db.funding.aggregate([
+        {'$match': {'ns': slug}},
+        {'$group': {'_id': '$from', 'count': {'$sum': 1}, 'total': {'$sum': '$steem_value'}}},
+        {'$sort': {'total': -1}}
+    ])
+    return response({
+        'history': list(funding),
+        'contributors': list(contributions)
+    }, forum=forum)
 
 @app.route('/topics/<category>')
 def topics(category):
@@ -427,6 +518,17 @@ def active():
     results = db.posts.find(query, fields).sort(sort).limit(limit)
     return response(list(results))
 
+@app.route('/api/ns_lookup')
+def ns_lookup():
+    ns = request.args.get('ns', False)
+    query = {
+        '_id': ns
+    }
+    forums = db.forums.find_one(query)
+    requests = db.forum_requests.find_one(query)
+    return response({
+        'exists': bool(forums or requests)
+    })
 
 @app.route('/height')
 def height():

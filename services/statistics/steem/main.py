@@ -6,7 +6,7 @@ import inspect
 import sys
 import os
 
-ns = os.environ['namespace'] if 'namespace' in os.environ else ''
+ns = os.environ['namespace'] if 'namespace' in os.environ else 'chainbb'
 mongo = MongoClient("mongodb://mongo")
 db = mongo[ns]
 
@@ -17,25 +17,135 @@ def l(msg):
 
 
 def update_statistics():
-    l("Updating stats for all forums...")
+    # l("Updating stats for all forums...")
     forums = db.forums.find()
     for forum in forums:
         l(forum['_id'])
-        if ('tags' in forum):
-            stats = {
-                'posts': get_post_count(forum['tags']),
-                'replies': get_reply_count(forum['tags'])
+        update_forum(forum)
+
+def update_statistics_queue():
+    # l("Updating stats for next queued forum...")
+    forums = db.forums.find({'_update': True}).limit(5)
+    for forum in forums:
+        l(forum['_id'])
+        update_forum(forum)
+
+def update_forum(forum):
+    update_forum_stats(forum)
+    update_latest_content(forum)
+
+def update_latest_content(forum):
+    update_latest_post(forum)
+    update_latest_reply(forum)
+
+def update_latest_post(forum):
+    if 'exclusive' in forum and forum['exclusive'] == True:
+        query = {
+            'namespace': forum['_id'],
+            '_removedFrom': {'$ne': forum['_id']}
+        }
+    else:
+        if 'tags' not in forum:
+            return
+        query = {
+            'category': {'$in': forum['tags']},
+            '_removedFrom': {'$nin': forum['tags']}
+        }
+    sort = [('created', -1)]
+    results = list(db.posts.find(query).sort(sort).limit(1))
+    query = {
+        '_id': forum['_id'],
+    }
+    if len(results) > 0:
+        comment = results[0]
+        updates = {
+            'updated': comment['created'],
+            'last_post': {
+                'created': comment['created'],
+                'author': comment['author'],
+                'title': comment['title'],
+                'url': comment['url']
             }
-            l(stats)
-            db.forums.update({'_id': forum['_id']}, {'$set': {'stats': stats}})
+        }
+    else:
+        updates = {
+            'last_post': {}
+        }
+    results = db.forums.update(query, {'$set': updates})
 
 
-def get_post_count(tags=[]):
-    return db.posts.count({'category': {'$in': tags}})
+def update_latest_reply(forum):
+    if 'exclusive' in forum and forum['exclusive'] == True:
+        query = {
+            'root_namespace': forum['_id'],
+            '_removedFrom': {'$ne': forum['_id']}
+        }
+    else:
+        if 'tags' not in forum:
+            return
+        query = {
+            'category': {'$in': forum['tags']},
+            '_removedFrom': {'$nin': forum['tags']}
+        }
+    sort = [('created', -1)]
+    results = list(db.replies.find(query).sort(sort).limit(1))
+    query = {
+        '_id': forum['_id'],
+    }
+    if len(results) > 0:
+        comment = results[0]
+        updates = {
+            'updated': comment['created'],
+            'last_reply': {
+                'created': comment['created'],
+                'author': comment['author'],
+                'title': comment['root_title'],
+                'url': comment['url']
+            }
+        }
+    else:
+        updates = {
+            'last_reply': {}
+        }
+    results = db.forums.update(query, {'$set': updates})
+
+def update_forum_stats(forum):
+    if ('tags' in forum):
+        if 'exclusive' in forum and forum['exclusive']:
+            stats = {
+                'posts': get_post_count(namespace=forum['_id']),
+                'replies': get_reply_count(namespace=forum['_id'])
+            }
+        else:
+            stats = {
+                'posts': get_post_count(tags=forum['tags']),
+                'replies': get_reply_count(tags=forum['tags'])
+            }
+        db.forums.update({'_id': forum['_id']}, {'$set': {'stats': stats}, '$unset': {'_update': True}})
 
 
-def get_reply_count(tags=[]):
-    return db.replies.count({'category': {'$in': tags}})
+def get_post_count(tags=[], namespace=False):
+    if namespace:
+        return db.posts.count({
+            'namespace': namespace,
+            '_removedFrom': {'$ne': namespace},
+        })
+    return db.posts.count({
+        'category': {'$in': tags},
+        '_removedFrom': {'$nin': tags},
+    })
+
+
+def get_reply_count(tags=[], namespace=False):
+    if namespace:
+        return db.replies.count({
+            'root_namespace': namespace,
+            '_removedFrom': {'$ne': namespace},
+        })
+    return db.replies.count({
+        'category': {'$in': tags},
+        '_removedFrom': {'$nin': tags},
+    })
 
 
 if __name__ == '__main__':
@@ -43,7 +153,9 @@ if __name__ == '__main__':
     update_statistics()
     scheduler = BackgroundScheduler()
     scheduler.add_job(update_statistics, 'interval',
-                      hours=24, id='update_statistics')
+                      hours=1, id='update_statistics')
+    scheduler.add_job(update_statistics_queue, 'interval',
+                      seconds=15, id='update_statistics_queue')
     scheduler.start()
     # Loop
     try:
