@@ -394,7 +394,7 @@ def forum(slug):
         query.update({
             'category': postFilter
         })
-    if 'exclusive' in forum:
+    if 'exclusive' in forum and forum['exclusive'] == True:
         if postFilter == False and postFilter == 'all':
             query.pop('category', None)
         query.update({'namespace': slug})
