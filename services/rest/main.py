@@ -212,6 +212,7 @@ def replies(username):
                 'parent_permlink': 1,
                 'permlink': 1,
                 'root_namespace': 1,
+                'root_post': 1,
                 'root_title': 1,
                 'title': 1,
                 'url': 1,
