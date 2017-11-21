@@ -31,12 +31,23 @@ def update_statistics_queue():
         update_forum(forum)
 
 def update_forum(forum):
+    update_forum_funding(forum)
     update_forum_stats(forum)
     update_latest_content(forum)
 
 def update_latest_content(forum):
     update_latest_post(forum)
     update_latest_reply(forum)
+
+def update_forum_funding(forum):
+    _id = forum['_id']
+    total = list(db.funding.aggregate([
+        {'$match': {'ns': _id}},
+        {'$group': {'_id': 'total', 'amount': {'$sum': '$steem_value'}}}
+    ]))
+    if len(total) > 0:
+        total = float("%.3f" % total[0]['amount'])
+        db.forums.update({'_id': _id}, {'$set': {'funded': total}})
 
 def update_latest_post(forum):
     if 'exclusive' in forum and forum['exclusive'] == True:
