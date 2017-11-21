@@ -1,5 +1,15 @@
 version: '2.1'
 services:
+    account:
+        build: ./services/account
+        environment:
+            namespace: "chainbb"
+            steem_node: "https://rpc.buildteam.io"
+        links:
+            - mongo
+        restart: on-failure
+        volumes:
+            - ./services/account:/src:rw
     mongodata:
         image: mongo:3.3.10
         volumes:
@@ -18,7 +28,6 @@ services:
         build: ./services/rest
         environment:
             namespace: "chainbb"
-            steem_node: "https://steem.chainbb.com"
         external_links:
             - mongo:forums_mongo_1
         ports:
@@ -32,6 +41,7 @@ services:
             - mongo
         environment:
             namespace: "chainbb"
+            steem_node: "https://rpc.buildteam.io"
         restart: on-failure
         volumes:
             - ./services/statistics/steem:/src:rw
