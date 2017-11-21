@@ -158,15 +158,35 @@ def get_reply_count(tags=[], namespace=False):
         '_removedFrom': {'$nin': tags},
     })
 
+def rebuild_activeusers_cache():
+    results = db.activeusers.aggregate([
+        {'$unwind': '$app'},
+        {'$group': {
+            '_id': '$app',
+            'sum': {'$sum': 1}
+        }},
+        {'$sort': {
+            'sum': -1
+        }}
+    ])
+    users = {doc["_id"].replace('.', '-'): doc['sum'] for doc in results}
+    db.stats.update({
+        '_id': 'users-24h'
+    }, {
+        '$set': {
+            'total': sum(users.values()),
+            'platforms': users,
+        }
+    }, upsert=True)
 
 if __name__ == '__main__':
     l("starting service")
     update_statistics()
+    rebuild_activeusers_cache()
     scheduler = BackgroundScheduler()
-    scheduler.add_job(update_statistics, 'interval',
-                      hours=1, id='update_statistics')
-    scheduler.add_job(update_statistics_queue, 'interval',
-                      seconds=15, id='update_statistics_queue')
+    scheduler.add_job(rebuild_activeusers_cache, 'interval', minutes=1, id='rebuild_activeusers_cache')
+    scheduler.add_job(update_statistics, 'interval', hours=1, id='update_statistics')
+    scheduler.add_job(update_statistics_queue, 'interval', seconds=15, id='update_statistics_queue')
     scheduler.start()
     # Loop
     try:
