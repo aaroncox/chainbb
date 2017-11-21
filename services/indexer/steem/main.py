@@ -121,9 +121,6 @@ def process_op(op, block, quick=False):
         opData['symbol'] = symbol
         # Process incoming transfer
         process_incoming_transfer(opData)
-    if opType == 'comment_benefactor_reward':
-        process_benefactor_reward(opData)
-
 
 def process_incoming_transfer(opData):
     # Save record of the op
@@ -140,9 +137,13 @@ def process_incoming_transfer(opData):
             opData['ns'] = ns
             opData['timestamp'] = datetime.strptime(opData['timestamp'], '%Y-%m-%dT%H:%M:%S')
             # Store the value of this transfer, in STEEM
+            opData['type'] = 'transfer'
             opData['steem_value'] = opData['amount']
             if opData['symbol'] == 'SBD':
-                opData['steem_value'] = opData['amount'] / sbd_median_price
+                opData['steem_value'] = float("%.3f" % (opData['amount'] / sbd_median_price))
+            opData['sbd_value'] = opData['amount']
+            if opData['symbol'] == 'STEEM':
+                opData['sbd_value'] = float("%.3f" % (opData['amount'] * sbd_median_price))
             # Process the funding data
             process_namespace_funding(opData)
     except:
@@ -153,8 +154,8 @@ def process_incoming_transfer(opData):
             '$set': opData
         }, upsert=True)
         l('Error parsing transfer')
-        l(opData)
-        l(block)
+        # l(opData)
+        # l(block)
         pass
 
 def update_funding(opData):
@@ -211,41 +212,6 @@ def process_namespace_funding(opData):
         else:
             l('invalid namespace: {}'.format(opData['ns']))
             l(opData)
-
-
-def process_benefactor_reward(opData):
-    _id = opData['author'] + '/' + opData['permlink']
-    # l(_id)
-    try:
-        # Load the post now that it processed rewards
-        comment = load_post(_id, opData['author'], opData['permlink'])
-        # Ensure we a post was returned
-        if comment['author'] != '':
-            db.rewards.update({'_id': _id}, {'$set': {
-                'author': opData['author'],
-                'author_payout': comment['total_payout_value'],
-                'category': comment['category'],
-                'curator_payout': comment['curator_payout_value'],
-                'permlink': opData['permlink'],
-                'platform_payout': float(opData['reward'].split(' ')[0]),
-                'timestamp': comment['last_payout'],
-            }}, upsert=True)
-            # Update the post in the DB since we have it (once last time)
-            comment.update({
-                'active_votes': collapse_votes(comment['active_votes'])
-            })
-            # If this is a top level post, update the `posts` collection
-            if comment['parent_author'] == '':
-                db.posts.update({'_id': _id}, {'$set': comment}, upsert=True)
-            # Otherwise save it into the `replies` collection and update the parent
-            else:
-                # Update this post within the `replies` collection
-                db.replies.update({'_id': _id}, {'$set': comment}, upsert=True)
-    except:
-        l('Error parsing post')
-        l(comment)
-        pass
-
 
 def process_custom_op(custom_json):
     # Process the JSON
@@ -711,6 +677,7 @@ def process_rewards_pools():
     db.status.update({'_id': 'recent_claims'}, {
                      '$set': {'value': recent_claims}}, upsert=True)
 
+<<<<<<< Updated upstream
 
 def process_platform_history():
     l('platform account')
@@ -745,7 +712,7 @@ def rebuild_bots_cache():
 
 if __name__ == '__main__':
     l('Starting services @ block #{}'.format(last_block_processed))
-    #
+
     # while True:
     #     time.sleep(30)
 
@@ -759,9 +726,8 @@ if __name__ == '__main__':
     scheduler.add_job(process_global_props, 'interval', seconds=9, id='process_global_props')
     scheduler.add_job(rebuild_forums_cache, 'interval', minutes=1, id='rebuild_forums_cache')
     scheduler.add_job(rebuild_bots_cache, 'interval', minutes=1, id='rebuild_bots_cache')
-    scheduler.add_job(process_vote_queue, 'interval', minutes=5, id='process_vote_queue')
+    scheduler.add_job(process_vote_queue, 'interval', seconds=15, id='process_vote_queue')
     scheduler.add_job(process_rewards_pools, 'interval', minutes=10, id='process_rewards_pools')
-    scheduler.add_job(process_platform_history, 'interval', minutes=10, id='process_platform_history')
     scheduler.start()
 
     quick = False
