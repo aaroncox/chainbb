@@ -6,6 +6,7 @@ from flask_cors import CORS, cross_origin
 from mongodb_jsonencoder import MongoJsonEncoder
 from steem import Steem
 import os
+from time import time
 
 ns = os.environ['namespace'] if 'namespace' in os.environ else 'chainbb'
 mongo = MongoClient("mongodb://mongo", connect=False)
@@ -116,16 +117,21 @@ def index():
         }
     })
 
+fourmsCache = None
+lastForumUpdate = -1
 
 @app.route("/forums")
 def forums():
-    query = {}
-    sort = [("highlight", -1), ("_id", 1), ("parent", 1)]
-    results = db.forums.find(query).sort(sort)
-    return response({
-        'forums': list(results)
-    })
-
+    if (time() - lastForumUpdate) > 1800: # More than 30 minutes since last cache update.
+        fourmsCache = None
+    if fourmsCache is None:
+           query = {}
+            sort = [("highlight", -1), ("_id", 1), ("parent", 1)]
+            results = db.forums.find(query).sort(sort)
+            forumsCache = response({
+                'forums': list(results)
+            })
+    return forumsCache
 
 @app.route("/@<username>")
 def account(username):
