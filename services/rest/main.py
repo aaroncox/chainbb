@@ -544,6 +544,11 @@ def config():
     results = db.forums.find()
     return response(list(results))
 
+@app.route("/platforms")
+def platforms():
+    return response(db.stats.find_one({
+        '_id': 'users-24h'
+    }))
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
